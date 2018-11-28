@@ -1,0 +1,4 @@
+# Ignore model code
+NatuurlijkKapitaalModellen/
+# Ignore pc-raster application
+pcraster-*

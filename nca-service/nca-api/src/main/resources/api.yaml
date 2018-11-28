@@ -1,0 +1,192 @@
+swagger: '2.0'
+info:
+  # Some fields also need to be set in the web.xml. Swagger doesn't set these properly in the generated web.xml.
+  # The fields in question: title, version and basepath.
+  version: "1"
+  title: Natural Capital Assessment API
+  description: |
+    ## TDB
+  contact:
+    name: RIVM
+    email: TDB
+    url: TDB
+  license:
+    name: TDB
+    url: TDB
+basePath: /api/1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /assessmentRequest:
+    post:
+      operationId: postAssessmentRequest
+      tags:
+        - assessmentRequest
+      description: |
+        TDB
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AssessmentRequest'
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/AssessmentRequestResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+        - apiKey: []
+  /generateAPIKey:
+    post:
+      operationId: postGenerateAPIKey
+      tags:
+        - user
+      description: |
+        Generate a new API-key. The API-key will be e-mailed to the given e-mail address.
+        This function can also be used to reset the API-key for a previous registered e-mail address.
+        A previous API-key will be invalidated.
+        The function returns via the field __successful__ if the request successed.
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateAPIKeyRequest'
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/AssessmentRequestResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+securityDefinitions:
+   apiKey:
+     type: apiKey
+     name: api_key
+     in: query
+definitions:
+  AssessmentRequest:
+    type: object
+    required:
+      - name
+      - eco_system_service
+      - layers
+    properties:
+      name:
+        type: string
+        description: A name given to this assessment request.
+      eco_system_service:
+        type: string
+        description: The eco system service for which an assessment request is made.
+      layers:
+        type: array
+        minItems: 1
+        items:
+          $ref: '#/definitions/LayerObject'
+  AssessmentRequestResponse:
+    allOf:
+      - $ref: '#/definitions/ValidateResponse'
+      - properties:
+          key:
+            type: string
+            description: A unique id to identify this request.
+  DataType:
+    type: string
+    description: |
+      The data type of the layer data.
+      Supported values are:
+      ___GEOTIFF:___ ANK Classified GeoTIFF file.
+    enum:
+      - GEOTIFF
+  ErrorResponse:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  GenerateAPIKeyRequest:
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+        description: A valid e-mail address.
+  LayerObject:
+    type: object
+    discriminator: non-existent
+    required:
+      - classType
+      - dataType
+      - data
+    properties:
+      classType:
+        type: string
+        description: |
+          The type of class the layer data enclosed in the layer.
+      dataType:
+        $ref: '#/definitions/DataType'
+      data:
+        type: string
+        format: byte
+        description: |
+          The layer data. This data must be base64 encoded.
+  ValidationMessage:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: Validation code.
+      message:
+        type: string
+        description: Validation text.
+  ValidateResponse:
+    type: object
+    discriminator: non-existent
+    properties:
+      successful:
+        type: boolean
+        description: true in case the call was successful.
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ValidationMessage'
+      warnings:
+        type: array
+        items:
+          $ref: '#/definitions/ValidationMessage'

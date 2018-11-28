@@ -1,0 +1,11 @@
+{
+ "name" : "test",
+ "eco_system_service" : "air_regulation",
+ "layers" : [
+    {
+      "classType": "trees",
+      "dataType": "GEOTIFF",
+      "data": "ZmlsZTovaG9tZS9oaWxicmFuZC93b3Jrc3BhY2UvYW5rL25jYS9uY2EvbmNhLXBjcmFzdGVyL3NyYy90ZXN0L3Jlc291cmNlcy9ib21lbi50aWZm"
+    }
+  ]
+}
