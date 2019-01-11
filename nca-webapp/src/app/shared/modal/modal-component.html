@@ -1,0 +1,27 @@
+<div class="gbp-modal-overlay">
+  <div class="gbp-modal">
+
+    <div class="gbp-modal-title" *ngIf="title">
+      <span class="title-text">{{ title }}</span>
+      <span class="right-align" (click)="cancelDialog()" *ngIf="closeButton">
+        <i class="close">&times;</i>
+      </span>
+    </div>
+
+    <ng-content select="[notification-panel]"></ng-content>
+
+    <div class="gbp-modal-body">
+      <ng-content select="[body]"></ng-content>
+      <div class="spinner-container" *ngIf="spinner">
+        <i  class="fa fa-spinner"></i>
+      </div>
+
+    </div>
+
+    <div class="gbp-modal-footer btn-toolbar justify-content-end align-items-center" *ngIf="footer">
+      <hr>
+      <ng-content select="[footer]"></ng-content>
+    </div>
+
+  </div>
+</div>

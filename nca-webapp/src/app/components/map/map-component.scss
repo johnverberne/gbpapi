@@ -1,0 +1,17 @@
+.map-component {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  background-color: white;
+  max-height: 100%;
+
+  .map-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+}

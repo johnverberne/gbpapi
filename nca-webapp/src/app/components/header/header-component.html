@@ -1,0 +1,17 @@
+<nav class="header-component navbar">
+  <a class="navbar-brand">
+    <img class="gbp-logo" src="/assets/img/logo.png" alt="GroeneBatenPlanner">
+  </a>
+  <form class="tools form-inline text-right">
+    <button type="button" class="btn" (click)="onLeafletClick()">
+      <i class="material-icons">map</i>{{'BUTTON_LEAFLET' | translate}}
+    </button>
+    <button type="button" class="btn" (click)="onOpenLayersClick()">
+      <i class="material-icons">map</i>{{'BUTTON_OPENLAYERS' | translate}}
+    </button>
+    <button type="button" class="btn" (click)="onHelpClick()">
+        <i class="material-icons">help</i>{{'BUTTON_HELP' | translate}}
+    </button>
+  </form>
+</nav>
+<ng-template gbpDialogHost></ng-template>

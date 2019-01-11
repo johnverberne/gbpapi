@@ -1,0 +1,22 @@
+// $FontPathOpenSans: 'Open Sans', sans-serif !default;
+// app colors
+$theme-colors: ( primary: green);
+$checkbox-color: map-get($theme-colors, "primary");
+// header sizes
+$top-header-size: 90px;
+$toolbar-size: 50px;
+.btn-primary {
+    background-color: map-get($theme-colors, "primary");
+    &:hover {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+    }
+    &:focus {
+        color: white;
+        background-color: lightgreen;
+    }
+    &:not(:disabled):not(.disabled):active {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+    }
+}
