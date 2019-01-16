@@ -4,6 +4,8 @@ $theme-colors: ( primary: green);
 $checkbox-color: map-get($theme-colors, "primary");
 // header sizes
 $top-header-size: 90px;
+$nav-bar-width: 100px;
+$menu-bar-width: 350px;
 $toolbar-size: 50px;
 .btn-primary {
     background-color: map-get($theme-colors, "primary");

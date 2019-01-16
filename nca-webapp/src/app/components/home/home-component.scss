@@ -1,0 +1,44 @@
+@import 'variables.scss';
+.fixed-left {
+  width: $nav-bar-width;
+  position: fixed;
+  border-radius: 0;
+  height: 100%;
+  z-index: 1050;
+  background-color: #F5F5F5;
+}
+
+.menu {
+  position: fixed;
+  left: $nav-bar-width;
+  width: $menu-bar-width;
+  top: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 1050;
+}
+
+.map {
+  position: fixed;
+  left: calc(#{$nav-bar-width} + #{$menu-bar-width});
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1050;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.map {}

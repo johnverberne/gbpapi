@@ -1,0 +1,24 @@
+<nav class="sidebar-component navbar">
+  <a class="navbar-brand">
+    <img class="gbp-logo" src="/assets/img/gbp-logo.png" alt="GroeneBatenPlanner">
+  </a>
+  <form class="menu-buttons">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'REFERENCE'}" (click)="onReferenceClick()">
+      <i class="material-icons">add_location</i>
+      {{'BUTTON_REFERENCE' | translate}}
+    </button>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}">
+      <i class="material-icons">create</i>{{'BUTTON_SCENARIO' | translate}}
+    </button>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}">
+      <i class="material-icons">insert_chart</i>{{'BUTTON_RESULT' | translate}}
+    </button>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}">
+      <i class="material-icons">layers</i>{{'BUTTON_MAPLAYERS' | translate}}
+    </button>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SETTINGS'}" (click)="onSettingsClick()">
+      <i class="material-icons">settings</i>{{'BUTTON_SETTINGS' | translate}}
+    </button>
+  </form>
+</nav>
+<ng-template gbpDialogHost></ng-template>

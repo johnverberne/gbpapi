@@ -1,6 +1,9 @@
 {
-  "BUTTON_LEAFLET": "Leaflet",
-  "BUTTON_OPENLAYERS": "Openlayers",
+  "BUTTON_REFERENCE": "Referentie",
+  "BUTTON_SCENARIO": "Scenario",
+  "BUTTON_RESULT": "Resultaat",
+  "BUTTON_MAPLAYERS": "Kaartlagen",
+  "BUTTON_SETTINGS": "Instellingen",
   "BUTTON_HELP": "Help",
   "BUTTON_OK": "Ok",
   "WIP": "Deze functie is nog niet geïmplementeerd"
