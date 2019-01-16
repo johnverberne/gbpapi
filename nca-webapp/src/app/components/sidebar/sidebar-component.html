@@ -7,13 +7,13 @@
       <i class="material-icons">add_location</i>
       {{'BUTTON_REFERENCE' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}" (click)="onScenarioClick()">
       <i class="material-icons">create</i>{{'BUTTON_SCENARIO' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onResultClick()">
       <i class="material-icons">insert_chart</i>{{'BUTTON_RESULT' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onLayersClick()">
       <i class="material-icons">layers</i>{{'BUTTON_MAPLAYERS' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SETTINGS'}" (click)="onSettingsClick()">
@@ -21,4 +21,3 @@
     </button>
   </form>
 </nav>
-<ng-template gbpDialogHost></ng-template>

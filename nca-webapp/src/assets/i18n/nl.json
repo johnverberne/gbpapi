@@ -5,6 +5,7 @@
   "BUTTON_MAPLAYERS": "Kaartlagen",
   "BUTTON_SETTINGS": "Instellingen",
   "BUTTON_HELP": "Help",
-  "BUTTON_OK": "Ok",
+  "BUTTON_OK": "Doorgaan",
+  "BUTTON_CANCEL": "Annuleren",
   "WIP": "Deze functie is nog niet geïmplementeerd"
 }

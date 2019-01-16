@@ -16,6 +16,7 @@ import { ModalModule } from './shared/modal/modal-module';
 import { DialogHostDirective } from './directives/dialog-host-directive';
 import { HomeComponent } from './components/home/home-component';
 import { MenubarComponent } from './components/menubar/menubar-component';
+import { MessageEventService } from './services/message-event-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -50,7 +51,7 @@ export function createTranslateLoader(http: HttpClient) {
   entryComponents: [
     ConfirmDialogComponent
   ],
-  providers: [],
+  providers: [MessageEventService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

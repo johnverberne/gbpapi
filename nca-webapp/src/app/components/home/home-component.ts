@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageEventService } from '../../services/message-event-service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog-component';
+import { DialogHostDirective } from '../../directives/dialog-host-directive';
 
 @Component({
   selector: 'gbp-home',
@@ -9,9 +12,20 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class HomeComponent {
 
+  @ViewChild(DialogHostDirective) public gbpDialogHost: DialogHostDirective;
+
   constructor(
     private router: Router,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,
+    private messageService: MessageEventService) {
+      this.messageService.onMessageSend().subscribe((messages: string | string[]) => {
+        const dialog: ConfirmDialogComponent = this.gbpDialogHost.createDialog(ConfirmDialogComponent);
+        if (typeof messages === 'string') {
+          dialog.message = this.translateService.instant(messages);
+        } else {
+          dialog.message = messages.map((message) => this.translateService.instant(message)).join('; ');
+        }
+      });
   }
 
 }
