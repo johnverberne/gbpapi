@@ -17,6 +17,10 @@ import { DialogHostDirective } from './directives/dialog-host-directive';
 import { HomeComponent } from './components/home/home-component';
 import { MenubarComponent } from './components/menubar/menubar-component';
 import { MessageEventService } from './services/message-event-service';
+import { ScenarioComponent } from './components/menubar/scenario-component';
+import { ReferenceComponent } from './components/menubar/reference-component';
+import { ScenarioService } from './services/scenario-service';
+import { CurrentProjectService } from './services/current-project-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -32,7 +36,9 @@ export function createTranslateLoader(http: HttpClient) {
     MapComponent,
     ConfirmDialogComponent,
     HomeComponent,
-    MenubarComponent
+    MenubarComponent,
+    ScenarioComponent,
+    ReferenceComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,7 @@ export function createTranslateLoader(http: HttpClient) {
   entryComponents: [
     ConfirmDialogComponent
   ],
-  providers: [MessageEventService],
+  providers: [MessageEventService, ScenarioService, CurrentProjectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

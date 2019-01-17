@@ -1,12 +1,31 @@
 @import 'variables.scss';
-
 .menubar-component {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: start;
-    justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: flex-start;
+}
 
+.header {
+  font-size: 22px;
+  padding-bottom: 1rem;
+}
+
+.default-ref {
+    border-radius: 20px 0px 0px 20px;
+}
+
+.updated-ref {
+    border-radius: 0px 20px 20px 0px;
+}
+
+.btn-secondary {
+  &:not(:disabled):not(.disabled):active {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
+  }
 }

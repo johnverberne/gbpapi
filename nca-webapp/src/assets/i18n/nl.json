@@ -7,5 +7,9 @@
   "BUTTON_HELP": "Help",
   "BUTTON_OK": "Doorgaan",
   "BUTTON_CANCEL": "Annuleren",
+  "DEFAULT_REFERENCE": "Huidige situatie",
+  "UPDATED_REFERENCE": "Aangepaste referentie",
+  "REFERENCE": "Referentie",
+  "SCENARIO": "Scenario",
   "WIP": "Deze functie is nog niet geïmplementeerd"
 }

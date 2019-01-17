@@ -7,10 +7,10 @@
       <i class="material-icons">add_location</i>
       {{'BUTTON_REFERENCE' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}" (click)="onScenarioClick()">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}" (click)="onScenarioClick()" [disabled]="!projectService.currentProject.reference">
       <i class="material-icons">create</i>{{'BUTTON_SCENARIO' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onResultClick()">
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onResultClick()" [disabled]="!projectService.currentProject.results">
       <i class="material-icons">insert_chart</i>{{'BUTTON_RESULT' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onLayersClick()">

@@ -19,4 +19,3 @@ export class ScenarioService extends BaseService {
     return super.post('scenario/save', dispositionModel);
   }
 }
-

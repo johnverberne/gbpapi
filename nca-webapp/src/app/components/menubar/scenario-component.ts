@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'gbp-menubar',
-  templateUrl: './menubar-component.html',
+  selector: 'gbp-scenario',
+  templateUrl: './scenario-component.html',
   styleUrls: ['./menubar-component.scss']
 })
-export class MenubarComponent {
+export class ScenarioComponent {
 
 }

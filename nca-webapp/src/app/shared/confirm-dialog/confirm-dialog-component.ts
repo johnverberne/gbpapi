@@ -14,7 +14,7 @@ export class ConfirmDialogComponent extends BaseDialogComponent {
 
   @Input() public message: string = '';
   public okayButton: boolean = true;
-  public cancelButton: boolean = true;
+  public cancelButton: boolean = false;
 
   @ViewChild('dialog') public dialog: ModalComponent;
 
