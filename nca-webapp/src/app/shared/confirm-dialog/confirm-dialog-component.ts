@@ -7,7 +7,8 @@ import { ModalComponent } from '../modal/modal-component';
 
 @Component({
   templateUrl: 'confirm-dialog-component.html',
-  selector: 'gbp-confirm-dialog'
+  selector: 'gbp-confirm-dialog',
+  styleUrls: ['./confirm-dialog-component.scss']
 })
 export class ConfirmDialogComponent extends BaseDialogComponent {
 

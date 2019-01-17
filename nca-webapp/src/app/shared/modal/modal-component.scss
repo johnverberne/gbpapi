@@ -31,6 +31,7 @@ $base-header-color: white;
   transition: all 0.5s ease;
   display: flex;
   flex-direction: column;
+  padding: 2rem;
 
   .gbp-modal-title {
     flex-shrink: 0;
@@ -66,13 +67,15 @@ $base-header-color: white;
   }
 
   .gbp-modal-body {
-    padding: 1.2rem;
+    padding-bottom: 1rem;
     overflow-y: auto;
     position: relative;
   }
 
   .gbp-modal-footer {
     flex-shrink: 0;
+    justify-content: flex-start;
+    flex-direction: row;
 
     hr {
       margin: 0;
@@ -91,6 +94,7 @@ $base-header-color: white;
         visibility: hidden;
       }
     }
+
   }
 
   .spinner-container {
