@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  ENDPOINT: '/gbpservice/rest',
+  GEOSERVER_ENDPOINT: '/gbpgeoserver/gbp'
 };
