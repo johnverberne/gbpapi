@@ -2,7 +2,7 @@
   <a class="navbar-brand">
     <img class="gbp-logo" src="/assets/img/gbp-logo.png" alt="GroeneBatenPlanner">
   </a>
-  <form class="menu-buttons">
+  <div class="menu-buttons">
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'REFERENCE'}" (click)="onReferenceClick()">
       <i class="material-icons">add_location</i>
       {{'BUTTON_REFERENCE' | translate}}
@@ -19,5 +19,5 @@
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SETTINGS'}" (click)="onSettingsClick()">
       <i class="material-icons">settings</i>{{'BUTTON_SETTINGS' | translate}}
     </button>
-  </form>
+  </div>
 </nav>

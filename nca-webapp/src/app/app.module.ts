@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { AppComponent } from './app.component';
@@ -21,6 +22,7 @@ import { ScenarioComponent } from './components/menubar/scenario-component';
 import { ReferenceComponent } from './components/menubar/reference-component';
 import { ScenarioService } from './services/scenario-service';
 import { CurrentProjectService } from './services/current-project-service';
+import { DummyComponent } from './components/menubar/dummy-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,7 +40,8 @@ export function createTranslateLoader(http: HttpClient) {
     HomeComponent,
     MenubarComponent,
     ScenarioComponent,
-    ReferenceComponent
+    ReferenceComponent,
+    DummyComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     HttpClientModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     ModalModule
   ],
   entryComponents: [

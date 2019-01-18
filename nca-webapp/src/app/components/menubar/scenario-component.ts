@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'gbp-scenario',
@@ -11,9 +12,19 @@ export class ScenarioComponent {
 
   public MAX_SCENARIO_THRESHOLD: number = 5;
   public currentScenario: number = 0;
+  public scenarioForm: FormGroup;
 
-  constructor(public projectService: CurrentProjectService) {
+  constructor(private fb: FormBuilder, public projectService: CurrentProjectService) {
+    this.scenarioForm = this.constructForm(fb);
     this.addScenario();
+  }
+
+  public constructForm(fb: FormBuilder): FormGroup {
+    return fb.group({
+      id: new FormControl(),
+      name: new FormControl(),
+     // dispositions: []
+    });
   }
 
   public addScenario() {

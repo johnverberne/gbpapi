@@ -19,7 +19,7 @@
 }
 
 .pager-number {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -35,4 +35,10 @@
   &:not(:disabled):hover:not(.active) {
     color: rgba(0, 0, 0, 0.87);
   }
+}
+
+// TODO move to global style
+.row {
+  margin-right: 0;
+  margin-left: 0;
 }

@@ -36,16 +36,19 @@ export class SidebarComponent {
   public onResultClick() {
     this.activeMenu = 'RESULT';
     this.messageService.sendMessage('WIP');
+    this.router.navigate(['dummy']);
   }
 
   public onLayersClick() {
     this.activeMenu = 'LAYERS';
     this.messageService.sendMessage('WIP');
+    this.router.navigate(['dummy']);
   }
 
   public onSettingsClick() {
     this.activeMenu = 'SETTINGS';
     this.messageService.sendMessage('WIP');
+    this.router.navigate(['dummy']);
   }
 
 }
