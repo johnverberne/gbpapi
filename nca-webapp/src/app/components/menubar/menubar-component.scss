@@ -15,12 +15,16 @@
   padding-bottom: 1rem;
 }
 
-.default-ref {
-    border-radius: 20px 0px 0px 20px;
+.round-button-start {
+  border-radius: 20px 0px 0px 20px;
 }
 
-.updated-ref {
-    border-radius: 0px 20px 20px 0px;
+.round-button-middle {
+  border-radius: 0px 0px 0px 0px;
+}
+
+.round-button-end {
+  border-radius: 0px 20px 20px 0px;
 }
 
 .btn-secondary {

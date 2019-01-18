@@ -1,0 +1,38 @@
+@import 'variables.scss';
+:host {
+  width: 100%;
+}
+
+.btn-secondary {
+  &:not(:disabled):not(.disabled).active {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
+    border-color: map-get($theme-colors, "primary");
+  }
+}
+
+.pager {
+  display: flex;
+  flex-direction: row;
+  height: 35px;
+  width: 100%;
+}
+
+.pager-number {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.delete {
+  margin-left: auto;
+}
+
+.btn {
+  color: rgba(0, 0, 0, 0.54);
+  &.active {
+    color: map-get($theme-colors, "primary");
+  }
+  &:not(:disabled):hover:not(.active) {
+    color: rgba(0, 0, 0, 0.87);
+  }
+}

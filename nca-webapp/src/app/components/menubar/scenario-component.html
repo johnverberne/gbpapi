@@ -1,3 +1,18 @@
 <div class="scenario-component">
   <div class="header">{{'SCENARIO' | translate}}</div>
+  <div class="pager">
+    <div *ngFor="let scenario of projectService.currentProject.scenarios; let i = index">
+      <button type="button" class="btn btn-secondary pager-number" 
+        [ngClass]="{'active': i === currentScenario, 'round-button-start': i===0,
+          'round-button-middle': i!==0 && i < MAX_SCENARIO_THRESHOLD - 1,
+          'round-button-end': i===MAX_SCENARIO_THRESHOLD - 1}" 
+        (click)="onScenarioClick(scenario, i)">{{i + 1}}</button>
+    </div>
+    <button *ngIf="projectService.currentProject.scenarios.length < MAX_SCENARIO_THRESHOLD" type="button" 
+      class="btn btn-secondary round-button-end pager-number" (click)="addScenario()">+</button>
+    <button type="button" class="btn delete" disabled="true">
+      <i class="material-icons">save_alt</i></button>
+    <button type="button" class="btn" (click)="onDeleteClick()">
+      <i class="material-icons">delete</i></button>
+  </div>
 </div>

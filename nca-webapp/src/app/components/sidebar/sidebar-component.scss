@@ -25,7 +25,7 @@
     &.active {
       color: map-get($theme-colors, "primary");
     }
-    &:hover:not(.active) {
+    &:not(:disabled):hover:not(.active) {
       color: rgba(0, 0, 0, 0.87);
     }
   }

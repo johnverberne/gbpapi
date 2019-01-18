@@ -31,7 +31,6 @@ export class SidebarComponent {
   public onScenarioClick() {
     this.activeMenu = 'SCENARIO';
     this.router.navigate(['scenario']);
-    this.messageService.sendMessage('WIP');
   }
 
   public onResultClick() {
