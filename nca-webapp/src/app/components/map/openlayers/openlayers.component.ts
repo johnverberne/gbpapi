@@ -24,7 +24,7 @@ export class OpenlayersComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.source = new OlXYZ({
       url: 'http://tile.osm.org/{z}/{x}/{y}.png'
     });
@@ -39,8 +39,8 @@ export class OpenlayersComponent implements OnInit {
     });
 
     this.view = new OlView({
-      center: fromLonLat([6.661594, 50.433237]),
-      zoom: 3
+      center: fromLonLat([5.1776041, 52.1202117]),
+      zoom: 13
     });
 
     this.map = new OlMap({
@@ -48,7 +48,7 @@ export class OpenlayersComponent implements OnInit {
       layers: [this.layer, this.vector],
       view: this.view
     });
-    this.enableDrawPolygon();
+    // this.enableDrawPolygon();
   }
 
 
