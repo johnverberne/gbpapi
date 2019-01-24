@@ -3,6 +3,12 @@
   width: 100%;
 }
 
+.scenario-component {
+  .header {
+    padding: 0.5rem
+  }
+}
+
 .btn-secondary {
   &:not(:disabled):not(.disabled).active {
     color: white;
@@ -10,12 +16,16 @@
     border-color: map-get($theme-colors, "primary");
   }
 }
+.nav-header {
+  background-color: $menu-bar-background;
+}
 
 .pager {
   display: flex;
   flex-direction: row;
-  height: 35px;
+  height: 43px;
   width: 100%;
+  padding: 0.5rem 0.5rem 0 0.5rem;
 }
 
 .pager-number {
@@ -24,6 +34,13 @@
   font-weight: bold;
 }
 
+.scenario-form {
+  background-color: $menu-bar-background;
+}
+
+.scenario-content {
+  padding: 0.5rem;
+}
 .delete {
   margin-left: auto;
 }

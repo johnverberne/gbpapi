@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { CollapseModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
 import { OpenlayersComponent } from './components/map/openlayers/openlayers.component';
@@ -24,6 +25,7 @@ import { ReferenceComponent } from './components/menubar/reference-component';
 import { ScenarioService } from './services/scenario-service';
 import { CurrentProjectService } from './services/current-project-service';
 import { DummyComponent } from './components/menubar/dummy-component';
+import { MeasureComponent } from './components/menubar/measure-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -42,11 +44,13 @@ export function createTranslateLoader(http: HttpClient) {
     MenubarComponent,
     ScenarioComponent,
     ReferenceComponent,
-    DummyComponent
+    DummyComponent,
+    MeasureComponent
   ],
   imports: [
     BrowserModule,
     LeafletModule.forRoot(),
+    CollapseModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

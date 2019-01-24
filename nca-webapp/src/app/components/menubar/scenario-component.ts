@@ -22,8 +22,7 @@ export class ScenarioComponent {
   public constructForm(fb: FormBuilder): FormGroup {
     return fb.group({
       id: new FormControl(),
-      name: new FormControl(),
-     // dispositions: []
+      name: new FormControl()
     });
   }
 

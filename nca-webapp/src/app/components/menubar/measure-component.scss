@@ -1,0 +1,15 @@
+@import 'variables.scss';
+.collapse-button {
+  display: flex;
+}
+svg-icon {
+  width: 2rem;
+  fill: rgba(0, 0, 0, 0.54);
+  &.active {
+    fill: map-get($theme-colors, "primary");
+  }
+}
+
+.measure-panel {
+  padding-left: 0;
+}

@@ -1,0 +1,4 @@
+export enum LandUseType {
+  RESIDENTIAL = 'RESIDENTIAL',
+  LAKES_AND_PONDS = 'LAKES_AND_PONDS'
+}

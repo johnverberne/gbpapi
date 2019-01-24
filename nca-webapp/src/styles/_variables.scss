@@ -1,6 +1,8 @@
 // app colors
 $theme-colors: ( primary: #5F9600);
 $checkbox-color: map-get($theme-colors, "primary");
+$side-bar-background: #F5F5F5;
+$menu-bar-background: #F2F2F2;
 // header sizes
 $top-header-size: 90px;
 $nav-bar-width: 100px;
@@ -36,6 +38,10 @@ $toolbar-size: 50px;
     background-color: map-get($theme-colors, "primary");
     border-color: map-get($theme-colors, "primary");
   }
+}
+
+.control-label {
+  font-weight: bold;
 }
 
 /* Font RijksoverheidSansText */

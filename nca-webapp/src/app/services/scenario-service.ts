@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseService } from './base-service';
 import { Observable } from 'rxjs';
 import { ScenarioModel } from '../models/scenario-model';
-import { DispositionModel } from '../models/disposition-model';
+import { MeasureModel } from '../models/measure-model';
 
 @Injectable()
 export class ScenarioService extends BaseService {
@@ -15,7 +15,7 @@ export class ScenarioService extends BaseService {
     return super.post('scenario/save', scenarioModel);
   }
 
-  public saveDisposition(dispositionModel: DispositionModel): Observable<any> {
-    return super.post('scenario/save', dispositionModel);
+  public saveMeasure(measureModel: MeasureModel): Observable<any> {
+    return super.post('measure/save', measureModel);
   }
 }
