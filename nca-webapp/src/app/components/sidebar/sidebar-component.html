@@ -4,20 +4,24 @@
   </a>
   <div class="menu-buttons">
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'REFERENCE'}" (click)="onReferenceClick()">
-      <i class="material-icons">add_location</i>
+      <svg-icon src="assets/img/main-menu-reference.svg" [ngClass]="{'active': activeMenu === 'REFERENCE'}"></svg-icon>
       {{'BUTTON_REFERENCE' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SCENARIO'}" (click)="onScenarioClick()" [disabled]="!projectService.currentProject.reference">
-      <i class="material-icons">create</i>{{'BUTTON_SCENARIO' | translate}}
+      <svg-icon src="assets/img/main-menu-scenario.svg" [ngClass]="{'active': activeMenu === 'SCENARIO', 'disabled': !projectService.currentProject.reference}"></svg-icon>
+      {{'BUTTON_SCENARIO' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onResultClick()" [disabled]="!projectService.currentProject.results">
-      <i class="material-icons">insert_chart</i>{{'BUTTON_RESULT' | translate}}
+      <svg-icon src="assets/img/main-menu-result.svg" [ngClass]="{'active': activeMenu === 'RESULT', 'disabled': !projectService.currentProject.results}"></svg-icon>
+      {{'BUTTON_RESULT' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onLayersClick()">
-      <i class="material-icons">layers</i>{{'BUTTON_MAPLAYERS' | translate}}
+      <svg-icon src="assets/img/main-menu-maplayers.svg" [ngClass]="{'active': activeMenu === 'LAYERS'}"></svg-icon>
+      {{'BUTTON_MAPLAYERS' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SETTINGS'}" (click)="onSettingsClick()">
-      <i class="material-icons">settings</i>{{'BUTTON_SETTINGS' | translate}}
+      <svg-icon src="assets/img/main-menu-settings.svg" [ngClass]="{'active': activeMenu === 'SETTINGS'}"></svg-icon>
+      {{'BUTTON_SETTINGS' | translate}}
     </button>
   </div>
 </nav>

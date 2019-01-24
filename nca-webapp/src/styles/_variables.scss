@@ -1,4 +1,3 @@
-// $FontPathOpenSans: 'Open Sans', sans-serif !default;
 // app colors
 $theme-colors: ( primary: #5F9600);
 $checkbox-color: map-get($theme-colors, "primary");
@@ -37,4 +36,92 @@ $toolbar-size: 50px;
     background-color: map-get($theme-colors, "primary");
     border-color: map-get($theme-colors, "primary");
   }
+}
+
+/* Font RijksoverheidSansText */
+
+@font-face {
+  font-family: 'RO-Sans-Text';
+  src: url(/assets/fonts/ROsanswebtextregular.woff) format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RO-Sans-Text';
+  src: url(/assets/fonts/ROsanswebtextitalic.woff) format('woff');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'RO-Sans-Text';
+  src: url(/assets/fonts/ROsanswebtextbold.woff) format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Font RijksoverheidSerif */
+
+@font-face {
+  font-family: 'RO-Serif';
+  src: url(/assets/fonts/ROserifwebregular.woff) format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RO-Serif';
+  src: url(/assets/fonts/ROserifwebitalic.woff) format('woff');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'RO-Serif';
+  src: url(/assets/fonts/ROserifwebbold.woff) format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Font RijksoverheidSansHeading */
+
+@font-face {
+  font-family: 'RO-Sans-Heading';
+  src: 'assets/fonts/rijksoverheidsansheading-regular_2_0.ttf' format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RO-Sans-Heading';
+  src: 'assets/fonts/rijksoverheidsansheading-italic_2_0.ttf' format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'RO-Sans-Heading';
+  src: 'assets/fonts/rijksoverheidsansheading-bold_2_0.ttf' format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RO-Sans-Heading';
+  src: 'assets/fonts/rijksoverheidsansheading-bolditalic_2_0.ttf' format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+body {
+  font-family: 'RO-Sans-Text', Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'RO-Sans-Heading', Arial, Sans-Serif;
 }
