@@ -11,11 +11,17 @@ import java.util.Base64;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.rivm.nca.runner.Exec;
 
 /**
  * Pushes a geotiff image to geoserver. The workspace it stores the image in must already exist for this to work.
  */
 public class PublishGeotiff {
+	
+  private static final Logger LOGGER = LoggerFactory.getLogger(PublishGeotiff.class);
 
   private final String geoserverUrl;
   private final String encodedAuth;
@@ -31,7 +37,9 @@ public class PublishGeotiff {
     final String url = geoserverUrl + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName
         + "/file.geotiff?configure=first&coverageName=" + name;
     final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-
+    
+    LOGGER.debug("Publisch to geoserver {}", url);
+    
     try {
       con.setRequestMethod("PUT");
       con.setRequestProperty("Authorization", "Basic " + encodedAuth);

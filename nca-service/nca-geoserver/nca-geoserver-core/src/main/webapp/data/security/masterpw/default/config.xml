@@ -1,0 +1,8 @@
+<urlProvider>
+  <id>7091e3f2:14b2bd12d4c:-7ff9</id>
+  <name>default</name>
+  <className>org.geoserver.security.password.URLMasterPasswordProvider</className>
+  <readOnly>false</readOnly>
+  <url>file:/etc/tomcat/geoserverpasswd</url>
+  <encrypting>true</encrypting>
+</urlProvider>

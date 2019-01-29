@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
@@ -21,86 +23,91 @@ import nl.rivm.nca.messagebus.Consumer;
 //      "data": "file://home/hilbrand/workspace/ank/nca/nca/nca-pcraster/src/test/resources/bomen.tiff"
 public class Main {
 
-	private static final String QUEUE_NAME = "nca.pcraster";
+  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-	private final ObjectMapper mapper = new ObjectMapper();
-	private final Controller controller;
+  private static final String QUEUE_NAME = "nca.pcraster";
 
-	public Main(boolean directFile) throws IOException, InterruptedException {
-		final String ncaModel = System.getenv("NCA_MODEL");
-		if (ncaModel == null) {
-			throw new IllegalArgumentException(
-					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
-		}
-		controller = new Controller(new File(ncaModel), directFile);
-	}
+  private final ObjectMapper mapper = new ObjectMapper();
+  private final Controller controller;
 
-	public static void main(final String[] args) throws IOException, TimeoutException, InterruptedException {
-		final ExecutorService executorService = Executors.newFixedThreadPool(1);
+  public Main(boolean directFile) throws IOException, InterruptedException {
+    final String ncaModel = System.getenv("NCA_MODEL");
+    if (ncaModel == null) {
+      throw new IllegalArgumentException(
+          "Environment variable 'NCA_MODEL' not set. This should point to the raster data");
+    }
+    controller = new Controller(new File(ncaModel), directFile);
+  }
 
-		try {
-			final ConnectionFactory factory = ConnectionHelper.createFactory();
-			final boolean singleRun = args.length == 3;
+  public static void main(final String[] args) throws IOException, TimeoutException, InterruptedException {
+    final ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-			final Main main = new Main(singleRun);
+    try {
+      final ConnectionFactory factory = ConnectionHelper.createFactory();
+      final boolean singleRun = args.length == 3;
+
+      LOGGER.info("lets start with model: {} {} {}", args[0], args[1], args[2]);
+
+      final Main main = new Main(singleRun);
       if (singleRun) {
-				main.singleRun(args);
-			} else {
-				main.start(factory.newConnection(executorService), QUEUE_NAME);
-			}
-		} finally {
-			executorService.shutdown();
-		}
-	}
+        main.singleRun(args);
+      } else {
+        main.start(factory.newConnection(executorService), QUEUE_NAME);
+      }
+    } finally {
+      executorService.shutdown();
+    }
+  }
 
-	/**
-	 * A single run which requires the following arguments:
+  /**
+   * A single run which requires the following arguments:
    * <p>args[0]: user defined name
-	 * <p>args[1]: model to run, i.e: air_regulation
-	 * <p>args[2]: directory with geotiff files to use as input. Files must match the name as used by the model.
-	 *
-	 * @param args
-	 * @throws IOException
-	 */
-	private void singleRun(final String[] args) throws IOException {
-		final String uuid = UUID.randomUUID().toString();
-		final SingleRun singleRun = new SingleRun();
-		runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2]));
-	}
+   * <p>args[1]: model to run, i.e: air_regulation
+   * <p>args[2]: directory with geotiff files to use as input. Files must match the name as used by the model.
+   *
+   * @param args
+   * @throws IOException
+   */
+  private void singleRun(final String[] args) throws IOException {
+    final String uuid = UUID.randomUUID().toString();
+    final SingleRun singleRun = new SingleRun();
+    runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2]));
+  }
 
-	/**
-	 * Runs the application as a service listening to a queue.
-	 * @param connection
-	 * @param queueName
-	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	private Channel start(Connection connection, String queueName) throws IOException, InterruptedException {
-		final Channel channel = connection.createChannel();
-		final Consumer workerConsumer = new Consumer(channel) {
-			@Override
-			protected void handleDelivery(String correlationId, byte[] body) {
-				try {
+  /**
+   * Runs the application as a service listening to a queue.
+   * @param connection
+   * @param queueName
+   * @return
+   * @throws IOException
+   * @throws InterruptedException
+   */
+  private Channel start(Connection connection, String queueName) throws IOException, InterruptedException {
+    final Channel channel = connection.createChannel();
+    final Consumer workerConsumer = new Consumer(channel) {
+      @Override
+      protected void handleDelivery(String correlationId, byte[] body) {
+        try {
           runAssessment(correlationId, mapper.readValue(body, AssessmentRequest.class));
         } catch (final IOException e) {
           throw new RuntimeException("Running model failed.", e);
         }
-			}
-		};
-		channel.basicQos(1);
-		channel.basicConsume(queueName, false, queueName, workerConsumer);
-		return channel;
-	}
+      }
+    };
+    channel.basicQos(1);
+    channel.basicConsume(queueName, false, queueName, workerConsumer);
+    return channel;
+  }
 
-	private void runAssessment(String correlationId, AssessmentRequest ar) {
-		try {
-			controller.run(correlationId, ar);
-		} catch (IOException | ConfigurationException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Running model failed.", e);
-		} catch (final InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
+  private void runAssessment(String correlationId, AssessmentRequest ar) {
+    try {
+      LOGGER.info("AssessmentRequest {}", ar.toString());
+      controller.run(correlationId, ar);
+    } catch (IOException | ConfigurationException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Running model failed.", e);
+    } catch (final InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+  }
 }

@@ -1,0 +1,11 @@
+# Ignore service implementations (We have our own)
+**/impl/*.java
+# Ignore model (as we get that from nca-api)
+**/domain/*.java
+
+# Ignore various unneeded files
+README.md
+pom.xml
+**/web.xml
+**/StringUtil.java
+**/LICENSE
