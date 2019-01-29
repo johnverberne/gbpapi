@@ -22,11 +22,15 @@ import org.geotools.factory.Hints;
 import org.geotools.gce.geotiff.GeoTiffFormat;
 import org.geotools.gce.geotiff.GeoTiffReader;
 import org.geotools.geometry.Envelope2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.LayerObject;
 
 class Controller {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
   public static final String GEOTIFF_EXT = "tiff";
   public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
@@ -150,6 +154,8 @@ class Controller {
     final File mapFile = new File(FilenameUtils.removeExtension(geotiffFile.getAbsolutePath()) + MAP_DOT_EXT);
 
     try {
+      // convert input tiff to map
+      LOGGER.info("geotiff2pcraster {} -> {}", geotiffFile, mapFile);
       Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile);
     } catch (final IOException e) {
       e.printStackTrace();
@@ -171,6 +177,11 @@ class Controller {
   }
 
   private void publishFiles(final String correlationId, File outputPath) throws IOException {
+
+    Files.list(outputPath.toPath())
+        .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
+        .forEach(f -> LOGGER.info(f.toFile().getName()));
+
     Files.list(outputPath.toPath())
         .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
