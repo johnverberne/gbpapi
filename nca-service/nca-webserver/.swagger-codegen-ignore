@@ -1,6 +1,6 @@
 # Ignore service implementations (We have our own)
 **/impl/*.java
-# Ignore model (as we get that from aerius-connect-model)
+# Ignore model (as we get that from nca-api)
 **/domain/*.java
 
 # Ignore various unneeded files

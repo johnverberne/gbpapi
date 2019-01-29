@@ -1,0 +1,9 @@
+# Ignore everything except domain objects (configuring in the pom would be better, but the maven plugin doesn't seem to pickup on the configuration options)
+**/service/**
+
+# Ignore various unneeded files
+README.md
+pom.xml
+LICENSE
+**/web.xml
+**/StringUtil.java

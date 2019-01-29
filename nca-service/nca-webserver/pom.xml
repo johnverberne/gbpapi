@@ -67,7 +67,6 @@
 	    <!-- Tomcat 7 deployment name --> 
 	    <finalName>${project.artifactId}</finalName>
 		<plugins>
-		<!-- 
 	      <plugin>
 	        <groupId>org.codehaus.mojo</groupId>
 	        <artifactId>buildnumber-maven-plugin</artifactId>
@@ -75,7 +74,6 @@
 	         <doCheck>false</doCheck>
 	        </configuration>
 	      </plugin>
-	      -->
 	      <plugin>
 	        <artifactId>maven-war-plugin</artifactId>
 	        <configuration>
@@ -138,7 +136,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
+							<inputSpec>${project.basedir}/../nca-api/src/main/resources/api.yaml</inputSpec>
 							<output>${project.build.directory}/swagger/</output>
 							<addCompileSourceRoot>true</addCompileSourceRoot>
 							<invokerPackage>${project.groupId}.api.service</invokerPackage>

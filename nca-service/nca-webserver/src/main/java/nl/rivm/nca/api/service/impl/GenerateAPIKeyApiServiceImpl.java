@@ -7,11 +7,11 @@ import nl.rivm.nca.api.domain.GenerateAPIKeyRequest;
 import nl.rivm.nca.api.domain.ValidateResponse;
 import nl.rivm.nca.api.service.GenerateAPIKeyApiService;
 import nl.rivm.nca.api.service.NotFoundException;
+import nl.rivm.nca.api.service.util.WarningUtil;
 
 public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
     @Override
     public Response postGenerateAPIKey(GenerateAPIKeyRequest body, SecurityContext securityContext) throws NotFoundException {
-        // do some magic!
         return Response.ok().entity(generateAPIKey(body.getEmail())).build();
     }
 
@@ -33,6 +33,7 @@ public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 	      throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
 	    }
 */
+	    result.setWarnings(WarningUtil.WarningValidationMessageNoImplementation());
 	    return result;
 	  }
 

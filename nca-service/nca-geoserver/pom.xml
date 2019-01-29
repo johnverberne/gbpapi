@@ -52,8 +52,8 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
-        <module>aerius-geoserver-core</module>
-        <module>aerius-geoserver-monitor-up</module>
+        <module>nca-geoserver-core</module>
+        <module>nca-geoserver-planner</module>
       </modules>
     </profile>
   </profiles>
