@@ -53,7 +53,7 @@
       </activation>
       <modules>
         <module>nca-geoserver-core</module>
-        <module>nca-geoserver-planner</module>
+        <module>nca-geoserver-gbp</module>
       </modules>
     </profile>
   </profiles>

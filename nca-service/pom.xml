@@ -57,6 +57,21 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+		        <groupId>net.postgis</groupId>
+		        <artifactId>postgis-jdbc</artifactId>
+		        <version>${postgis-jdbc.version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.postgresql</groupId>
+		        <artifactId>postgresql</artifactId>
+		        <version>${postgresql.version}</version>
+		      </dependency>
+			  <dependency>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>exec-maven-plugin</artifactId>
+		        <version>1.2.1</version>
+		      </dependency>
+			<dependency>
 				<groupId>com.fasterxml.jackson.jaxrs</groupId>
 				<artifactId>jackson-jaxrs-json-provider</artifactId>
 				<version>${com-fasterxml-jackson.version}</version>
@@ -92,6 +107,40 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
+				<plugin>
+	              <groupId>org.codehaus.mojo</groupId>
+	              <artifactId>buildnumber-maven-plugin</artifactId>
+	              <version>1.1</version>
+	              <executions>
+	                <execution>
+	                  <id>generate-buildDateTime</id>
+	                  <phase>validate</phase>
+	                  <goals>
+	                    <goal>create</goal>
+	                  </goals>
+	                  <configuration>
+	                    <format>{0,date,yyyyMMdd}</format>
+	                    <items>
+	                      <item>timestamp</item>
+	                    </items>
+	                    <buildNumberPropertyName>buildDateTime</buildNumberPropertyName>
+	                  </configuration>
+	                </execution>
+	                <execution>
+	                  <id>generate-buildRevision</id>
+	                  <phase>validate</phase>
+	                  <goals>
+	                    <goal>create</goal>
+	                  </goals>
+	                  <configuration>
+	                    <doCheck>true</doCheck>
+	                    <doUpdate>false</doUpdate>
+	                    <shortRevisionLength>10</shortRevisionLength>
+	                    <buildNumberPropertyName>buildRevision</buildNumberPropertyName>
+	                  </configuration>
+	                </execution>
+	              </executions>
+	            </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -108,6 +157,9 @@
 				<module>nca-lib</module>
 				<module>nca-webserver</module>
 				<module>nca-pcraster</module>
+				<module>nca-geoserver-core</module>
+				<module>nca-geoserver-gbp</module>
+				<module>nca-database-gbp</module>
 			</modules>
 		</profile>
 	</profiles>
