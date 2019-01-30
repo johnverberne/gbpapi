@@ -1,0 +1,2 @@
+INSERT INTO i18n.permit_calculation_radius_types SELECT permit_calculation_radius_type_id, 'nl', name FROM permit_calculation_radius_types;
+INSERT INTO i18n.permit_calculation_radius_types SELECT permit_calculation_radius_type_id, 'en', name FROM permit_calculation_radius_types;

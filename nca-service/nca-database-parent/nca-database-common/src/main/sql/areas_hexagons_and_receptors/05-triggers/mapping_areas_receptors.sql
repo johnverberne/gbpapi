@@ -1,0 +1,1 @@
+SELECT ae_add_existing_assessment_area_id_triggers();

@@ -1,0 +1,2 @@
+clear_log
+validate_contents :abort_on_errors

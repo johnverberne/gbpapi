@@ -1,5 +1,0 @@
-<namespace>
-  <id>NamespaceInfoImpl-78d9694b:14b2bf52943:-7ffe</id>
-  <prefix>monitor</prefix>
-  <uri>${geoserver.layer.namespace.uri}monitor/wms</uri>
-</namespace>

@@ -1,0 +1,2 @@
+BEGIN; SELECT setup.ae_load_table('i18n.sectors', '{data_folder}/i18n/i18n.sectors_20161110_nl.txt'); COMMIT;
+BEGIN; SELECT setup.ae_load_table('i18n.sectors', '{data_folder}/i18n/i18n.sectors_20161110_en.txt'); COMMIT;

@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>nl.rivm.nca</groupId>
+    <artifactId>nca-geoserver-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>nca-geoserver-gbp</artifactId>
+  <name>nca GeoServer</name>
+  <packaging>war</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>nl.rivm.nca</groupId>
+      <artifactId>nca-geoserver-base</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/webapp/data/workspaces</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <finalName>geoserver-gbp##${project.version}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <overlays>
+            <overlay>
+              <groupId>nl.rivm.nca</groupId>
+              <artifactId>nca-geoserver-base</artifactId>
+            </overlay>
+          </overlays>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <!--
+            gs-web-app dependency is also added as lib, which we don't want as it makes the war almost double in size.
+            classes are excluded as they are already added to the root of the war, which suffices.
+           -->
+          <packagingExcludes>
+            WEB-INF/lib/gs-web-app-*.jar,
+            WEB-INF/classes/**
+          </packagingExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <filters>
+      <filter>src/main/filters/geoserver-default-filter.properties</filter>
+    </filters>
+  </build>
+
+  <!--
+  <profiles>
+    <profile>
+      <id>aerius-ide</id>
+      <build>
+        <finalName>geoserver-gbp</finalName>
+      </build>
+    </profile>
+  </profiles>
+  -->
+
+</project>

@@ -1,0 +1,1 @@
+BEGIN; SELECT setup.ae_load_table('depositions_jurisdiction_policies', '{data_folder}/public/depositions_jurisdiction_policies_20181008.txt'); COMMIT;
