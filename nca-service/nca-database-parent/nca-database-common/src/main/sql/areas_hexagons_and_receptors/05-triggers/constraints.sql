@@ -1,0 +1,1 @@
+ALTER TABLE terrain_properties ADD CONSTRAINT terrain_properties_check_zoom_level CHECK (ae_is_receptor_id_available_on_zoomlevel(receptor_id, zoom_level));

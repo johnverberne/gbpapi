@@ -1,0 +1,2 @@
+-- These tables would normally be automatically synced in the application. To have a workable database dump, we fill them initially.
+SELECT system.ae_set_constant('DEVELOPMENT_SPACE_SYNC_TIMESTAMP', (ROUND(EXTRACT(EPOCH FROM clock_timestamp())) * 1000)::text);

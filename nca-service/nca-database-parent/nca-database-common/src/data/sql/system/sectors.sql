@@ -1,0 +1,81 @@
+/*
+ * Insert sector_cosmetic_properties.
+ */
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (2100, '0F789B'::system.color, 'ENERGY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4110, '427F08'::system.color, 'FARM_LODGE');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4120, '427F08'::system.color, 'FARM_MANURE_STORAGE');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4130, '427F08'::system.color, 'FARM_PASTURE');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4140, '427F08'::system.color, 'FARM_FERTILIZER');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4320, '427F08'::system.color, 'GREENHOUSE');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (4600, '427F08'::system.color, 'AGRICULTURE');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (8640, 'F47A0F'::system.color, 'OFFICES_SHOPS');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (8200, 'F47A0F'::system.color, 'CONSUMERS');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (8210, 'F47A0F'::system.color, 'RECREATION');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1050, '6B15CB'::system.color, 'WASTE_MANAGEMENT');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1100, '6B15CB'::system.color, 'INDUSTRY_FOOD_INDUSTRY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1300, '6B15CB'::system.color, 'INDUSTRY_CHEMICAL_INDUSTRY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1400, '6B15CB'::system.color, 'INDUSTRY_BUILDING_MATERIALS');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1500, '6B15CB'::system.color, 'INDUSTRY_BASE_MATERIAL');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1700, '6B15CB'::system.color, 'INDUSTRY_METAL_INDUSTRY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (1800, '6B15CB'::system.color, 'INDUSTRY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3210, 'CB181D'::system.color, 'ROAD_FARM');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3220, 'CB181D'::system.color, 'ROAD_CONSTRUCTION_INDUSTRY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3230, 'CB181D'::system.color, 'MINING');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3530, 'CB181D'::system.color, 'ROAD_CONSUMER');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3710, 'AAA406'::system.color, 'RAIL_EMPLACEMENT');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3720, 'AAA406'::system.color, 'RAIL_TRANSPORT');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3610, '993300'::system.color, 'AVIATION_TAKE_OFF');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3620, '993300'::system.color, 'AVIATION_TOUCH_DOWN');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3630, '993300'::system.color, 'AVIATION_TAXI');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3640, '993300'::system.color, 'AVIATION_AERODROME');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3111, 'CB181D'::system.color, 'ROAD_FREEWAY');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3112, 'CB181D'::system.color, 'ROAD_NON_URBAN');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (3113, 'CB181D'::system.color, 'ROAD_URBAN');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (7510, '084594'::system.color, 'SHIPPING_DOCK');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (7520, '084594'::system.color, 'SHIPPING_MARITIME_MOORING');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (7530, '084594'::system.color, 'SHIPPING_MARITIME_NCP');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (7610, '084594'::system.color, 'SHIPPING_INLAND_DOCK');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (7620, '084594'::system.color, 'SHIPPING_INLAND');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (9999, '084594'::system.color, 'OTHER');
+INSERT INTO system.sector_cosmetic_properties (sector_id, color, icon_type) VALUES (9000, 'AE017E'::system.color, 'PLAN');
+
+/*
+ * Insert sector_calculation_properties.
+ */
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (2100, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4110, 'FARM_LODGE', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4120, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4130, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4140, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4320, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (4600, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (8640, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (8200, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (8210, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1050, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1100, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1300, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1400, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1500, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1700, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (1800, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3210, 'OFFROAD_MOBILE', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3220, 'OFFROAD_MOBILE', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3230, 'OFFROAD_MOBILE', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3530, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3710, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3720, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3610, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3620, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3630, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3640, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3111, 'ROAD', 'ASRM2', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3112, 'ROAD', 'ASRM2', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (3113, 'ROAD', 'ASRM2', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (7510, 'SHIPPING_MARITIME_DOCKED', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (7520, 'SHIPPING_MARITIME_INLAND', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (7530, 'SHIPPING_MARITIME_MARITIME', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (7610, 'SHIPPING_INLAND_DOCKED', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (7620, 'SHIPPING_INLAND', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (9999, 'GENERIC', 'OPS', false);
+INSERT INTO system.sector_calculation_properties (sector_id, emission_calculation_method, calculation_engine, building_possible) VALUES (9000, 'PLAN', 'OPS', false);

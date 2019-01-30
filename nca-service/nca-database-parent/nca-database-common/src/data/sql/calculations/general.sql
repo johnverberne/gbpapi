@@ -1,0 +1,1 @@
+BEGIN; SELECT setup.ae_load_table('permit_calculation_radius_types', '{data_folder}/temp/temp_permit_calculation_radius_types_20170131.txt'); COMMIT;

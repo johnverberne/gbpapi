@@ -1,0 +1,40 @@
+/*
+ * Insert sectors_sectorgroup.
+ */
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (2100, 'energy');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4110, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4120, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4130, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4140, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4320, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (4600, 'agriculture');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (8640, 'live_and_work');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (8200, 'live_and_work');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (8210, 'live_and_work');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1050, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1100, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1300, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1400, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1500, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1700, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (1800, 'industry');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3210, 'mobile_equipment');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3220, 'mobile_equipment');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3230, 'mobile_equipment');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3530, 'mobile_equipment');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3710, 'rail_transportation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3720, 'rail_transportation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3610, 'aviation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3620, 'aviation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3630, 'aviation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3640, 'aviation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3111, 'road_transportation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3112, 'road_transportation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (3113, 'road_transportation');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (7510, 'shipping');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (7520, 'shipping');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (7530, 'shipping');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (7610, 'shipping');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (7620, 'shipping');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (9999, 'other');
+INSERT INTO system.sectors_sectorgroup (sector_id, sectorgroup) VALUES (9000, 'plan');
