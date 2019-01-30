@@ -25,3 +25,22 @@ svg-icon {
 .measure-panel {
   padding-left: 0;
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.measure-row {
+  padding-bottom: 0.5rem;
+}
+
+.okay-button {
+  margin-left: auto;
+}
+
+.save-cancel {
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+}

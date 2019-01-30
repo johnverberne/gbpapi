@@ -11,19 +11,63 @@
         <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick()">
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
-        <div id="collapseBasic" [collapse]="openMeasure === i" class="col-sm-10 offset-2 measure-panel">
-          <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
-          <div class="">
+        <div id="collapseBasic" [collapse]="openMeasure === i" class="col-sm-12 measure-panel">
+          <div class="offset-2 col-sm-10">
+            <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
+            <div>
               <div class="row col-sm-6">
                 <label class="control-label" for="land-use">{{'LANDUSE' | translate}}</label>
               </div>
-               <div class="row col-sm-10">
+              <div class="row col-sm-12">
                 <select id="detour-direction" class="form-control" formControlName="landuse">
                   <option *ngFor="let landuseValue of landUseValues" [ngValue]="landuseValue">{{'LANDUSE_'
                     + landuseValue | translate}}</option>
                 </select>
               </div>
             </div>
+            <div formGroupName="vegetation">
+              <div class="row col-sm-6">
+                <label class="control-label" for="vegetation">{{'VEGETATION' | translate}}</label>
+              </div>
+              <div class="row col-sm-12 measure-row">
+                <div class="col-sm-9">
+                  <label class="sub-label" for="vegetation">{{'VEGETATION_LOW' | translate}}</label>
+                </div>
+                <input type="number" max="100" accuracy="2" min="0" formControlName="low" class="form-control col-sm-3">
+              </div>
+              <div class="row col-sm-12 measure-row">
+                <div class="col-sm-9">
+                  <label class="sub-label" for="vegetation">{{'VEGETATION_BUSH' | translate}}</label>
+                </div>
+                <input type="number" max="100" accuracy="2" min="0" formControlName="middle" class="form-control col-sm-3">
+              </div>
+              <div class="row col-sm-12 measure-row">
+                <div class="col-sm-9">
+                  <label class="sub-label" for="vegetation">{{'VEGETATION_TREE' | translate}}</label>
+                </div>
+                <input type="number" max="100" accuracy="2" min="0" formControlName="high" class="form-control col-sm-3">
+              </div>
+            </div>
+            <div class="row col-sm-6">
+              <label class="control-label" for="inhabitants">{{'INHABITANTS' | translate}}</label>
+            </div>
+            <div class="row col-sm-12 measure-row">
+              <div class="col-sm-9">
+                <label class="sub-label" for="inhabitants">{{'NUMBER_PER_TILE' | translate}}</label>
+              </div>
+              <input type="number" min="0" formControlName="inhabitants" class="form-control col-sm-3">
+            </div>
+            <div class="row col-sm-6">
+              <label class="control-label" for="inhabitants">{{'WOZ' | translate}}</label>
+            </div>
+            <div class="row col-sm-12 measure-row">
+              <input type="number" min="0" formControlName="woz" class="form-control">
+            </div>
+          </div>
+          <div class="row save-cancel">
+            <button type="button" class="btn btn-secondary" (click)="cancelClick(i)">{{ 'BUTTON_CANCEL' | translate }}</button>
+            <button type="button" class="btn btn-primary okay-button" (click)="saveClick(i)" autofocus>{{ 'BUTTON_SAVE' | translate }}</button>
+          </div>
         </div>
       </div>
     </div>

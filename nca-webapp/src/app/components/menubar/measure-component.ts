@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { MeasureModel } from 'src/app/models/measure-model';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { LandUseType } from 'src/app/models/enums/landuse-type';
+import { VegetationModel } from '../../models/vegetation-model';
 
 @Component({
   selector: 'gbp-measure',
@@ -15,6 +16,8 @@ export class MeasureComponent implements OnChanges {
   public measureForm: FormGroup;
   public openMeasure: number = 0;
   public landUseValues: any[];
+  public activeMeasure: number = 0;
+  private numberPattern: '^[0-9][0-9]?$|^100$';
 
   constructor(private fb: FormBuilder) {
     this.measureForm = this.constructForm(fb);
@@ -53,6 +56,24 @@ export class MeasureComponent implements OnChanges {
     // TODO
   }
 
+  public saveClick(index: number) {
+    this.saveMeasure(index);
+  }
+
+  public cancelClick(index: number) {
+    this.measures.removeAt(index);
+  }
+
+  private saveMeasure(index: number) {
+    this.activeMeasure = -1;
+    const measureFormGroup = (this.measureForm.get('measures') as FormArray).controls[index] as FormGroup;
+    const measureModel = this.fromFormGroupToModel(measureFormGroup);
+    if (!this.measureModels) {
+      this.measureModels = [];
+    }
+    this.measureModels.push(measureModel);
+  }
+
   private setMeasures(measures: MeasureModel[]) {
     if (measures) {
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));
@@ -60,11 +81,33 @@ export class MeasureComponent implements OnChanges {
     }
   }
 
+  private fromFormGroupToModel(measureFG: FormGroup): MeasureModel {
+    const measureFormModel = measureFG.value;
+
+    const measureModel: MeasureModel = {
+      measureId: measureFormModel.id,
+      measureName: measureFormModel.name,
+      landuse: measureFormModel.landuse,
+      vegetation: measureFormModel.vegetation,
+      inhabitants: measureFormModel.inhabitants,
+      woz: measureFormModel.woz
+    };
+
+    return measureModel;
+  }
+
   private fromModelToFormGroup(measure: MeasureModel): FormGroup {
     return this.fb.group({
       id: measure.measureId,
       name: [measure.measureName, Validators.required],
-      landuse: ''
+      landuse: measure.landuse,
+      vegetation: this.fb.group({
+        low: [measure.vegetation.low, Validators.pattern(this.numberPattern)],
+        middle: [measure.vegetation.middle, Validators.pattern(this.numberPattern)],
+        high: [measure.vegetation.high, Validators.pattern(this.numberPattern)]
+      }),
+      inhabitants: measure.inhabitants,
+      woz: measure.woz
     });
   }
 
@@ -77,6 +120,7 @@ export class MeasureComponent implements OnChanges {
   private addNewMeasure() {
     const newModel = new MeasureModel();
     newModel.measureId = -1;
+    newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
   }
 
