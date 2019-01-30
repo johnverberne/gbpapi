@@ -10,10 +10,12 @@
       </div>
       <button *ngIf="projectService.currentProject.scenarios.length < MAX_SCENARIO_THRESHOLD" type="button" class="btn btn-secondary round-button-end pager-number"
         (click)="addScenario()">+</button>
-      <button type="button" class="btn delete" disabled="true">
-        <i class="material-icons">save_alt</i></button>
-      <button type="button" class="btn" (click)="onDeleteClick()">
-        <i class="material-icons">delete</i></button>
+      <button type="button" class="btn download delete-download" disabled="true">
+        <svg-icon src="assets/img/ui-download.svg" [ngClass]="{'disabled': true}"></svg-icon>
+      </button>
+      <button type="button" class="btn delete-download" (click)="onDeleteClick()">
+        <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
+      </button>
     </div>
   </div>
   <form class="scenario-form" id="scenarioform" [formGroup]="scenarioForm">
@@ -25,9 +27,17 @@
         <input type="text" placeholder="{{('SCENARIO_NAME_PLACEHOLDER' | translate) + (currentScenario + 1)}}" id="name"
           formControlName="name" class="form-control col-sm-10">
       </div>
-      <div class="header">{{'MEASURE' | translate}}</div>
-      <div id="measure">
+      <div class="header measure">{{'MEASURE' | translate}}</div>
+      <div *ngIf="hasMeasures()" class="measures">
         <gbp-measure [measureModels]="projectService.currentProject.scenarios.measures" name="gbp-measure"></gbp-measure>
+      </div>
+      <div class="no-measure" *ngIf="!hasMeasures()">
+        {{'MEASURE_CREATION_EXPLANATION' | translate}}
+        <div *ngIf="debug">
+          <button type="button" class="btn" (click)="onAddMeasureClick()">
+            <svg-icon src="assets/img/ui-map-plus.svg"></svg-icon>
+          </button>
+        </div>
       </div>
     </div>
   </form>

@@ -49,6 +49,10 @@ export class MeasureComponent implements OnChanges {
     }
   }
 
+  public onDeleteClick() {
+    // TODO
+  }
+
   private setMeasures(measures: MeasureModel[]) {
     if (measures) {
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));

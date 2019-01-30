@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { MeasureModel } from '../../models/measure-model';
 
 @Component({
   selector: 'gbp-scenario',
@@ -13,6 +14,7 @@ export class ScenarioComponent {
   public MAX_SCENARIO_THRESHOLD: number = 5;
   public currentScenario: number = 0;
   public scenarioForm: FormGroup;
+  public debug: boolean = true;
 
   constructor(private fb: FormBuilder, public projectService: CurrentProjectService) {
     this.scenarioForm = this.constructForm(fb);
@@ -38,5 +40,13 @@ export class ScenarioComponent {
 
   public onDeleteClick() {
     this.projectService.currentProject.scenarios.splice(this.currentScenario, 1);
+  }
+
+  public hasMeasures(): boolean {
+    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0;
+  }
+
+  public onAddMeasureClick() {
+    this.projectService.currentProject.scenarios[this.currentScenario].measures.push(new MeasureModel());
   }
 }

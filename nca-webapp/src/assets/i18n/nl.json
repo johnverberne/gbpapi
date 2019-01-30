@@ -16,6 +16,7 @@
   "LANDUSE_RESIDENTIAL": "Woongebied",
   "LANDUSE_LAKES_AND_PONDS": "Meren en vijvers",
   "MEASURE": "Maatregelen",
+  "MEASURE_CREATION_EXPLANATION": "Er zijn geen maatregelen in dit scenario. Gebruik de upload-knop om bestaande maatregelen te importeren of zoom in op de kaart en selecteer een of meer vakken om een maatregel op te nemen.",
   "MEASURE_NAME_PLACEHOLDER": "Naamloos gebied ",
   "SCENARIO_NAME_PLACEHOLDER": "Naamloos scenario ",
   "WIP": "Deze functie is nog niet geïmplementeerd"

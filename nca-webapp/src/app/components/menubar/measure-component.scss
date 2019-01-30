@@ -1,12 +1,24 @@
 @import 'variables.scss';
+$measure-colors: (first: #D63327, second: #93278F);
 .collapse-button {
   display: flex;
 }
+
+.svg-collapse {
+  fill: map-get($measure-colors, "first");
+  &:not(.disabled):hover:not(.active) {
+    fill: map-get($measure-colors, "first");
+  }
+}
+
 svg-icon {
   width: 2rem;
   fill: rgba(0, 0, 0, 0.54);
   &.active {
     fill: map-get($theme-colors, "primary");
+  }
+  &:not(.disabled):hover:not(.active) {
+    fill: rgba(0, 0, 0, 0.87);
   }
 }
 

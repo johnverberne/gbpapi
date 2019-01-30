@@ -5,17 +5,29 @@
 
 .scenario-component {
   .header {
-    padding: 0.5rem
+    padding: 0.5rem;
   }
 }
 
-.btn-secondary {
-  &:not(:disabled):not(.disabled).active {
-    color: white;
-    background-color: map-get($theme-colors, "primary");
-    border-color: map-get($theme-colors, "primary");
+.measure {
+  background-color: white;
+}
+
+.download {
+  margin-left: auto;
+}
+
+svg-icon {
+  width: 2rem;
+  fill: rgba(0, 0, 0, 0.54);
+  &.active {
+    fill: map-get($theme-colors, "primary");
+  }
+  &:not(.disabled):hover:not(.active) {
+    fill: rgba(0, 0, 0, 0.87);
   }
 }
+
 .nav-header {
   background-color: $menu-bar-background;
 }
@@ -28,10 +40,19 @@
   padding: 0.5rem 0.5rem 0 0.5rem;
 }
 
-.pager-number {
+.btn.pager-number {
   font-family: 'RO-Sans-Text';
   font-size: 14px;
   font-weight: bold;
+  color: map-get($theme-colors, "primary");
+  border-color: map-get($theme-colors, "primary");
+  &:not(:disabled):not(.disabled).active {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
+  }
+  &:not(:disabled):hover:not(.active) {
+    color: map-get($theme-colors, "primary");
+  }
 }
 
 .scenario-form {
@@ -40,9 +61,6 @@
 
 .scenario-content {
   padding: 0.5rem;
-}
-.delete {
-  margin-left: auto;
 }
 
 .btn {
@@ -55,7 +73,16 @@
   }
 }
 
-// TODO move to global style
+.no-measure {
+  background-color: white;
+  padding-left: 0.5rem;
+  font-size: 15px;
+}
+
+.measures {
+  padding-top: 0.5rem;
+}
+
 .row {
   margin-right: 0;
   margin-left: 0;

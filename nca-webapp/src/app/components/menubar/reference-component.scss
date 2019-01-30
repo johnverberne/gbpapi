@@ -1,5 +1,8 @@
 @import 'variables.scss';
 
+.reference-component {
+  padding: 0.5rem
+}
 .btn-secondary {
   &:not(:disabled):not(.disabled).active {
     color: white;
