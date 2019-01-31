@@ -4,7 +4,7 @@
     <groupId>nl.rivm.nca</groupId>
     <artifactId>nca-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../nca-parent/pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
