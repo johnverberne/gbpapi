@@ -167,12 +167,27 @@ definitions:
     type: object
     required:
       - name
+      - model
       - eco_system_service
       - layers
     properties:
       name:
         type: string
-        description: A name given to this assessment request.
+        description: A description given to this assessment request.
+      model:
+        type: string
+        description: |
+          A description given to this assessment request.
+          supported values are: 
+          ___AIR_REGULATION:___ Excecute model air_regulation.
+          ___COOLING_IN_URBAN_AREAS:___ Excecute model cooling_in_urban_areas.
+          ___ENERGY_SAVINGS_BY_SHELTER_TREES:___ Excecute energy_savings_by_shelter_trees model.      
+          ___OTHER:___ Returns a warning not implemented.
+        enum:
+          - AIR_REGULATION
+          - COOLING_IN_URBAN_AREAS
+          - ENERGY_SAVINGS_BY_SHELTER_TREES
+          - OTHER
       eco_system_service:
         type: string
         description: The eco system service for which an assessment request is made.

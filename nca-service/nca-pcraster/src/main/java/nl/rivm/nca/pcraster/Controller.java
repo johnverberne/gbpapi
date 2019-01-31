@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.LayerObject;
 
-class Controller {
+public class Controller {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
@@ -36,6 +36,7 @@ class Controller {
   public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
   private static final String MAP_EXT = "map";
   private static final String MAP_DOT_EXT = '.' + MAP_EXT;
+  private static final String JSON_EXT = "json";
   private static final String WORKSPACE_NAME = "nca";
   private static final String OUTPUTS = "outputs";
 
@@ -65,6 +66,7 @@ class Controller {
         outputPath.getAbsolutePath());
     runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
     convertOutput(outputPath);
+    importOutput(outputPath);
     publishFiles(correlationId, outputPath);
     cleanUp(workingPath);
     return null;
@@ -171,6 +173,22 @@ class Controller {
             Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(),
                 new File(FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
           } catch (final IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
+  }
+  
+  private void importOutput(File outputPath) throws IOException {
+    Files.list(outputPath.toPath())
+        .filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
+        .forEach(f -> {
+          try {
+            LOGGER.info("read result file {}", f.getFileName());
+            /*
+            Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(),
+                new File(FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
+                */
+          } catch (final Exception e) {
             throw new RuntimeException(e);
           }
         });
