@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home-component';
 import { ScenarioComponent } from './components/menubar/scenario-component';
 import { ReferenceComponent } from './components/menubar/reference-component';
 import { DummyComponent } from './components/menubar/dummy-component';
+import { ScenarioGuard } from './guards/scenario-guard';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
         path: 'reference', component: ReferenceComponent
       },
       {
-        path: 'scenario', component: ScenarioComponent
+        path: 'scenario', component: ScenarioComponent,
+        canActivate: [ScenarioGuard]
       },
       {
         path: 'dummy', component: DummyComponent
