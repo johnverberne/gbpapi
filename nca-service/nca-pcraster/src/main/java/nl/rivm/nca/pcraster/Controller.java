@@ -2,6 +2,7 @@ package nl.rivm.nca.pcraster;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -25,7 +26,10 @@ import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import nl.rivm.nca.api.domain.AssessmentRequest;
+import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.LayerObject;
 
 public class Controller {
@@ -44,6 +48,7 @@ public class Controller {
   private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
   private final PublishGeotiff publishGeotiff;
   private final boolean directFile;
+  private final ObjectMapper mapper = new ObjectMapper();
 
   public Controller(File path, boolean directFile) throws IOException, InterruptedException {
     rasterLayers = RasterLayers.loadRasterLayers(path);
@@ -66,7 +71,7 @@ public class Controller {
         outputPath.getAbsolutePath());
     runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
     convertOutput(outputPath);
-    importOutput(outputPath);
+    importOutputToDatabase(correlationId, outputPath);
     publishFiles(correlationId, outputPath);
     cleanUp(workingPath);
     return null;
@@ -178,24 +183,37 @@ public class Controller {
         });
   }
   
-  private void importOutput(File outputPath) throws IOException {
+  /**
+   * load generated json files and put in the database
+   * 
+   * @param outputPath
+   * @throws IOException
+   */
+  private void importOutputToDatabase(String correlationId, File outputPath) throws IOException {
     Files.list(outputPath.toPath())
         .filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
           try {
             LOGGER.info("read result file {}", f.getFileName());
-            /*
-            Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(),
-                new File(FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
-                */
+            @SuppressWarnings("resource")
+            FileReader fr = new FileReader(f.toFile().getAbsolutePath()); 
+            int i; 
+            String body ="";
+            while ((i=fr.read()) != -1) 
+              body += (char) i;
+            AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
+            LOGGER.info("content of file for correlationId {} content {}", correlationId,  result.toString());
+            // lets write to database with id
+
           } catch (final Exception e) {
+            LOGGER.warn("Reading and parsing of json failed {}", e);
             throw new RuntimeException(e);
           }
         });
   }
 
-  private void publishFiles(final String correlationId, File outputPath) throws IOException {
-
+  private boolean publishFiles(final String correlationId, File outputPath) throws IOException {
+    boolean successfull = true;
     Files.list(outputPath.toPath())
         .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> LOGGER.info(f.toFile().getName()));
@@ -207,9 +225,12 @@ public class Controller {
             publishGeotiff.publish(WORKSPACE_NAME, correlationId, f.toFile(),
                 FilenameUtils.removeExtension(f.toFile().getName()));
           } catch (final IOException e) {
-            throw new RuntimeException(e);
+            // rewrite to throw an warning and eat error
+            LOGGER.warn("Geoserver publication failed {}", e);
+            //throw new RuntimeException(e);
           }
         });
+    return successfull;
   }
 
   private void cleanUp(File workingPath) {
