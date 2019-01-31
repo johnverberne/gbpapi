@@ -3,6 +3,8 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MeasureModel } from '../../models/measure-model';
+import { CalculationService } from '../../services/calculation-service';
+import { AssessmentRequest } from '../../models/assessment-request-model';
 
 @Component({
   selector: 'gbp-scenario',
@@ -16,7 +18,7 @@ export class ScenarioComponent {
   public scenarioForm: FormGroup;
   public debug: boolean = true;
 
-  constructor(private fb: FormBuilder, public projectService: CurrentProjectService) {
+  constructor(private fb: FormBuilder, public projectService: CurrentProjectService, private calculationService: CalculationService) {
     this.scenarioForm = this.constructForm(fb);
     this.addScenario();
   }
@@ -48,5 +50,16 @@ export class ScenarioComponent {
 
   public onAddMeasureClick() {
     this.projectService.currentProject.scenarios[this.currentScenario].measures.push(new MeasureModel());
+  }
+
+  public calculateClick(index: number) {
+    const request = new AssessmentRequest();
+    request.name = 'Test scenario Geert';
+    request.eco_system_service = 'AIR_REGULATION';
+    this.calculationService.startCalculation(request).subscribe((result) => {
+      if (result) {
+        console.log('Result: ' + result.successful);
+      }
+    });
   }
 }

@@ -30,6 +30,9 @@
       <div class="header measure">{{'MEASURE' | translate}}</div>
       <div *ngIf="hasMeasures()" class="measures">
         <gbp-measure [measureModels]="projectService.currentProject.scenarios.measures" name="gbp-measure"></gbp-measure>
+        <div class="row save-cancel">
+            <button type="button" class="btn btn-primary calculate" (click)="calculateClick(i)" autofocus>{{ 'BUTTON_CALCULATE' | translate }}</button>
+        </div>
       </div>
       <div class="no-measure" *ngIf="!hasMeasures()">
         {{'MEASURE_CREATION_EXPLANATION' | translate}}

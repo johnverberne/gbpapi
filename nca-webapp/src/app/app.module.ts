@@ -26,6 +26,7 @@ import { ScenarioService } from './services/scenario-service';
 import { CurrentProjectService } from './services/current-project-service';
 import { DummyComponent } from './components/menubar/dummy-component';
 import { MeasureComponent } from './components/menubar/measure-component';
+import { CalculationService } from './services/calculation-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -67,7 +68,12 @@ export function createTranslateLoader(http: HttpClient) {
   entryComponents: [
     ConfirmDialogComponent
   ],
-  providers: [MessageEventService, ScenarioService, CurrentProjectService],
+  providers: [
+    MessageEventService,
+    ScenarioService,
+    CurrentProjectService,
+    CalculationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

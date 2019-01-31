@@ -8,21 +8,18 @@ $top-header-size: 90px;
 $nav-bar-width: 100px;
 $menu-bar-width: 350px;
 $toolbar-size: 50px;
-
 .btn-primary {
   font-size: 15px;
   background-color: map-get($theme-colors, "primary");
+  color: white;
   border: none;
   &:hover {
-    color: white;
     background-color: map-get($theme-colors, "primary");
   }
   &:focus {
-    color: white;
     background-color: map-get($theme-colors, "primary");
   }
   &:not(:disabled):not(.disabled):active {
-    color: white;
     background-color: map-get($theme-colors, "primary");
   }
 }
@@ -52,6 +49,7 @@ $toolbar-size: 50px;
     box-shadow: none;
   }
 }
+
 .btn {
   &:focus {
     box-shadow: none;
