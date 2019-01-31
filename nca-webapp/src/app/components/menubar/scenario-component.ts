@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MeasureModel } from '../../models/measure-model';
 import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequest } from '../../models/assessment-request-model';
+import { MeasureComponent } from './measure-component';
 
 @Component({
   selector: 'gbp-scenario',
@@ -13,10 +14,13 @@ import { AssessmentRequest } from '../../models/assessment-request-model';
 })
 export class ScenarioComponent {
 
-  public MAX_SCENARIO_THRESHOLD: number = 5;
+  @ViewChild(MeasureComponent) private measures: MeasureComponent;
+
+  public MAX_SCENARIO_THRESHOLD: number = 4;
   public currentScenario: number = 0;
   public scenarioForm: FormGroup;
   public debug: boolean = true;
+  public addingMeasure: boolean = false;
 
   constructor(private fb: FormBuilder, public projectService: CurrentProjectService, private calculationService: CalculationService) {
     this.scenarioForm = this.constructForm(fb);
@@ -45,11 +49,17 @@ export class ScenarioComponent {
   }
 
   public hasMeasures(): boolean {
-    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0;
+    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0 || this.addingMeasure;
   }
 
   public onAddMeasureClick() {
-    this.projectService.currentProject.scenarios[this.currentScenario].measures.push(new MeasureModel());
+    this.addingMeasure = true;
+    setTimeout(() => {
+      this.measures.savedMeasureModel.subscribe((savedData: MeasureModel) => {
+        this.projectService.currentProject.scenarios[this.currentScenario].measures.push(savedData);
+        this.addingMeasure = false;
+      });
+    }, 1);
   }
 
   public calculateClick(index: number) {

@@ -29,18 +29,18 @@
       </div>
       <div class="header measure">{{'MEASURE' | translate}}</div>
       <div *ngIf="hasMeasures()" class="measures">
-        <gbp-measure [measureModels]="projectService.currentProject.scenarios.measures" name="gbp-measure"></gbp-measure>
-        <div class="row save-cancel">
+        <gbp-measure id="measures" [measureModels]="projectService.currentProject.scenarios?.measures" name="gbp-measure"></gbp-measure>
+        <div class="row save-cancel" *ngIf="projectService.currentProject.scenarios.measures">
             <button type="button" class="btn btn-primary calculate" (click)="calculateClick(i)" autofocus>{{ 'BUTTON_CALCULATE' | translate }}</button>
         </div>
       </div>
-      <div class="no-measure" *ngIf="!hasMeasures()">
-        {{'MEASURE_CREATION_EXPLANATION' | translate}}
-        <div *ngIf="debug">
+      <div *ngIf="debug">
           <button type="button" class="btn" (click)="onAddMeasureClick()">
             <svg-icon src="assets/img/ui-map-plus.svg"></svg-icon>
           </button>
         </div>
+      <div class="no-measure" *ngIf="!hasMeasures()">
+        {{'MEASURE_CREATION_EXPLANATION' | translate}}
       </div>
     </div>
   </form>

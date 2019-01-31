@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { MeasureModel } from 'src/app/models/measure-model';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { LandUseType } from 'src/app/models/enums/landuse-type';
@@ -13,6 +13,8 @@ import { VegetationModel } from '../../models/vegetation-model';
 export class MeasureComponent implements OnChanges {
 
   @Input() public measureModels: MeasureModel[] = [];
+  @Output() public savedMeasureModel = new EventEmitter<MeasureModel>();
+
   public measureForm: FormGroup;
   public openMeasure: number = 0;
   public landUseValues: any[];
@@ -72,6 +74,7 @@ export class MeasureComponent implements OnChanges {
       this.measureModels = [];
     }
     this.measureModels.push(measureModel);
+    this.savedMeasureModel.emit(measureModel);
   }
 
   private setMeasures(measures: MeasureModel[]) {
