@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -14,16 +14,12 @@ import { MeasureComponent } from './measure-component';
 })
 export class ScenarioComponent {
 
-  @ViewChild(MeasureComponent) private measures: MeasureComponent;
-
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public currentScenario: number = 0;
   public scenarioForm: FormGroup;
-  public debug: boolean = true;
-  public addingMeasure: boolean = false;
 
   constructor(private fb: FormBuilder, public projectService: CurrentProjectService, private calculationService: CalculationService) {
-    this.scenarioForm = this.constructForm(fb);
+    this.scenarioForm = this.constructForm(this.fb);
     this.addScenario();
   }
 
@@ -32,6 +28,12 @@ export class ScenarioComponent {
       id: new FormControl(),
       name: new FormControl()
     });
+  }
+
+  public get measures() {
+    if (this.projectService.currentProject.scenarios[this.currentScenario]) {
+      return this.projectService.currentProject.scenarios[this.currentScenario].measures;
+    }
   }
 
   public addScenario() {
@@ -49,17 +51,7 @@ export class ScenarioComponent {
   }
 
   public hasMeasures(): boolean {
-    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0 || this.addingMeasure;
-  }
-
-  public onAddMeasureClick() {
-    this.addingMeasure = true;
-    setTimeout(() => {
-      this.measures.savedMeasureModel.subscribe((savedData: MeasureModel) => {
-        this.projectService.currentProject.scenarios[this.currentScenario].measures.push(savedData);
-        this.addingMeasure = false;
-      });
-    }, 1);
+    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0;
   }
 
   public calculateClick(index: number) {

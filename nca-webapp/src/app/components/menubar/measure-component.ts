@@ -13,12 +13,13 @@ import { VegetationModel } from '../../models/vegetation-model';
 export class MeasureComponent implements OnChanges {
 
   @Input() public measureModels: MeasureModel[] = [];
-  @Output() public savedMeasureModel = new EventEmitter<MeasureModel>();
+  @Output() public measureModelsChange = new EventEmitter<MeasureModel[]>();
 
   public measureForm: FormGroup;
-  public openMeasure: number = 0;
+  public openMeasure: number = -1;
+  public isOpen: boolean = true;
   public landUseValues: any[];
-  public activeMeasure: number = 0;
+  public debug: boolean = true; // TODO remove when map interaction is implemented
   private numberPattern: '^[0-9][0-9]?$|^100$';
 
   constructor(private fb: FormBuilder) {
@@ -38,7 +39,7 @@ export class MeasureComponent implements OnChanges {
     };
     this.measureForm.reset(resetObject);
     this.setMeasures(this.measureModels);
-    this.ensureOneMeasureExists();
+    // this.ensureOneMeasureExists();
     // this.cdRef.detectChanges();
   }
 
@@ -46,16 +47,22 @@ export class MeasureComponent implements OnChanges {
     return this.measureForm.get('measures') as FormArray;
   }
 
-  public onOpenMeasure(event: any) {
+  public onOpenMeasure(event: number) {
     if (this.openMeasure === event) {
-      this.openMeasure = undefined;
+      this.isOpen = !this.isOpen;
+      this.openMeasure = event;
     } else {
+      this.isOpen = true;
       this.openMeasure = event;
     }
   }
 
-  public onDeleteClick() {
-    // TODO
+  public onDeleteClick(index: number) {
+    this.measures.removeAt(index);
+    this.measureModels.splice(index, 1);
+    this.measureForm.markAsDirty();
+    this.openMeasure = -1;
+    this.measureModelsChange.emit(this.measureModels);
   }
 
   public saveClick(index: number) {
@@ -66,15 +73,23 @@ export class MeasureComponent implements OnChanges {
     this.measures.removeAt(index);
   }
 
+  public onAddMeasureClick() {
+    const model = this.addNewMeasure();
+    this.measureModels.push(model);
+    this.measureModelsChange.emit(this.measureModels);
+    this.openMeasure = this.measureModels.length - 1;
+    this.isOpen = true;
+  }
+
   private saveMeasure(index: number) {
-    this.activeMeasure = -1;
+    this.openMeasure = -1;
     const measureFormGroup = (this.measureForm.get('measures') as FormArray).controls[index] as FormGroup;
     const measureModel = this.fromFormGroupToModel(measureFormGroup);
     if (!this.measureModels) {
       this.measureModels = [];
     }
     this.measureModels.push(measureModel);
-    this.savedMeasureModel.emit(measureModel);
+    this.measureModelsChange.emit(this.measureModels);
   }
 
   private setMeasures(measures: MeasureModel[]) {
@@ -120,11 +135,12 @@ export class MeasureComponent implements OnChanges {
     }
   }
 
-  private addNewMeasure() {
+  private addNewMeasure(): MeasureModel {
     const newModel = new MeasureModel();
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
+    return newModel;
   }
 
   private addMeasure(measure: MeasureModel) {

@@ -1,17 +1,22 @@
 <div class="measure-component container" [formGroup]="measureForm">
   <div formArrayName="measures">
+    <div *ngIf="debug">
+      <button type="button" class="btn" (click)="onAddMeasureClick()">
+        <svg-icon src="assets/img/ui-map-plus.svg"></svg-icon>
+      </button>
+    </div>
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
         <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
-          <svg-icon class="svg-collapse" *ngIf="openMeasure !== i" src="assets/img/ui-measure-open.svg"></svg-icon>
-          <svg-icon class="svg-collapse" *ngIf="openMeasure === i" src="assets/img/ui-measure-closed.svg"></svg-icon>
+          <svg-icon class="svg-collapse" *ngIf="openMeasure === i && isOpen" src="assets/img/ui-measure-open.svg"></svg-icon>
+          <svg-icon class="svg-collapse" *ngIf="openMeasure !== i || !isOpen" src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
         <input type="text" placeholder="{{('MEASURE_NAME_PLACEHOLDER' | translate) + (i + 1)}}" id="name"
           formControlName="name" class="form-control col-sm-8">
         <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick()">
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
-        <div id="collapseBasic" [collapse]="openMeasure === i" class="col-sm-12 measure-panel">
+        <div id="collapseBasic" [collapse]="openMeasure !== i || !isOpen" class="col-sm-12 measure-panel">
           <div class="offset-2 col-sm-10">
             <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
             <div>
@@ -66,7 +71,8 @@
           </div>
           <div class="row save-cancel">
             <button type="button" class="btn btn-secondary" (click)="cancelClick(i)">{{ 'BUTTON_CANCEL' | translate }}</button>
-            <button type="button" class="btn btn-primary okay-button" (click)="saveClick(i)" autofocus>{{ 'BUTTON_SAVE' | translate }}</button>
+            <button type="button" class="btn btn-primary okay-button" (click)="saveClick(i)" autofocus>{{ 'BUTTON_SAVE'
+              | translate }}</button>
           </div>
         </div>
       </div>
