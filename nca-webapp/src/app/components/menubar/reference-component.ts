@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
+import { MessageEventService } from '../../services/message-event-service';
 
 @Component({
   selector: 'gbp-reference',
@@ -9,8 +10,11 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 
 export class ReferenceComponent {
 
-  constructor(public projectService: CurrentProjectService) {
+  constructor(public projectService: CurrentProjectService, private messageService: MessageEventService) {
 
   }
 
+  public onScenarioReferenceClick() {
+    this.messageService.sendMessage('WIP');
+  }
 }

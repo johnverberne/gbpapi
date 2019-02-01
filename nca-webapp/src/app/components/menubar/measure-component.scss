@@ -1,14 +1,13 @@
 @import 'variables.scss';
-$measure-colors: (first: #D63327, second: #93278F);
 .collapse-button {
   display: flex;
 }
 
 .svg-collapse {
-  fill: map-get($measure-colors, "first");
-  &:not(.disabled):hover:not(.active) {
-    fill: map-get($measure-colors, "first");
-  }
+  // fill: map-get($measure-colors, "first");
+  // &:not(.disabled):hover:not(.active) {
+  //   fill: map-get($measure-colors, "first");
+  // }
 }
 
 svg-icon {
@@ -43,4 +42,10 @@ input[type=number]::-webkit-outer-spin-button {
 .save-cancel {
   padding-left: 1rem;
   padding-right: 0.5rem;
+}
+
+.no-measure {
+  background-color: white;
+  padding-left: 0.5rem;
+  font-size: 15px;
 }

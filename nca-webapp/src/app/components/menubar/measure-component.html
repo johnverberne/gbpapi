@@ -8,8 +8,8 @@
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
         <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
-          <svg-icon class="svg-collapse" *ngIf="openMeasure === i && isOpen" src="assets/img/ui-measure-open.svg"></svg-icon>
-          <svg-icon class="svg-collapse" *ngIf="openMeasure !== i || !isOpen" src="assets/img/ui-measure-closed.svg"></svg-icon>
+          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure === i && isOpen" src="assets/img/ui-measure-open.svg"></svg-icon>
+          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen" src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
         <input type="text" placeholder="{{('MEASURE_NAME_PLACEHOLDER' | translate) + (i + 1)}}" id="name"
           formControlName="name" class="form-control col-sm-8">
@@ -77,5 +77,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="no-measure" *ngIf="measures.length === 0">
+      {{'MEASURE_CREATION_EXPLANATION' | translate}}
   </div>
 </div>

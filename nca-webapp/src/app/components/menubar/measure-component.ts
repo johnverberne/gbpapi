@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
-import { MeasureModel } from 'src/app/models/measure-model';
+import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { MeasureModel } from '../../models/measure-model';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { LandUseType } from 'src/app/models/enums/landuse-type';
+import { LandUseType } from '../../models/enums/landuse-type';
 import { VegetationModel } from '../../models/vegetation-model';
 
 @Component({
@@ -21,8 +21,9 @@ export class MeasureComponent implements OnChanges {
   public landUseValues: any[];
   public debug: boolean = true; // TODO remove when map interaction is implemented
   private numberPattern: '^[0-9][0-9]?$|^100$';
+  private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
     this.measureForm = this.constructForm(fb);
     this.landUseValues = Object.keys(LandUseType);
   }
@@ -39,12 +40,15 @@ export class MeasureComponent implements OnChanges {
     };
     this.measureForm.reset(resetObject);
     this.setMeasures(this.measureModels);
-    // this.ensureOneMeasureExists();
-    // this.cdRef.detectChanges();
+    this.cdRef.detectChanges();
   }
 
   public get measures(): FormArray {
     return this.measureForm.get('measures') as FormArray;
+  }
+
+  public getColor(index: number): string {
+    return this.colors[index];
   }
 
   public onOpenMeasure(event: number) {
@@ -81,7 +85,7 @@ export class MeasureComponent implements OnChanges {
 
   private saveMeasure(index: number) {
     this.openMeasure = -1;
-    const measureFormGroup = (this.measureForm.get('measures') as FormArray).controls[index] as FormGroup;
+    const measureFormGroup = this.measures.controls[index] as FormGroup;
     const measureModel = this.fromFormGroupToModel(measureFormGroup);
     if (!this.measureModels) {
       this.measureModels = [];
@@ -125,12 +129,6 @@ export class MeasureComponent implements OnChanges {
       inhabitants: measure.inhabitants,
       woz: measure.woz
     });
-  }
-
-  private ensureOneMeasureExists() {
-    if (this.measures.length === 0) {
-      this.addNewMeasure();
-    }
   }
 
   private addNewMeasure() {

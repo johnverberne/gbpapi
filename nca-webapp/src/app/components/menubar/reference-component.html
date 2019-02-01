@@ -4,7 +4,7 @@
     <button type="button" class="btn btn-secondary round-button-start" [ngClass]="{'active': projectService.currentProject.reference === 'DEFAULT'}"
       (click)="projectService.currentProject.reference = 'DEFAULT'">{{ 'DEFAULT_REFERENCE' | translate }}</button>
     <button type="button" class="btn btn-secondary round-button-end" [ngClass]="{'active': projectService.currentProject.reference === 'SCENARIO'}"
-      (click)="projectService.currentProject.reference = 'SCENARIO'">{{ 'UPDATED_REFERENCE' | translate }}</button>
+      (click)="onScenarioReferenceClick()">{{ 'UPDATED_REFERENCE' | translate }}</button>
   </div>
   <div class="description">
     {{'REFERENCE_DESCIPTION' | translate}}
