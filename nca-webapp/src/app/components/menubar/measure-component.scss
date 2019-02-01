@@ -1,4 +1,8 @@
 @import 'variables.scss';
+.measure-component {
+  overflow-y: auto;
+}
+
 .collapse-button {
   display: flex;
 }

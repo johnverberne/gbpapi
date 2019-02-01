@@ -15,6 +15,8 @@ export class MeasureComponent implements OnChanges {
   @Input() public measureModels: MeasureModel[] = [];
   @Output() public measureModelsChange = new EventEmitter<MeasureModel[]>();
 
+  public MAX_MEASURES_THRESHOLD: number = 4;
+
   public measureForm: FormGroup;
   public openMeasure: number = -1;
   public isOpen: boolean = true;
@@ -78,20 +80,24 @@ export class MeasureComponent implements OnChanges {
   }
 
   public onAddMeasureClick() {
-    this.addNewMeasure();
-    this.openMeasure = this.measures.length - 1;
-    this.isOpen = true;
+    if (this.measures.length < this.MAX_MEASURES_THRESHOLD) {
+      this.addNewMeasure();
+      this.openMeasure = this.measures.length - 1;
+      this.isOpen = true;
+    }
   }
 
   private saveMeasure(index: number) {
-    this.openMeasure = -1;
-    const measureFormGroup = this.measures.controls[index] as FormGroup;
-    const measureModel = this.fromFormGroupToModel(measureFormGroup);
-    if (!this.measureModels) {
-      this.measureModels = [];
+    if (this.measureForm.valid) {
+      this.openMeasure = -1;
+      const measureFormGroup = this.measures.controls[index] as FormGroup;
+      const measureModel = this.fromFormGroupToModel(measureFormGroup);
+      if (!this.measureModels) {
+        this.measureModels = [];
+      }
+      this.measureModels.push(measureModel);
+      this.measureModelsChange.emit(this.measureModels);
     }
-    this.measureModels.push(measureModel);
-    this.measureModelsChange.emit(this.measureModels);
   }
 
   private setMeasures(measures: MeasureModel[]) {
@@ -120,7 +126,7 @@ export class MeasureComponent implements OnChanges {
     return this.fb.group({
       id: measure.measureId,
       name: [measure.measureName, Validators.required],
-      landuse: measure.landuse,
+      landuse: [measure.landuse, Validators.required],
       vegetation: this.fb.group({
         low: [measure.vegetation.low, Validators.pattern(this.numberPattern)],
         middle: [measure.vegetation.middle, Validators.pattern(this.numberPattern)],

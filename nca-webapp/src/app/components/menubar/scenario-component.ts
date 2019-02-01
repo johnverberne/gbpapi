@@ -1,11 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { MeasureModel } from '../../models/measure-model';
 import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequest } from '../../models/assessment-request-model';
-import { MeasureComponent } from './measure-component';
 
 @Component({
   selector: 'gbp-scenario',
