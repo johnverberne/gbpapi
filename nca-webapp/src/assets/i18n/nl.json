@@ -1,6 +1,6 @@
 {
   "BUTTON_REFERENCE": "Referentie",
-  "BUTTON_CALCULATE": "Berekenen",
+  "BUTTON_CALCULATE": "Bereken",
   "BUTTON_SCENARIO": "Scenario",
   "BUTTON_RESULT": "Resultaat",
   "BUTTON_MAPLAYERS": "Kaartlagen",
@@ -8,7 +8,7 @@
   "BUTTON_HELP": "Help",
   "BUTTON_OK": "Doorgaan",
   "BUTTON_SAVE": "Bewaar",
-  "BUTTON_CANCEL": "Annuleren",
+  "BUTTON_CANCEL": "Annuleer",
   "DEFAULT_REFERENCE": "Huidige situatie",
   "UPDATED_REFERENCE": "Aangepaste referentie",
   "REFERENCE": "Referentie",

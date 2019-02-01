@@ -74,10 +74,8 @@ export class MeasureComponent implements OnChanges {
   }
 
   public onAddMeasureClick() {
-    const model = this.addNewMeasure();
-    this.measureModels.push(model);
-    this.measureModelsChange.emit(this.measureModels);
-    this.openMeasure = this.measureModels.length - 1;
+    this.addNewMeasure();
+    this.openMeasure = this.measures.length - 1;
     this.isOpen = true;
   }
 
@@ -135,12 +133,11 @@ export class MeasureComponent implements OnChanges {
     }
   }
 
-  private addNewMeasure(): MeasureModel {
+  private addNewMeasure() {
     const newModel = new MeasureModel();
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
-    return newModel;
   }
 
   private addMeasure(measure: MeasureModel) {
