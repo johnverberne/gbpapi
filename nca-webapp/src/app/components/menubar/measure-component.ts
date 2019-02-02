@@ -24,6 +24,7 @@ export class MeasureComponent implements OnChanges {
   public debug: boolean = true; // TODO remove when map interaction is implemented
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
+  public validated: boolean = false;
 
   constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
     this.measureForm = this.constructForm(fb);
@@ -88,6 +89,7 @@ export class MeasureComponent implements OnChanges {
   }
 
   private saveMeasure(index: number) {
+    this.validated = true;
     if (this.measureForm.valid) {
       this.openMeasure = -1;
       const measureFormGroup = this.measures.controls[index] as FormGroup;
@@ -97,6 +99,7 @@ export class MeasureComponent implements OnChanges {
       }
       this.measureModels.push(measureModel);
       this.measureModelsChange.emit(this.measureModels);
+      this.validated = false;
     }
   }
 
