@@ -8,61 +8,6 @@ $top-header-size: 90px;
 $nav-bar-width: 100px;
 $menu-bar-width: 350px;
 $toolbar-size: 50px;
-.btn-primary {
-  font-size: 15px;
-  background-color: map-get($theme-colors, "primary");
-  color: white;
-  border: none;
-  &:hover {
-    background-color: map-get($theme-colors, "primary");
-  }
-  &:focus {
-    background-color: map-get($theme-colors, "primary");
-  }
-  &:not(:disabled):not(.disabled):active {
-    background-color: map-get($theme-colors, "primary");
-  }
-}
-
-.btn-secondary {
-  font-size: 15px;
-  background-color: white;
-  border-width: 1px;
-  border-color: map-get($theme-colors, "primary");
-  color: map-get($theme-colors, "primary");
-  &:hover {}
-  &:focus {}
-  &:not(:disabled):not(.disabled):active {
-    color: white;
-    background-color: map-get($theme-colors, "primary");
-    border-color: map-get($theme-colors, "primary");
-  }
-}
-
-.control-label {
-  font-weight: bold;
-}
-
-.form-control {
-  border: none;
-  &:focus {
-    box-shadow: none;
-  }
-}
-
-.btn {
-  &:focus {
-    box-shadow: none;
-  }
-}
-
-.validated .form-control.ng-untouched,
-.validated .form-control.ng-invalid {
-  border-style: solid;
-  border-width: 2px;
-  border-color: red;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
 
 /* Font RijksoverheidSansText */
 

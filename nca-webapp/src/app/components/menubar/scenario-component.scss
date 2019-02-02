@@ -17,17 +17,6 @@
   margin-left: auto;
 }
 
-svg-icon {
-  width: 2rem;
-  fill: rgba(0, 0, 0, 0.54);
-  &.active {
-    fill: map-get($theme-colors, "primary");
-  }
-  &:not(.disabled):hover:not(.active) {
-    fill: rgba(0, 0, 0, 0.87);
-  }
-}
-
 .nav-header {
   background-color: $menu-bar-background;
 }
@@ -50,8 +39,9 @@ svg-icon {
     color: white;
     background-color: map-get($theme-colors, "primary");
   }
-  &:not(:disabled):hover:not(.active) {
-    color: map-get($theme-colors, "primary");
+  &:hover {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
   }
 }
 
