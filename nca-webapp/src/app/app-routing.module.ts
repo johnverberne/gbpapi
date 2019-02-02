@@ -5,6 +5,8 @@ import { ScenarioComponent } from './components/menubar/scenario-component';
 import { ReferenceComponent } from './components/menubar/reference-component';
 import { DummyComponent } from './components/menubar/dummy-component';
 import { ScenarioGuard } from './guards/scenario-guard';
+import { ResultComponent } from './components/menubar/result-component';
+import { ResultGuard } from './guards/result-guard';
 
 const routes: Routes = [
   {
@@ -22,6 +24,10 @@ const routes: Routes = [
       {
         path: 'scenario', component: ScenarioComponent,
         canActivate: [ScenarioGuard]
+      },
+      {
+        path: 'result', component: ResultComponent,
+        canActivate: [ResultGuard]
       },
       {
         path: 'dummy', component: DummyComponent

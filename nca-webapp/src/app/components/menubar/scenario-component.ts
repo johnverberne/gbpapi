@@ -46,6 +46,11 @@ export class ScenarioComponent {
 
   public onDeleteClick() {
     this.projectService.currentProject.scenarios.splice(this.currentScenario, 1);
+    this.currentScenario = this.currentScenario - 1;
+    if (this.currentScenario < 0) {
+      this.currentScenario = 0;
+    }
+    this.ensureOneScenarioExists();
   }
 
   public hasMeasures(): boolean {
@@ -58,8 +63,15 @@ export class ScenarioComponent {
     request.eco_system_service = 'AIR_REGULATION';
     this.calculationService.startCalculation(request).subscribe((result) => {
       if (result) {
+        this.projectService.currentProject.results = result;
         console.log('Result: ' + result.successful);
       }
     });
+  }
+
+  private ensureOneScenarioExists() {
+    if (this.projectService.currentProject.scenarios.length === 0) {
+      this.projectService.currentProject.scenarios.push(new ScenarioModel());
+    }
   }
 }

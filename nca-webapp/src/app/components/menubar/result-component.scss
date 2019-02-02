@@ -1,0 +1,19 @@
+@import 'variables.scss';
+:host {
+  width: 100%;
+}
+
+.result-component {
+  .header {
+    padding: 0.5rem;
+  }
+}
+
+.result-form {
+  background-color: $menu-bar-background;
+}
+
+.result-content {
+  padding: 0.5rem;
+}
+
