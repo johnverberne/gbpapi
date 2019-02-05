@@ -9,6 +9,9 @@ Next open Visual Studio Code and choose File -> Open folder -> nca-webapp
 To show the IDE terminal: View -> Terminal
 All subsequent commands can be run from the IDE terminal.
 
+## Install required dependencies
+Run `npm install`
+
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
