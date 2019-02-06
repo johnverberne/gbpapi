@@ -3,6 +3,7 @@ package nl.rivm.nca.api.service.impl;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import nl.rivm.nca.api.domain.AssessmentRequestResponse;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.ValidateResponse;
 import nl.rivm.nca.api.service.AssessmentResultApiService;
@@ -16,8 +17,8 @@ public class AssessmentResultApiServiceImpl extends AssessmentResultApiService {
     return Response.ok(requestAssessmentResult(apiKey, resultId)).build();
   }
 
-  private ValidateResponse requestAssessmentResult(String apiKey, String resultId) {
-    AssessmentResultResponse result = new AssessmentResultResponse();
+  private AssessmentRequestResponse requestAssessmentResult(String apiKey, String resultId) {
+    AssessmentRequestResponse result = new AssessmentRequestResponse();
     result.key("you specified a request with apiKey (" + apiKey + ") and resultId (" + resultId + ")");
     return result;
   }
