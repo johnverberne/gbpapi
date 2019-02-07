@@ -3,6 +3,7 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 import { Router } from '@angular/router';
 import { MenuEventService } from '../../services/menu-event-service';
 import { MeasureModel } from '../../models/measure-model';
+import { MessageEventService } from '../../services/message-event-service';
 
 @Component({
   selector: 'gbp-result',
@@ -12,7 +13,11 @@ import { MeasureModel } from '../../models/measure-model';
 export class ResultComponent {
 
   openMenu: boolean = true;
-  constructor(public projectService: CurrentProjectService, public router: Router, private menuEventService: MenuEventService) {
+
+  constructor(public projectService: CurrentProjectService,
+    public router: Router,
+    private menuEventService: MenuEventService,
+    private messageEventService: MessageEventService) {
     this.menuEventService.onMenuCollapse().subscribe((collapse) => {
       this.openMenu = collapse;
     });
@@ -32,6 +37,10 @@ export class ResultComponent {
 
   public getMeasureSize(measure: MeasureModel) {
     return measure.cells.length;
+  }
+
+  public exportClick() {
+    this.messageEventService.sendMessage('WIP');
   }
 
 }

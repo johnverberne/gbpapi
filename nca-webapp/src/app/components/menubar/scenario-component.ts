@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -10,7 +10,7 @@ import { AssessmentRequest } from '../../models/assessment-request-model';
   templateUrl: './scenario-component.html',
   styleUrls: ['./menubar-component.scss', './scenario-component.scss']
 })
-export class ScenarioComponent {
+export class ScenarioComponent implements OnInit {
 
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public currentScenario: number = 0;
@@ -18,7 +18,12 @@ export class ScenarioComponent {
 
   constructor(private fb: FormBuilder, public projectService: CurrentProjectService, private calculationService: CalculationService) {
     this.scenarioForm = this.constructForm(this.fb);
-    this.addScenario();
+  }
+
+  ngOnInit(): void {
+    if (this.projectService.currentProject.scenarios.length === 0) {
+      this.addScenario();
+    }
   }
 
   public constructForm(fb: FormBuilder): FormGroup {
