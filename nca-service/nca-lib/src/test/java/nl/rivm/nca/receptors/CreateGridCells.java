@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateReceptors {
+public class CreateGridCells {
 
 	static final BigInteger ONE = BigInteger.ONE;
 
@@ -22,15 +22,14 @@ public class CreateReceptors {
 		String cvsSplitBy = ",";
 
 		List<GridSource> list = new ArrayList<GridSource>();
-		boolean fistSkip = true;
+		boolean firstRow = true;
 		int count = 10;
 		try {
 			br = new BufferedReader(new FileReader(fileIn));
 			PrintWriter writer = new PrintWriter(fileOut, "UTF-8");
 			while ((line = br.readLine()) != null) {
 				String[] row = line.split(cvsSplitBy);
-				if (!fistSkip) {
-					// use comma as separator
+				if (!firstRow) {
 					// System.out.println(row[0] + row[1] + row[2] + row[4]);
 					GridSource source = new GridSource();
 					source.setX(Integer.parseInt(row[0]));
@@ -41,18 +40,18 @@ public class CreateReceptors {
 					list.add(source);
 
 					// build a poly
-					String poly = "POLYGON((" + source.getX() + " " + source.getY() + "," + source.getXB() + " "
+					String poly = "POLYGON((" 
+					        + source.getX() + " " + source.getY() + "," + source.getXB() + " "
 							+ source.getY() + "," + source.getXB() + " " + source.getYB() + "," + source.getX() + " "
 							+ source.getYB() + "," + source.getX() + " " + source.getY() + "))";
 					// System.out.println(row[4] + "\t" + poly);
-					writer.println(row[4] + "\t" + poly);
-
+					writer.println(row[4] + "\t" + poly); //tab column seperator
 					if (count > 250) {
 						// break;
 					}
 
 				}
-				fistSkip = false;
+				firstRow = false;
 				count++;
 			}
 
@@ -74,7 +73,6 @@ public class CreateReceptors {
 		}
 
 	}
-
 }
 
 /*
