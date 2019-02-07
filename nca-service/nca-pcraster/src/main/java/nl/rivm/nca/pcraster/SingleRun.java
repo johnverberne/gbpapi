@@ -15,7 +15,7 @@ import nl.rivm.nca.api.domain.LayerObject;
 /**
  * Performs a single run
  */
-class SingleRun {
+public class SingleRun {
 
   public static final String GEOTIFF_EXT = "tiff";
 

@@ -68,7 +68,8 @@
                     <argument>default.rb</argument>
                     <argument>settings.rb</argument>
                     <argument>--version=${project.version}_${buildDateTime}_${buildRevision}</argument>
-                    <argument>--flags=validate,delete_setup_schema_and_redump,maven</argument>
+                    <argument>--flags=delete_setup_schema_and_redump,maven</argument>
+                   /* --flags=validate,delete_setup_schema_and_redump,maven */
                   </arguments>
                 </configuration>
               </execution>
