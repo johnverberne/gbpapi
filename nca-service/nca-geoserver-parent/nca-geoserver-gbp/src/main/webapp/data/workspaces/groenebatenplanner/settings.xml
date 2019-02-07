@@ -1,0 +1,28 @@
+<settings>
+  <id>SettingsInfoImpl--6f3bb491:168c29c6c63:-7ffe</id>
+  <workspace>
+    <id>WorkspaceInfoImpl--6f3bb491:168c29c6c63:-8000</id>
+    <name>groenebatenplanner</name>
+  </workspace>
+  <contact>
+    <id>contact</id>
+    <addressType>Work</addressType>
+    <contactEmail>john.verberne@gmail.com</contactEmail>
+    <contactOrganization>RIVM</contactOrganization>
+    <contactPerson>Groene Baten planner contact</contactPerson>
+    <contactPosition>......</contactPosition>
+  </contact>
+  <charset>UTF-8</charset>
+  <numDecimals>8</numDecimals>
+  <verbose>false</verbose>
+  <verboseExceptions>false</verboseExceptions>
+  <metadata>
+    <map>
+      <entry>
+        <string>quietOnNotFound</string>
+        <boolean>false</boolean>
+      </entry>
+    </map>
+  </metadata>
+  <localWorkspaceIncludesPrefix>false</localWorkspaceIncludesPrefix>
+</settings>

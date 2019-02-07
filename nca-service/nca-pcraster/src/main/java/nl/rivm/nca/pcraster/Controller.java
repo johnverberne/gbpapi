@@ -10,6 +10,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class Controller {
     // python via docker dan geen test draaien pcRasterRunner.sanityCheck();
   }
 
-  public List<File> run(String correlationId, AssessmentRequest assessmentRequest)
+  public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
       throws IOException, ConfigurationException, InterruptedException {
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
     final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
@@ -71,10 +72,10 @@ public class Controller {
         outputPath.getAbsolutePath());
     runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
     convertOutput(outputPath);
-    importOutputToDatabase(correlationId, outputPath);
+    List<AssessmentResultResponse> assessmentResultlist = importOutputToDatabase(correlationId, outputPath);
     publishFiles(correlationId, outputPath);
     cleanUp(workingPath);
-    return null;
+    return assessmentResultlist;
   }
 
   // copy input geotiff files to working map and convert to pcraster format
@@ -189,7 +190,8 @@ public class Controller {
    * @param outputPath
    * @throws IOException
    */
-  private void importOutputToDatabase(String correlationId, File outputPath) throws IOException {
+  private  List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath) throws IOException {
+	  List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
     Files.list(outputPath.toPath())
         .filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
@@ -202,6 +204,7 @@ public class Controller {
             while ((i=fr.read()) != -1) 
               body += (char) i;
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
+			returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId,  result.toString());
             // lets write to database with id
 
@@ -210,6 +213,7 @@ public class Controller {
             throw new RuntimeException(e);
           }
         });
+    return returnList;
   }
 
   private boolean publishFiles(final String correlationId, File outputPath) throws IOException {

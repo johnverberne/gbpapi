@@ -54,6 +54,42 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
         - apiKey: []
+  /immediatlyAssessmentRequest:
+    post:
+      operationId: postImmediatlyAssessmentRequest
+      tags:
+        - immediatlyAssessmentRequest
+      description: |
+        Excecute a model and wait for the results and immediatly return the results list in the response.
+        This is based on the assumption that running the model is very fast.
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AssessmentRequest'
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/ImmediatlyAssessmentRequestResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+        - apiKey: []
   /assessmentResult/{resultId}:
     get:
       operationId: getAssessmentResultById
@@ -258,6 +294,17 @@ definitions:
           key:
             type: string
             description: A unique id to identify this request.
+  ImmediatlyAssessmentRequestResponse:
+    allOf:
+      - $ref: '#/definitions/ValidateResponse'
+      - properties:
+          key:
+            type: string
+            description: A unique id to identify this request.
+          assessmentResults:
+            type: array
+            items:
+              $ref: '#/definitions/AssessmentResultResponse'       
   DataType:
     type: string
     description: |
