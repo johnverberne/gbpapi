@@ -203,8 +203,9 @@ public class Controller {
             String body ="";
             while ((i=fr.read()) != -1) 
               body += (char) i;
+            
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
-			returnList.add(result);
+			      returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId,  result.toString());
             // lets write to database with id
 

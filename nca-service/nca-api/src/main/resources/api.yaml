@@ -58,7 +58,7 @@ paths:
     post:
       operationId: postImmediatlyAssessmentRequest
       tags:
-        - immediatlyAssessmentRequest
+        - assessmentRequest
       description: |
         Excecute a model and wait for the results and immediatly return the results list in the response.
         This is based on the assumption that running the model is very fast.

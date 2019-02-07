@@ -1,38 +1,96 @@
 package nl.rivm.nca.api.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.ImmediatlyAssessmentRequestResponse;
 import nl.rivm.nca.api.domain.ValidateResponse;
+import nl.rivm.nca.api.domain.ValidationMessage;
+import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
+import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.service.ImmediatlyAssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
+import nl.rivm.nca.pcraster.Controller;
+import nl.rivm.nca.pcraster.SingleRun;
 
 public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessmentRequestApiService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImmediatlyAssessmentRequestApiServiceImpl.class);
-	
-	@Override
-	public Response postImmediatlyAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
-			throws NotFoundException {
-		ImmediatlyAssessmentRequestResponse response = calculate(assessmentRequest);
-		return Response.ok().entity(response).build();
-	}
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImmediatlyAssessmentRequestApiServiceImpl.class);
 
-	private ImmediatlyAssessmentRequestResponse calculate(AssessmentRequest ar) {
-		final ImmediatlyAssessmentRequestResponse response = new ImmediatlyAssessmentRequestResponse();
+  @Override
+  public Response postImmediatlyAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
+      throws NotFoundException {
+    ImmediatlyAssessmentRequestResponse response = calculate(assessmentRequest);
+    return Response.ok().entity(response).build();
+  }
 
-		response.successful(Boolean.FALSE);
-		response.setWarnings(WarningUtil.WarningValidationMessageNoImplementation());
-		response.setKey("xxxx");
-		response.assessmentResults(null);
+  private ImmediatlyAssessmentRequestResponse calculate(AssessmentRequest ar) {
+    final ImmediatlyAssessmentRequestResponse response = new ImmediatlyAssessmentRequestResponse();
+    ArrayList<ValidationMessage> warnings = new ArrayList<ValidationMessage>();
+    List<ValidationMessage> errors = new ArrayList<ValidationMessage>();
+    response.setWarnings(warnings);
+    response.setErrors(errors);
 
-		return response;
-	}
-	
+    if (ar.getModel() != ModelEnum.AIR_REGULATION) {
+      warnings.add(WarningUtil.ValidationInfoMessage("EcoSystem not implemented yet."));
+
+    } else {
+      final String uuid = UUID.randomUUID().toString();
+      try {
+        
+        response.setKey(uuid);
+        response.setAssessmentResults(assessmentRun(ar, warnings, uuid));
+        response.setSuccessful(true);
+
+      } catch (ConfigurationException | IOException | InterruptedException e) {
+        ValidationMessage message = new ValidationMessage();
+        message.setCode(1);
+        message.setMessage("error is call : " + e.getMessage());
+        errors.add(WarningUtil.ValidationInfoMessage("Task executed uuid:" + uuid));
+        response.setErrors(errors);
+        LOGGER.info("error in call {}", e.getMessage());
+        response.setSuccessful(false);
+      }
+    }
+    return response;
+  }
+
+  private List<AssessmentResultResponse> assessmentRun(AssessmentRequest ar, ArrayList<ValidationMessage> warnings, final String uuid)
+      throws IOException, ConfigurationException, InterruptedException {
+    final Controller controller = initController(true);
+    final SingleRun singleRun = new SingleRun();
+    List<String> models = new ArrayList<String>();
+    models.add("air_regulation");
+    //models.add("cooling_in_urban_areas");
+    //models.add("energy_savings_by_shelter_trees");
+    
+    List<AssessmentResultResponse> results = new ArrayList<AssessmentResultResponse>();
+    for(String model : models) {
+    results.addAll(controller.run(uuid,
+        singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/")));
+    }
+    return results;
+  }
+
+  private Controller initController(boolean directFile) throws IOException, InterruptedException {
+    final String ncaModel = System.getenv("NCA_MODEL");
+    if (ncaModel == null) {
+      throw new IllegalArgumentException(
+          "Environment variable 'NCA_MODEL' not set. This should point to the raster data");
+    }
+    return new Controller(new File(ncaModel), directFile);
+  }
+
 }
