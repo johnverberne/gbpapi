@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { Router } from '@angular/router';
 import { MenuEventService } from '../../services/menu-event-service';
+import { MeasureModel } from '../../models/measure-model';
 
 @Component({
   selector: 'gbp-result',
@@ -27,6 +28,10 @@ export class ResultComponent {
     if (this.projectService.currentProject.scenarios) {
       return this.projectService.currentProject.scenarios[0];
     }
+  }
+
+  public getMeasureSize(measure: MeasureModel) {
+    return measure.cells.length;
   }
 
 }

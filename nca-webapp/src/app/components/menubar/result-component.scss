@@ -18,14 +18,46 @@
   .header {
     padding: 0.5rem;
   }
-}
 
-.result-form {
-  background-color: $menu-bar-background;
+  .sub-header {
+    height: 43px;
+    width: 100%;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    background-color: $menu-bar-background;
+  }
 }
 
 .result-content {
   padding: 0.5rem;
+  .scenario-name {
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: $result-scenario-background;
+    font-weight: bold;
+  }
+  .measures {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    .measure-name {
+      display: flex;
+      padding-left: 10px;
+      padding-right: 10px;
+      background-color: $side-bar-background;
+    }
+  }
+
+  .ha-size {
+    margin-left: auto;
+  }
+}
+
+.save-cancel {
+  padding-right: 20px;
+  .export {
+    margin-left: auto;
+  }
 }
 
 .resultbar {

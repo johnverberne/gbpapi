@@ -119,7 +119,8 @@ export class MeasureComponent implements OnChanges {
       landuse: measureFormModel.landuse,
       vegetation: measureFormModel.vegetation,
       inhabitants: measureFormModel.inhabitants,
-      woz: measureFormModel.woz
+      woz: measureFormModel.woz,
+      cells: []
     };
 
     return measureModel;

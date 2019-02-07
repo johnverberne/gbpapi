@@ -8,8 +8,10 @@
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
         <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
-          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure === i && isOpen" src="assets/img/ui-measure-open.svg"></svg-icon>
-          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen" src="assets/img/ui-measure-closed.svg"></svg-icon>
+          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure === i && isOpen"
+            src="assets/img/ui-measure-open.svg"></svg-icon>
+          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen"
+            src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
         <input type="text" placeholder="{{('MEASURE_NAME_PLACEHOLDER' | translate) + (i + 1)}}" id="name"
           formControlName="name" class="form-control col-sm-8">
@@ -17,60 +19,79 @@
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
         <div id="collapseBasic" [collapse]="openMeasure !== i || !isOpen" class="col-sm-12 measure-panel">
-          <div class="offset-2 col-sm-10">
+          <div class="offset-2 col-sm-10 measure-content">
             <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
             <div>
-              <div class="row col-sm-6">
+              <div class="row col-sm-12">
                 <label class="control-label" for="land-use">{{'LANDUSE' | translate}}</label>
               </div>
               <div class="row col-sm-12">
-                <select id="detour-direction" class="form-control" formControlName="landuse">
+                <select id="landuse" class="form-control" formControlName="landuse">
                   <option *ngFor="let landuseValue of landUseValues" [ngValue]="landuseValue">{{'LANDUSE_'
                     + landuseValue | translate}}</option>
                 </select>
               </div>
             </div>
             <div formGroupName="vegetation">
-              <div class="row col-sm-6">
+              <div class="row col-sm-12">
                 <label class="control-label" for="vegetation">{{'VEGETATION' | translate}}</label>
               </div>
               <div class="row col-sm-12 measure-row">
-                <div class="col-sm-9">
+                <div class="measure-label">
                   <label class="sub-label" for="vegetation">{{'VEGETATION_LOW' | translate}}</label>
                 </div>
-                <input type="number" max="100" accuracy="2" min="0" formControlName="low" class="form-control col-sm-3">
+                <div class="input-group">
+                  <input type="number" max="100" accuracy="2" min="0" formControlName="low" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
               </div>
               <div class="row col-sm-12 measure-row">
-                <div class="col-sm-9">
+                <div class="measure-label">
                   <label class="sub-label" for="vegetation">{{'VEGETATION_BUSH' | translate}}</label>
                 </div>
-                <input type="number" max="100" accuracy="2" min="0" formControlName="middle" class="form-control col-sm-3">
+                <div class="input-group">
+                  <input type="number" max="100" accuracy="2" min="0" formControlName="middle" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
               </div>
               <div class="row col-sm-12 measure-row">
-                <div class="col-sm-9">
+                <div class="measure-label">
                   <label class="sub-label" for="vegetation">{{'VEGETATION_TREE' | translate}}</label>
                 </div>
-                <input type="number" max="100" accuracy="2" min="0" formControlName="high" class="form-control col-sm-3">
+                <div class="input-group">
+                  <input type="number" max="100" accuracy="2" min="0" formControlName="high" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="row col-sm-6">
+            <div class="row col-sm-12">
               <label class="control-label" for="inhabitants">{{'INHABITANTS' | translate}}</label>
             </div>
             <div class="row col-sm-12 measure-row">
-              <div class="col-sm-9">
+              <div class="col-sm-9 measure-label">
                 <label class="sub-label" for="inhabitants">{{'NUMBER_PER_TILE' | translate}}</label>
               </div>
               <input type="number" min="0" formControlName="inhabitants" class="form-control col-sm-3">
             </div>
-            <div class="row col-sm-6">
+            <div class="row col-sm-12">
               <label class="control-label" for="inhabitants">{{'WOZ' | translate}}</label>
             </div>
-            <div class="row col-sm-12 measure-row">
+            <div class="row col-sm-12 measure-row input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">€</span>
+              </div>
               <input type="number" min="0" formControlName="woz" class="form-control">
             </div>
           </div>
           <div class="row save-cancel">
-            <button type="button" class="btn btn-secondary" (click)="cancelClick(i)">{{ 'BUTTON_CANCEL' | translate }}</button>
+            <button type="button" class="btn btn-secondary"
+              (click)="cancelClick(i)">{{ 'BUTTON_CANCEL' | translate }}</button>
             <button type="button" class="btn btn-primary okay-button" (click)="saveClick(i)" autofocus>{{ 'BUTTON_SAVE'
               | translate }}</button>
           </div>
@@ -79,6 +100,6 @@
     </div>
   </div>
   <div class="no-measure" *ngIf="measures.length === 0">
-      {{'MEASURE_CREATION_EXPLANATION' | translate}}
+    {{'MEASURE_CREATION_EXPLANATION' | translate}}
   </div>
 </div>

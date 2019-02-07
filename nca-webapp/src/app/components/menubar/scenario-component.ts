@@ -69,6 +69,13 @@ export class ScenarioComponent {
     });
   }
 
+  public saveClick() {
+    if (this.scenarioForm.valid) {
+      const name = this.scenarioForm.get('name').value;
+      this.projectService.currentProject.scenarios[this.currentScenario].scenarioName = name;
+    }
+  }
+
   private ensureOneScenarioExists() {
     if (this.projectService.currentProject.scenarios.length === 0) {
       this.projectService.currentProject.scenarios.push(new ScenarioModel());

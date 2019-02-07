@@ -1,10 +1,47 @@
 <div class="result-component" [ngClass]="{'closed-menu':!openMenu}">
   <div class="header">{{'RESULT' | translate}}</div>
-  <div class="result-content">
-    Scenarionaam
-    Maatregelen
+  <div class="sub-header">
   </div>
-</div>
-<div class="resultbar" [ngClass]="{'open-menu':openMenu}">
-  <gbp-resultbar></gbp-resultbar>
-</div>
+  <div class="result-content">
+    <div class="scenario-name">
+      {{ scenario.scenarioName }}
+      <div class="ha-size">ha</div>
+    </div>
+    <div class="measures" *ngFor="let measure of measures">
+      <div class="measure-name">
+        {{ measure.measureName }}
+        <div class="ha-size">{{ getMeasureSize(measure) }}</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'LANDUSE' | translate}}</div>
+        <div class="col-sm-6">{{ 'LANDUSE_' + measure.landuse | translate}}</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'VEGETATION_LOW' | translate}}</div>
+        <div class="col-sm-6">{{ measure.vegetation.low}}%</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'VEGETATION_BUSH' | translate}}</div>
+        <div class="col-sm-6">{{ measure.vegetation.middle}}%</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'VEGETATION_TREE' | translate}}</div>
+        <div class="col-sm-6">{{ measure.vegetation.high}}%</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'INHABITANTS' | translate}}</div>
+        <div class="col-sm-6">{{ measure.inhabitants}}</div>
+      </div>
+      <div class="row col-sm-12 measure-row">
+        <div class="col-sm-6">{{'WOZ' | translate}}</div>
+        <div class="col-sm-6">€ {{ measure.woz}}</div>
+      </div>
+    </div>
+    <div class="row save-cancel">
+      <button type="button" class="btn btn-secondary export" (click)="exportClick()" autofocus>{{
+      'BUTTON_EXPORT' | translate }}</button>
+    </div>
+  </div>
+  <div class="resultbar" [ngClass]="{'open-menu':openMenu}">
+    <gbp-resultbar></gbp-resultbar>
+  </div>
