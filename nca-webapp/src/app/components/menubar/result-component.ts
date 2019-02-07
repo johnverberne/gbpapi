@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
+import { Router } from '@angular/router';
+import { MenuEventService } from '../../services/menu-event-service';
 
 @Component({
   selector: 'gbp-result',
@@ -8,7 +10,11 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 })
 export class ResultComponent {
 
-  constructor(public projectService: CurrentProjectService) {
+  openMenu: boolean = true;
+  constructor(public projectService: CurrentProjectService, public router: Router, private menuEventService: MenuEventService) {
+    this.menuEventService.onMenuCollapse().subscribe((collapse) => {
+      this.openMenu = collapse;
+    });
   }
 
   public get measures() {

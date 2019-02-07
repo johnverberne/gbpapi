@@ -1,7 +1,10 @@
-<div class="result-component">
+<div class="result-component" [ngClass]="{'closed-menu':!openMenu}">
   <div class="header">{{'RESULT' | translate}}</div>
   <div class="result-content">
     Scenarionaam
     Maatregelen
   </div>
+</div>
+<div class="resultbar" [ngClass]="{'open-menu':openMenu}">
+  <gbp-resultbar></gbp-resultbar>
 </div>

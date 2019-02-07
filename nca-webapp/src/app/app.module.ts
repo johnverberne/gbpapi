@@ -28,6 +28,8 @@ import { DummyComponent } from './components/menubar/dummy-component';
 import { MeasureComponent } from './components/menubar/measure-component';
 import { CalculationService } from './services/calculation-service';
 import { ResultComponent } from './components/menubar/result-component';
+import { ResultBarComponent } from './components/menubar/resultbar/resultbar-component';
+import { MenuEventService } from './services/menu-event-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -48,7 +50,8 @@ export function createTranslateLoader(http: HttpClient) {
     ReferenceComponent,
     DummyComponent,
     MeasureComponent,
-    ResultComponent
+    ResultComponent,
+    ResultBarComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +77,8 @@ export function createTranslateLoader(http: HttpClient) {
     MessageEventService,
     ScenarioService,
     CurrentProjectService,
-    CalculationService
+    CalculationService,
+    MenuEventService
   ],
   bootstrap: [AppComponent]
 })

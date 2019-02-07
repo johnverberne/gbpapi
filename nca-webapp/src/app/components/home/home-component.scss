@@ -16,6 +16,11 @@
   bottom: 0;
   background-color: white;
   z-index: 1050;
+  &.result {
+    &.open-menu {
+      width: $result-bar-width;
+    }
+  }
 }
 
 .map {
@@ -25,6 +30,12 @@
   top: 0;
   bottom: 0;
   z-index: 1050;
+  &.result {
+    left: calc(#{$nav-bar-width} + #{$result-bar-width});
+    &.open-menu {
+      left: calc(#{$nav-bar-width} + #{$menu-bar-width} + #{$result-bar-width});
+    }
+  }
 }
 
 .row {
@@ -40,5 +51,3 @@
   flex-basis: 100%;
   flex: 1;
 }
-
-.map {}

@@ -1,0 +1,17 @@
+@import 'variables.scss';
+.resultbar-component {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: $result-bar-width;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+
+  .result-buttons {
+    padding-top: 4rem;
+  }
+}
+

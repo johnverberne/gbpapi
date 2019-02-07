@@ -4,6 +4,17 @@
 }
 
 .result-component {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  border-right-color: $side-bar-background;
+  border-right-style: solid;
+  border-right-width: 2px;
+  &.closed-menu {
+    display: none;
+  }
+
   .header {
     padding: 0.5rem;
   }
@@ -15,5 +26,16 @@
 
 .result-content {
   padding: 0.5rem;
+}
+
+.resultbar {
+  position: fixed;
+  left: calc(#{$nav-bar-width});
+  top: 0;
+  bottom: 0;
+  z-index: 1050;
+  &.open-menu {
+    left: calc(#{$nav-bar-width} + #{$menu-bar-width});
+  }
 }
 
