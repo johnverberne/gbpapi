@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequest } from '../../models/assessment-request-model';
+import { MenuEventService } from '../../services/menu-event-service';
+import { MeasureComponent } from './measure-component';
 
 @Component({
   selector: 'gbp-scenario',
@@ -12,11 +14,16 @@ import { AssessmentRequest } from '../../models/assessment-request-model';
 })
 export class ScenarioComponent implements OnInit {
 
+  @ViewChild(MeasureComponent) private gbpMeasures: MeasureComponent;
+
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public currentScenario: number = 0;
   public scenarioForm: FormGroup;
 
-  constructor(private fb: FormBuilder, public projectService: CurrentProjectService, private calculationService: CalculationService) {
+  constructor(private fb: FormBuilder,
+    public projectService: CurrentProjectService,
+    private calculationService: CalculationService,
+    private menuService: MenuEventService) {
     this.scenarioForm = this.constructForm(this.fb);
   }
 
@@ -29,7 +36,8 @@ export class ScenarioComponent implements OnInit {
   public constructForm(fb: FormBuilder): FormGroup {
     return fb.group({
       id: new FormControl(),
-      name: new FormControl()
+      name: new FormControl(),
+      measures: MeasureComponent.constructForm(this.fb)
     });
   }
 
@@ -47,6 +55,7 @@ export class ScenarioComponent implements OnInit {
 
   public onScenarioClick(scenario: ScenarioModel, index: number) {
     this.currentScenario = index;
+    this.menuService.scenarioChange();
   }
 
   public onDeleteClick() {
@@ -78,7 +87,12 @@ export class ScenarioComponent implements OnInit {
     if (this.scenarioForm.valid) {
       const name = this.scenarioForm.get('name').value;
       this.projectService.currentProject.scenarios[this.currentScenario].scenarioName = name;
+      this.projectService.currentProject.scenarios[this.currentScenario].measures = this.gbpMeasures.saveMeasures();
     }
+  }
+
+  public cancelClick(index: number) {
+    // TODO needs to be defined by Taco
   }
 
   private ensureOneScenarioExists() {
