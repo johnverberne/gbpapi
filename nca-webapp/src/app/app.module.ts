@@ -30,6 +30,7 @@ import { CalculationService } from './services/calculation-service';
 import { ResultComponent } from './components/menubar/result-component';
 import { ResultBarComponent } from './components/menubar/resultbar/resultbar-component';
 import { MenuEventService } from './services/menu-event-service';
+import { MapService } from './services/map-service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -78,7 +79,8 @@ export function createTranslateLoader(http: HttpClient) {
     ScenarioService,
     CurrentProjectService,
     CalculationService,
-    MenuEventService
+    MenuEventService,
+    MapService
   ],
   bootstrap: [AppComponent]
 })
