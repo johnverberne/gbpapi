@@ -8,5 +8,5 @@ export class MeasureModel {
   public vegetation: VegetationModel;
   public inhabitants: number;
   public woz: number;
-  public cells: number[] = [];
+  public cells: number[][] = [];
 }
