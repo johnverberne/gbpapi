@@ -3,12 +3,16 @@ import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import Draw from 'ol/interaction/Draw';
+import DrawEvent from 'ol/interaction/Draw';
 import OlView from 'ol/View';
 import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
-import { DrawEvent } from 'ol/events';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
+import { GeometryModel } from '../../../models/geometry-model';
+import { Style, Fill, RegularShape } from 'ol/style';
+import { Stroke } from 'ol/style';
+import { Circle } from 'ol/style';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -25,11 +29,9 @@ export class OpenlayersComponent implements OnInit {
   vectorSource: VectorSource;
   vector: VectorLayer;
 
-  private coords: any[] = [];
-
   constructor(private mapService: MapService) {
-    this.mapService.onStartDrawing().subscribe((coords) => {
-      this.enableDrawPoint(coords);
+    this.mapService.onStartDrawing().subscribe((geom) => {
+      this.enableDrawPoint(geom);
     });
     this.mapService.onStopDrawing().subscribe(() => {
       this.disableDrawPoint();
@@ -62,24 +64,40 @@ export class OpenlayersComponent implements OnInit {
     });
   }
 
-  private getFeature(coords: any[], event: DrawEvent) {
+  private getFeature(coords: any[], event: any) {
     const feature = event.feature as Feature;
-    coords.push(feature.getGeometry().getCoordinates());
+    coords.push(feature.values_.geometry.flatCoordinates);
     this.mapService.featureDrawn();
   }
 
   private disableDrawPoint() {
     this.draw = null;
+    this.clearMap();
   }
 
-  private enableDrawPoint(coords: any[]) {
+  private clearMap() {
+    this.vectorSource.clear();
+  }
+
+  private enableDrawPoint(geom: GeometryModel) {
     this.draw = new Draw({
       source: this.vectorSource,
       type: 'Point'
     });
     this.map.addInteraction(this.draw);
+    this.draw.on('drawstart', (e) => {
+      const style = new Style({
+        image: new RegularShape({
+          fill: new Fill({color: geom.color}),
+          points: 4,
+          radius: 10,
+          angle: Math.PI / 4
+        })
+      });
+      e.feature.setStyle(style);
+    });
     this.draw.on('drawend', (e) => {
-      this.getFeature(coords, e);
+      this.getFeature(geom.cells, e);
     });
   }
 

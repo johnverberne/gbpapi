@@ -6,6 +6,7 @@ import { VegetationModel } from '../../models/vegetation-model';
 import { MapService } from '../../services/map-service';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
+import { GeometryModel } from '../../models/geometry-model';
 
 @Component({
   selector: 'gbp-measure',
@@ -27,16 +28,16 @@ export class MeasureComponent implements OnChanges {
   public validated: boolean = false;
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
-  private coordinatesPerMeasure: number[][][] = [];
+  private geomPerMeasure: GeometryModel[] = [];
   private featureSubsciption: Subscription;
 
   constructor(private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
     private mapService: MapService,
     private menuService: MenuEventService) {
-      this.landUseValues = Object.keys(LandUseType);
-      this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
-      this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
+    this.landUseValues = Object.keys(LandUseType);
+    this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
+    this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
   public static constructForm(fb: FormBuilder): FormGroup {
@@ -62,7 +63,7 @@ export class MeasureComponent implements OnChanges {
     if (index !== undefined) {
       return this.colors[index];
     } else {
-      return this.colors[this.measures.length];
+      return this.colors[this.geomPerMeasure.length];
     }
   }
 
@@ -106,9 +107,10 @@ export class MeasureComponent implements OnChanges {
       const measures: MeasureModel[] = [];
       for (const index in this.measures.controls) {
         if (this.measures.controls[index] instanceof FormGroup) {
-        const measureFormGroup = this.measures.controls[index] as FormGroup;
-        const measureModel = this.fromFormGroupToModel(measureFormGroup);
-        measures.push(measureModel);
+          const measureFormGroup = this.measures.controls[index] as FormGroup;
+          const measureModel = this.fromFormGroupToModel(measureFormGroup);
+          measureModel.geom = this.geomPerMeasure[index];
+          measures.push(measureModel);
         }
       }
       this.validated = false;
@@ -125,15 +127,16 @@ export class MeasureComponent implements OnChanges {
   }
 
   private enableDrawForMeasure() {
-    let measureCoordinates;
-    if (this.openMeasure === -1) {
-      const length = this.coordinatesPerMeasure.push([]);
-      measureCoordinates = this.coordinatesPerMeasure[length - 1];
+    let measureGeom: GeometryModel;
+    if (this.measures.length === 0) {
+      measureGeom = new GeometryModel();
+      measureGeom.color = this.getColor();
+      this.geomPerMeasure[0] = measureGeom;
     } else {
-      measureCoordinates = this.coordinatesPerMeasure[this.openMeasure];
+      measureGeom = this.geomPerMeasure[this.openMeasure];
     }
-    this.mapService.startDrawing( measureCoordinates );
-    this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureCoordinates));
+    this.mapService.startDrawing(measureGeom);
+    this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureGeom));
   }
 
   private disableDrawForMeasure() {
@@ -143,7 +146,7 @@ export class MeasureComponent implements OnChanges {
 
   private setMeasures(measures: MeasureModel[]) {
     if (measures) {
-      this.coordinatesPerMeasure = [];
+      this.geomPerMeasure = [];
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));
       this.measureForm.setControl('measures', measureFormArray);
     }
@@ -159,14 +162,18 @@ export class MeasureComponent implements OnChanges {
       vegetation: measureFormModel.vegetation,
       inhabitants: measureFormModel.inhabitants,
       woz: measureFormModel.woz,
-      cells: []
+      geom: {
+        color: '',
+        cells: []
+      }
     };
 
     return measureModel;
   }
 
   private fromModelToFormGroup(measure: MeasureModel): FormGroup {
-    this.coordinatesPerMeasure.push(measure.cells);
+    measure.geom.color = this.getColor(this.geomPerMeasure.length);
+    this.geomPerMeasure.push(measure.geom);
     return this.fb.group({
       id: measure.measureId,
       name: [measure.measureName, Validators.required],
@@ -181,7 +188,7 @@ export class MeasureComponent implements OnChanges {
     });
   }
 
-  private addFeatures(coordinates: number[]) {
+  private addFeatures(geom: GeometryModel) {
     if (this.openMeasure === -1) {
       this.addNewMeasure();
       this.openMeasure = this.measures.length - 1;
@@ -190,6 +197,7 @@ export class MeasureComponent implements OnChanges {
 
   private addNewMeasure() {
     const newModel = new MeasureModel();
+    newModel.geom = new GeometryModel();
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);

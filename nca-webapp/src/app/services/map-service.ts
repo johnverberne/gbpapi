@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { Point } from 'geojson';
+import { GeometryModel } from '../models/geometry-model';
 
 @Injectable()
 export class MapService {
 
-  private drawSubject: Subject<any[]> = new Subject();
+  private drawSubject: Subject<GeometryModel> = new Subject();
   private stopDrawSubject: Subject<void> = new Subject();
   private featureDrawnSubject: Subject<void> = new Subject();
 
-  public onStartDrawing(): Observable<any[]> {
+  public onStartDrawing(): Observable<GeometryModel> {
     return this.drawSubject.asObservable();
   }
 
-  public startDrawing(coords: Point[]) {
-    this.drawSubject.next(coords);
+  public startDrawing(geom: GeometryModel) {
+    this.drawSubject.next(geom);
   }
 
   public onStopDrawing(): Observable<void> {

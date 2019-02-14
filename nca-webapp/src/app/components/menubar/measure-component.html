@@ -90,7 +90,7 @@
   </div>
   <div *ngIf="measures.length !== 0 && measures.length < MAX_MEASURES_THRESHOLD">
       <button type="button" class="btn" (click)="onAddMeasureClick()">
-        <svg-icon [style.fill]="getColor()" src="assets/img/ui-map-plus.svg"></svg-icon>
+        <svg-icon [style.fill]="getColor(measures.length)" src="assets/img/ui-map-plus.svg"></svg-icon>
       </button>
     </div>
   <div class="no-measure" *ngIf="measures.length === 0">
