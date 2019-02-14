@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { LandUseType } from '../../models/enums/landuse-type';
 import { VegetationModel } from '../../models/vegetation-model';
 import { MapService } from '../../services/map-service';
-import { Point, MultiPoint } from 'geojson';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
 
@@ -38,6 +37,7 @@ export class MeasureComponent implements OnChanges, OnInit {
     private menuService: MenuEventService) {
       this.landUseValues = Object.keys(LandUseType);
       this.menuService.onScenarioChange().subscribe(() => this.scenarioChanged());
+      this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
   public static constructForm(fb: FormBuilder): FormGroup {
@@ -91,19 +91,29 @@ export class MeasureComponent implements OnChanges, OnInit {
     this.measureModelsChange.emit(this.measureModels);
   }
 
-  public saveClick() {
-    this.saveMeasures();
-  }
-
-  public cancelClick(index: number) {
-    this.measures.removeAt(index);
-  }
-
   public onAddMeasureClick() {
     if (this.measures.length < this.MAX_MEASURES_THRESHOLD) {
       this.addNewMeasure();
       this.openMeasure = this.measures.length - 1;
       this.isOpen = true;
+    }
+  }
+
+  public saveMeasures(): MeasureModel[] {
+    this.validated = true;
+    if (this.measureForm.valid) {
+      this.openMeasure = -1;
+      const measures: MeasureModel[] = [];
+      for (const index in this.measures.controls) {
+        if (this.measures.controls[index] instanceof FormGroup) {
+        const measureFormGroup = this.measures.controls[index] as FormGroup;
+        const measureModel = this.fromFormGroupToModel(measureFormGroup);
+        measures.push(measureModel);
+        }
+      }
+      this.validated = false;
+      this.disableDrawForMeasure();
+      return measures;
     }
   }
 
@@ -129,23 +139,6 @@ export class MeasureComponent implements OnChanges, OnInit {
   private disableDrawForMeasure() {
     this.mapService.stopDrawing();
     this.featureSubsciption.unsubscribe();
-  }
-
-  public saveMeasures(): MeasureModel[] {
-    this.validated = true;
-    if (this.measureForm.valid) {
-
-      this.openMeasure = -1;
-      const measures: MeasureModel[] = [];
-      for (const index in this.measures.controls) {
-        if (this.measures.controls[index] instanceof FormGroup) {
-        const measureFormGroup = this.measures.controls[index] as FormGroup;
-        const measureModel = this.fromFormGroupToModel(measureFormGroup);
-        measures.push(measureModel);
-        }
-      }
-      return measures;
-    }
   }
 
   private setMeasures(measures: MeasureModel[]) {

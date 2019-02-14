@@ -2,8 +2,8 @@
   <div class="header">{{'SCENARIO' | translate}}</div>
   <div class="nav-header">
     <div class="pager">
-      <div *ngFor="let scenario of projectService.currentProject.scenarios; let i = index">
-        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenario, 'round-button-start': i===0,
+      <div *ngFor="let scenario of scenarios; let i = index">
+        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex, 'round-button-start': i===0,
           'round-button-middle': i!==0 && i < MAX_SCENARIO_THRESHOLD - 1,
           'round-button-end': i===MAX_SCENARIO_THRESHOLD - 1}"
           (click)="onScenarioClick(scenario, i)">{{i + 1}}</button>
@@ -24,7 +24,7 @@
         <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
       </div>
       <div class="form-group row">
-        <input type="text" placeholder="{{('SCENARIO_NAME_PLACEHOLDER' | translate) + (currentScenario + 1)}}" id="name"
+        <input type="text" placeholder="{{('SCENARIO_NAME_PLACEHOLDER' | translate) + (currentScenarioIndex + 1)}}" id="name"
           formControlName="name" required class="form-control col-sm-10">
       </div>
       <div class="header measure">{{'MEASURE' | translate}}</div>

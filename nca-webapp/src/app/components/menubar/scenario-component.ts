@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -17,20 +17,31 @@ export class ScenarioComponent implements OnInit {
   @ViewChild(MeasureComponent) private gbpMeasures: MeasureComponent;
 
   public MAX_SCENARIO_THRESHOLD: number = 4;
-  public currentScenario: number = 0;
+  public currentScenarioIndex: number = 0;
+  public currentScenario: ScenarioModel;
   public scenarioForm: FormGroup;
 
   constructor(private fb: FormBuilder,
+    public cdRef: ChangeDetectorRef,
     public projectService: CurrentProjectService,
     private calculationService: CalculationService,
     private menuService: MenuEventService) {
     this.scenarioForm = this.constructForm(this.fb);
   }
 
-  ngOnInit(): void {
-    if (this.projectService.currentProject.scenarios.length === 0) {
+  public ngOnInit(): void {
+    if (this.scenarios.length === 0) {
       this.addScenario();
     }
+  }
+
+  public updateScenarioForm(): void {
+    const resetObject = {
+      id: this.currentScenario.scenarioId,
+      name: this.currentScenario.scenarioName
+    };
+    this.scenarioForm.reset(resetObject);
+    this.cdRef.detectChanges();
   }
 
   public constructForm(fb: FormBuilder): FormGroup {
@@ -41,34 +52,48 @@ export class ScenarioComponent implements OnInit {
     });
   }
 
+  public get scenarios() {
+    if (this.projectService.currentProject.scenarios) {
+      return this.projectService.currentProject.scenarios;
+    }
+  }
+
   public get measures() {
-    if (this.projectService.currentProject.scenarios[this.currentScenario]) {
-      return this.projectService.currentProject.scenarios[this.currentScenario].measures;
+    if (this.scenarios[this.currentScenarioIndex]) {
+      return this.scenarios[this.currentScenarioIndex].measures;
     }
   }
 
   public addScenario() {
-    if (this.projectService.currentProject.scenarios.length < this.MAX_SCENARIO_THRESHOLD) {
-      this.projectService.currentProject.scenarios.push(new ScenarioModel());
+    if (this.scenarios.length < this.MAX_SCENARIO_THRESHOLD) {
+      this.scenarios.push(new ScenarioModel());
+      this.currentScenarioIndex = this.scenarios.length - 1;
+      this.currentScenario = this.scenarios[this.currentScenarioIndex];
+      this.scenarioForm = this.constructForm(this.fb);
+      this.updateScenarioForm();
+      this.menuService.scenarioChange();
     }
   }
 
   public onScenarioClick(scenario: ScenarioModel, index: number) {
-    this.currentScenario = index;
+    this.currentScenarioIndex = index;
+    this.currentScenario = scenario;
     this.menuService.scenarioChange();
+    this.updateScenarioForm();
   }
 
   public onDeleteClick() {
-    this.projectService.currentProject.scenarios.splice(this.currentScenario, 1);
-    this.currentScenario = this.currentScenario - 1;
-    if (this.currentScenario < 0) {
-      this.currentScenario = 0;
+    this.scenarios.splice(this.currentScenarioIndex, 1);
+    this.currentScenarioIndex = this.currentScenarioIndex - 1;
+    if (this.currentScenarioIndex < 0) {
+      this.currentScenarioIndex = 0;
     }
+    this.updateScenarioForm();
     this.ensureOneScenarioExists();
   }
 
   public hasMeasures(): boolean {
-    return this.projectService.currentProject.scenarios[this.currentScenario].measures.length > 0;
+    return this.scenarios[this.currentScenarioIndex].measures.length > 0;
   }
 
   public calculateClick(index: number) {
@@ -86,8 +111,8 @@ export class ScenarioComponent implements OnInit {
   public saveClick() {
     if (this.scenarioForm.valid) {
       const name = this.scenarioForm.get('name').value;
-      this.projectService.currentProject.scenarios[this.currentScenario].scenarioName = name;
-      this.projectService.currentProject.scenarios[this.currentScenario].measures = this.gbpMeasures.saveMeasures();
+      this.scenarios[this.currentScenarioIndex].scenarioName = name;
+      this.scenarios[this.currentScenarioIndex].measures = this.gbpMeasures.saveMeasures();
     }
   }
 
@@ -96,8 +121,8 @@ export class ScenarioComponent implements OnInit {
   }
 
   private ensureOneScenarioExists() {
-    if (this.projectService.currentProject.scenarios.length === 0) {
-      this.projectService.currentProject.scenarios.push(new ScenarioModel());
+    if (this.scenarios.length === 0) {
+      this.scenarios.push(new ScenarioModel());
     }
   }
 }

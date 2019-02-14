@@ -6,6 +6,7 @@ export class MenuEventService {
 
   private menuBarCollapseSubject: Subject<boolean> = new Subject();
   private scenarioChangeSubject: Subject<void> = new Subject();
+  private mainMenuChangeSubject: Subject<void> = new Subject();
 
   public onMenuCollapse(): Observable<boolean> {
     return this.menuBarCollapseSubject.asObservable();
@@ -21,5 +22,13 @@ export class MenuEventService {
 
   public scenarioChange() {
     this.scenarioChangeSubject.next();
+  }
+
+  public onMainMenuChange(): Observable<void> {
+    return this.mainMenuChangeSubject.asObservable();
+  }
+
+  public mainMenuChange() {
+    this.mainMenuChangeSubject.next();
   }
 }
