@@ -13,7 +13,7 @@ import { MenuEventService } from '../../services/menu-event-service';
   styleUrls: ['./menubar-component.scss', './measure-component.scss']
 })
 
-export class MeasureComponent implements OnChanges, OnInit {
+export class MeasureComponent implements OnChanges {
 
   @Input() public measureForm: FormGroup;
   @Input() public measureModels: MeasureModel[] = [];
@@ -24,7 +24,6 @@ export class MeasureComponent implements OnChanges, OnInit {
   public openMeasure: number = -1;
   public isOpen: boolean = true;
   public landUseValues: any[];
-  public debug: boolean = false; // TODO remove when map interaction is implemented
   public validated: boolean = false;
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
@@ -36,7 +35,7 @@ export class MeasureComponent implements OnChanges, OnInit {
     private mapService: MapService,
     private menuService: MenuEventService) {
       this.landUseValues = Object.keys(LandUseType);
-      this.menuService.onScenarioChange().subscribe(() => this.scenarioChanged());
+      this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
       this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
@@ -44,10 +43,6 @@ export class MeasureComponent implements OnChanges, OnInit {
     return fb.group({
       measures: fb.array([])
     });
-  }
-
-  ngOnInit(): void {
-    // this.enableDrawForMeasure();
   }
 
   public ngOnChanges(): void {
@@ -63,8 +58,12 @@ export class MeasureComponent implements OnChanges, OnInit {
     return this.measureForm.get('measures') as FormArray;
   }
 
-  public getColor(index: number): string {
-    return this.colors[index];
+  public getColor(index?: number): string {
+    if (index !== undefined) {
+      return this.colors[index];
+    } else {
+      return this.colors[this.measures.length];
+    }
   }
 
   public onOpenMeasure(event: number) {
@@ -96,6 +95,7 @@ export class MeasureComponent implements OnChanges, OnInit {
       this.addNewMeasure();
       this.openMeasure = this.measures.length - 1;
       this.isOpen = true;
+      this.manageDrawing();
     }
   }
 
@@ -117,7 +117,7 @@ export class MeasureComponent implements OnChanges, OnInit {
     }
   }
 
-  private scenarioChanged() {
+  private manageDrawing() {
     if (this.featureSubsciption) {
       this.disableDrawForMeasure();
     }

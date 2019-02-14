@@ -1,10 +1,5 @@
 <div class="measure-component container" [formGroup]="measureForm" [ngClass]="{'validated': validated}">
   <div formArrayName="measures">
-    <div *ngIf="debug">
-      <button type="button" class="btn" (click)="onAddMeasureClick()">
-        <svg-icon src="assets/img/ui-map-plus.svg"></svg-icon>
-      </button>
-    </div>
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
         <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
@@ -93,6 +88,11 @@
       </div>
     </div>
   </div>
+  <div *ngIf="measures.length !== 0 && measures.length < MAX_MEASURES_THRESHOLD">
+      <button type="button" class="btn" (click)="onAddMeasureClick()">
+        <svg-icon [style.fill]="getColor()" src="assets/img/ui-map-plus.svg"></svg-icon>
+      </button>
+    </div>
   <div class="no-measure" *ngIf="measures.length === 0">
     {{'MEASURE_CREATION_EXPLANATION' | translate}}
   </div>
