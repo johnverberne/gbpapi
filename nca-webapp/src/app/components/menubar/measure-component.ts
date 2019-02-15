@@ -6,7 +6,7 @@ import { VegetationModel } from '../../models/vegetation-model';
 import { MapService } from '../../services/map-service';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
-import { GeometryModel } from '../../models/geometry-model';
+import { FeatureModel } from '../../models/feature-model';
 
 @Component({
   selector: 'gbp-measure',
@@ -28,7 +28,7 @@ export class MeasureComponent implements OnChanges {
   public validated: boolean = false;
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
-  private geomPerMeasure: GeometryModel[] = [];
+  private geomPerMeasure: FeatureModel[] = [];
   private featureSubsciption: Subscription;
 
   constructor(private fb: FormBuilder,
@@ -67,6 +67,10 @@ export class MeasureComponent implements OnChanges {
     }
   }
 
+  public getMeasureColor(index: number): string {
+    return this.geomPerMeasure[index].color;
+  }
+
   public onOpenMeasure(event: number) {
     if (this.openMeasure === event) {
       this.isOpen = !this.isOpen;
@@ -77,6 +81,9 @@ export class MeasureComponent implements OnChanges {
         this.openMeasure = -1;
       }
     } else {
+      if (this.isOpen) {
+        this.disableDrawForMeasure();
+      }
       this.isOpen = true;
       this.openMeasure = event;
       this.enableDrawForMeasure();
@@ -86,6 +93,8 @@ export class MeasureComponent implements OnChanges {
   public onDeleteClick(index: number) {
     this.measures.removeAt(index);
     this.measureModels.splice(index, 1);
+    this.mapService.removeMeasure(this.geomPerMeasure[index].id);
+    this.geomPerMeasure.splice(index, 1);
     this.measureForm.markAsDirty();
     this.openMeasure = -1;
     this.measureModelsChange.emit(this.measureModels);
@@ -127,10 +136,11 @@ export class MeasureComponent implements OnChanges {
   }
 
   private enableDrawForMeasure() {
-    let measureGeom: GeometryModel;
+    let measureGeom: FeatureModel;
     if (this.measures.length === 0) {
-      measureGeom = new GeometryModel();
+      measureGeom = new FeatureModel();
       measureGeom.color = this.getColor();
+      measureGeom.id = this.measures.length;
       this.geomPerMeasure[0] = measureGeom;
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
@@ -163,6 +173,7 @@ export class MeasureComponent implements OnChanges {
       inhabitants: measureFormModel.inhabitants,
       woz: measureFormModel.woz,
       geom: {
+        id: -1,
         color: '',
         cells: []
       }
@@ -188,7 +199,7 @@ export class MeasureComponent implements OnChanges {
     });
   }
 
-  private addFeatures(geom: GeometryModel) {
+  private addFeatures(geom: FeatureModel) {
     if (this.openMeasure === -1) {
       this.addNewMeasure();
       this.openMeasure = this.measures.length - 1;
@@ -197,7 +208,9 @@ export class MeasureComponent implements OnChanges {
 
   private addNewMeasure() {
     const newModel = new MeasureModel();
-    newModel.geom = new GeometryModel();
+    newModel.geom = new FeatureModel();
+    newModel.geom.color = this.getColor();
+    newModel.geom.id = this.geomPerMeasure.length;
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);

@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { Point } from 'geojson';
-import { GeometryModel } from '../models/geometry-model';
+import { FeatureModel } from '../models/feature-model';
 
 @Injectable()
 export class MapService {
 
-  private drawSubject: Subject<GeometryModel> = new Subject();
+  private drawSubject: Subject<FeatureModel> = new Subject();
   private stopDrawSubject: Subject<void> = new Subject();
   private featureDrawnSubject: Subject<void> = new Subject();
+  private removeSubject: Subject<number> = new Subject();
 
-  public onStartDrawing(): Observable<GeometryModel> {
+  public onStartDrawing(): Observable<FeatureModel> {
     return this.drawSubject.asObservable();
   }
 
-  public startDrawing(geom: GeometryModel) {
+  public startDrawing(geom: FeatureModel) {
     this.drawSubject.next(geom);
   }
 
@@ -32,5 +33,13 @@ export class MapService {
 
   public featureDrawn() {
     this.featureDrawnSubject.next();
+  }
+
+  public removeMeasure(index: number) {
+    this.removeSubject.next(index);
+  }
+
+  public onRemoveMeasure(): Observable<number> {
+    return this.removeSubject.asObservable();
   }
 }

@@ -8,7 +8,7 @@ import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
-import { GeometryModel } from '../../../models/geometry-model';
+import { FeatureModel } from '../../../models/feature-model';
 import { Style, Fill, RegularShape } from 'ol/style';
 import { Point } from 'ol/src/geom';
 
@@ -37,6 +37,9 @@ export class OpenlayersComponent implements OnInit {
     });
     this.mapService.onStopDrawing().subscribe(() => {
       this.disableDrawPoint();
+    });
+    this.mapService.onRemoveMeasure().subscribe((id) => {
+      this.clearFeatures(id);
     });
   }
 
@@ -102,10 +105,11 @@ export class OpenlayersComponent implements OnInit {
     });
   }
 
-  private getFeature(geom: GeometryModel, event: any) {
+  private getFeature(geom: FeatureModel, event: any) {
     const feature = event.feature as Feature;
     feature.setStyle(this.getStyle(geom.color));
-    geom.cells.push((feature.getGeometry() as Point).getCoordinates());
+    feature.set('measureId', geom.id);
+    geom.cells.push((feature.getGeometry() as Point));
     this.mapService.featureDrawn();
   }
 
@@ -126,11 +130,19 @@ export class OpenlayersComponent implements OnInit {
     // this.clearMap();
   }
 
+  private clearFeatures(id: number) {
+    this.vectorSource.getFeatures().forEach((feature) => {
+      if (feature.get('measureId') === id) {
+        this.vectorSource.removeFeature(feature);
+      }
+    });
+  }
+
   private clearMap() {
     this.vectorSource.clear();
   }
 
-  private enableDrawPoint(geom: GeometryModel) {
+  private enableDrawPoint(geom: FeatureModel) {
     this.draw = new Draw({
       source: this.vectorSource,
       type: 'Point'

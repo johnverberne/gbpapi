@@ -3,14 +3,14 @@
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
         <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
-          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure === i && isOpen"
+          <svg-icon [style.fill]="getMeasureColor(i)" class="svg-collapse" *ngIf="openMeasure === i && isOpen"
             src="assets/img/ui-measure-open.svg"></svg-icon>
-          <svg-icon [style.fill]="getColor(i)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen"
+          <svg-icon [style.fill]="getMeasureColor(i)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen"
             src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
         <input type="text" placeholder="{{('MEASURE_NAME_PLACEHOLDER' | translate) + (i + 1)}}" id="name"
           formControlName="name" class="form-control col-sm-8">
-        <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick()">
+        <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick(i)">
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
         <div id="collapseBasic" [collapse]="openMeasure !== i || !isOpen" class="col-sm-12 measure-panel">
