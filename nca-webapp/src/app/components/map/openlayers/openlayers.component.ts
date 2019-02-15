@@ -3,7 +3,6 @@ import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import Draw from 'ol/interaction/Draw';
-import DrawEvent from 'ol/interaction/Draw';
 import OlView from 'ol/View';
 import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
@@ -11,8 +10,7 @@ import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
 import { GeometryModel } from '../../../models/geometry-model';
 import { Style, Fill, RegularShape } from 'ol/style';
-import { Stroke } from 'ol/style';
-import { Circle } from 'ol/style';
+import { Point } from 'ol/src/geom';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -21,13 +19,17 @@ import { Circle } from 'ol/style';
 })
 export class OpenlayersComponent implements OnInit {
 
-  map: OlMap;
-  source: OlXYZ;
-  layer: TileLayer;
-  view: OlView;
-  draw: Draw;
-  vectorSource: VectorSource;
-  vector: VectorLayer;
+  public map: OlMap;
+  private source: OlXYZ;
+  private layer: TileLayer;
+  private view: OlView;
+  private draw: Draw;
+  private vectorSource: VectorSource;
+  private vector: VectorLayer;
+  private style1: Style;
+  private style2: Style;
+  private style3: Style;
+  private style4: Style;
 
   constructor(private mapService: MapService) {
     this.mapService.onStartDrawing().subscribe((geom) => {
@@ -47,6 +49,42 @@ export class OpenlayersComponent implements OnInit {
       source: this.source
     });
 
+    this.style1 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#D63327' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style2 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#93278F' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style3 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#1C0078' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style4 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#FF931E' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
     this.vectorSource = new VectorSource({ wrapX: false });
     this.vector = new VectorLayer({
       source: this.vectorSource
@@ -64,15 +102,28 @@ export class OpenlayersComponent implements OnInit {
     });
   }
 
-  private getFeature(coords: any[], event: any) {
+  private getFeature(geom: GeometryModel, event: any) {
     const feature = event.feature as Feature;
-    coords.push(feature.values_.geometry.flatCoordinates);
+    feature.setStyle(this.getStyle(geom.color));
+    geom.cells.push((feature.getGeometry() as Point).getCoordinates());
     this.mapService.featureDrawn();
   }
 
+  private getStyle(color: string) {
+    if (color === '#D63327') {
+      return this.style1;
+    } else if (color === '#93278F') {
+      return this.style2;
+    } else if (color === '#1C0078') {
+      return this.style3;
+    } else if (color === '#FF931E') {
+      return this.style4;
+    }
+  }
+
   private disableDrawPoint() {
-    this.draw = null;
-    this.clearMap();
+    this.map.removeInteraction(this.draw);
+    // this.clearMap();
   }
 
   private clearMap() {
@@ -85,19 +136,8 @@ export class OpenlayersComponent implements OnInit {
       type: 'Point'
     });
     this.map.addInteraction(this.draw);
-    this.draw.on('drawstart', (e) => {
-      const style = new Style({
-        image: new RegularShape({
-          fill: new Fill({color: geom.color}),
-          points: 4,
-          radius: 10,
-          angle: Math.PI / 4
-        })
-      });
-      e.feature.setStyle(style);
-    });
     this.draw.on('drawend', (e) => {
-      this.getFeature(geom.cells, e);
+      this.getFeature(geom, e);
     });
   }
 
