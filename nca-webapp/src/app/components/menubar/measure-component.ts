@@ -26,8 +26,10 @@ export class MeasureComponent implements OnChanges {
   public isOpen: boolean = true;
   public landUseValues: any[];
   public validated: boolean = false;
+  public addMeasureColor: string;
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
+  private usedColors: string[] = [];
   private geomPerMeasure: FeatureModel[] = [];
   private featureSubsciption: Subscription;
 
@@ -59,16 +61,25 @@ export class MeasureComponent implements OnChanges {
     return this.measureForm.get('measures') as FormArray;
   }
 
-  public getColor(index?: number): string {
-    if (index !== undefined) {
-      return this.colors[index];
-    } else {
-      return this.colors[this.geomPerMeasure.length];
-    }
+  public getColor(): string {
+    const color = this.colors.pop();
+    this.usedColors.push(color);
+    return color;
   }
 
-  public getMeasureColor(index: number): string {
-    return this.geomPerMeasure[index].color;
+  public getAddMeasureColor(): string {
+    if (!this.addMeasureColor) {
+      this.addMeasureColor = this.colors[this.colors.length - 1];
+    }
+    return this.addMeasureColor;
+  }
+
+  public getColorForMeasure(measure): string {
+    if (measure.value.geom.color) {
+      return measure.value.geom.color;
+    } else {
+      return this.usedColors[0];
+    }
   }
 
   public onOpenMeasure(event: number) {
@@ -91,6 +102,10 @@ export class MeasureComponent implements OnChanges {
   }
 
   public onDeleteClick(index: number) {
+    const color: string = this.measures.value[index].geom.color;
+    const colorIndex = this.usedColors.findIndex((usedColor) => usedColor === color);
+    this.colors.push(this.usedColors[colorIndex]);
+    this.usedColors.splice(colorIndex, 1);
     this.measures.removeAt(index);
     this.measureModels.splice(index, 1);
     this.mapService.removeMeasure(this.geomPerMeasure[index].id);
@@ -118,7 +133,7 @@ export class MeasureComponent implements OnChanges {
         if (this.measures.controls[index] instanceof FormGroup) {
           const measureFormGroup = this.measures.controls[index] as FormGroup;
           const measureModel = this.fromFormGroupToModel(measureFormGroup);
-          measureModel.geom = this.geomPerMeasure[index];
+          measureModel.geom.cells = this.geomPerMeasure[index].cells;
           measures.push(measureModel);
         }
       }
@@ -141,7 +156,6 @@ export class MeasureComponent implements OnChanges {
       measureGeom = new FeatureModel();
       measureGeom.color = this.getColor();
       measureGeom.id = this.measures.length;
-      this.geomPerMeasure[0] = measureGeom;
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
     }
@@ -173,8 +187,8 @@ export class MeasureComponent implements OnChanges {
       inhabitants: measureFormModel.inhabitants,
       woz: measureFormModel.woz,
       geom: {
-        id: -1,
-        color: '',
+        id: measureFormModel.geom.id,
+        color: measureFormModel.geom.color,
         cells: []
       }
     };
@@ -183,7 +197,6 @@ export class MeasureComponent implements OnChanges {
   }
 
   private fromModelToFormGroup(measure: MeasureModel): FormGroup {
-    measure.geom.color = this.getColor(this.geomPerMeasure.length);
     this.geomPerMeasure.push(measure.geom);
     return this.fb.group({
       id: measure.measureId,
@@ -195,22 +208,31 @@ export class MeasureComponent implements OnChanges {
         high: [measure.vegetation.high, Validators.pattern(this.numberPattern)]
       }),
       inhabitants: measure.inhabitants,
-      woz: measure.woz
+      woz: measure.woz,
+      geom: this.fb.group({
+        id: measure.geom.id,
+        color: measure.geom.color
+      })
     });
   }
 
   private addFeatures(geom: FeatureModel) {
     if (this.openMeasure === -1) {
-      this.addNewMeasure();
+      this.addNewMeasure(geom);
       this.openMeasure = this.measures.length - 1;
     }
   }
 
-  private addNewMeasure() {
+  private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
-    newModel.geom = new FeatureModel();
-    newModel.geom.color = this.getColor();
-    newModel.geom.id = this.geomPerMeasure.length;
+    if (geom) {
+      newModel.geom = geom;
+    } else {
+      newModel.geom = new FeatureModel();
+      newModel.geom.color = this.getColor();
+      newModel.geom.id = this.geomPerMeasure.length;
+      this.addMeasureColor = this.colors[this.colors.length - 1];
+    }
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
