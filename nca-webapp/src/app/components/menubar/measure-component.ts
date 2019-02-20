@@ -7,6 +7,7 @@ import { MapService } from '../../services/map-service';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
 import { FeatureModel } from '../../models/feature-model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'gbp-measure',
@@ -36,7 +37,8 @@ export class MeasureComponent implements OnChanges {
   constructor(private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
     private mapService: MapService,
-    private menuService: MenuEventService) {
+    private menuService: MenuEventService,
+    private translateService: TranslateService) {
     this.landUseValues = Object.keys(LandUseType);
     this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
@@ -225,6 +227,7 @@ export class MeasureComponent implements OnChanges {
 
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
+    newModel.measureName = this.generateUniqueMeasureName();
     if (geom) {
       newModel.geom = geom;
     } else {
@@ -242,5 +245,20 @@ export class MeasureComponent implements OnChanges {
     const measureFG = this.fromModelToFormGroup(measure);
     const formArray = this.measureForm.get('measures') as FormArray;
     formArray.push(measureFG);
+  }
+
+  private generateUniqueMeasureName(): string {
+    const returnValue = this.translateService.instant('AREA');
+    let ix = this.measures.length + 1;
+    let name = returnValue + ' ' + ix;
+    while (!this.isUniqueName(name)) {
+      ix = ix + 1;
+      name = returnValue + ' ' + ix;
+    }
+    return name;
+  }
+
+  private isUniqueName(name: string): boolean {
+    return this.measures.value.findIndex((x) => x.name === name) === -1;
   }
 }

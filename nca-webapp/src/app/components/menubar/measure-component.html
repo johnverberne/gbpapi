@@ -8,8 +8,7 @@
           <svg-icon [style.fill]="getColorForMeasure(measure)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen"
             src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
-        <input type="text" placeholder="{{('MEASURE_NAME_PLACEHOLDER' | translate) + (i + 1)}}" id="name"
-          formControlName="name" class="form-control col-sm-8">
+        <input type="text" id="name" formControlName="name" class="form-control col-sm-8">
         <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick(i)">
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
