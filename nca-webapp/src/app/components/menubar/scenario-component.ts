@@ -104,12 +104,17 @@ export class ScenarioComponent implements OnInit {
     const request = new AssessmentRequest();
     request.name = 'Test scenario Geert';
     request.eco_system_service = 'AIR_REGULATION';
-    this.calculationService.startCalculation(request).subscribe((result) => {
-      if (result) {
-        this.projectService.currentProject.results = result;
-        console.log('Result: ' + result.successful);
+    this.calculationService.startCalculation(request).subscribe(
+      (result) => {
+        if (result) {
+          this.projectService.currentProject.results = result;
+          console.log('Result: ' + result.successful);
+        }
+      },
+      (error) => {
+        this.projectService.currentProject.results = error;
       }
-    });
+    );
   }
 
   public saveClick() {
