@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { Point } from 'geojson';
 import { FeatureModel } from '../models/feature-model';
 
 @Injectable()
@@ -10,6 +9,7 @@ export class MapService {
   private stopDrawSubject: Subject<void> = new Subject();
   private featureDrawnSubject: Subject<void> = new Subject();
   private removeSubject: Subject<number> = new Subject();
+  private clearMapSubject: Subject<void> = new Subject();
 
   public onStartDrawing(): Observable<FeatureModel> {
     return this.drawSubject.asObservable();
@@ -42,4 +42,13 @@ export class MapService {
   public onRemoveMeasure(): Observable<number> {
     return this.removeSubject.asObservable();
   }
+
+  public clearMap() {
+    this.clearMapSubject.next();
+  }
+
+  public onClearMap(): Observable<void> {
+    return this.clearMapSubject.asObservable();
+  }
+
 }

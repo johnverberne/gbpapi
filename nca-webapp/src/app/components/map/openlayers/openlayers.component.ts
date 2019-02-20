@@ -41,6 +41,9 @@ export class OpenlayersComponent implements OnInit {
     this.mapService.onRemoveMeasure().subscribe((id) => {
       this.clearFeatures(id);
     });
+    this.mapService.onClearMap().subscribe(() => {
+      this.clearMap();
+    });
   }
 
   public ngOnInit() {

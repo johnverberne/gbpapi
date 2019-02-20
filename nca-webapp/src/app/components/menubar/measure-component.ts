@@ -40,7 +40,7 @@ export class MeasureComponent implements OnChanges {
     private menuService: MenuEventService,
     private translateService: TranslateService) {
     this.landUseValues = Object.keys(LandUseType);
-    this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
+    this.menuService.onScenarioChange().subscribe(() => this.onScenarioChange());
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
@@ -143,6 +143,11 @@ export class MeasureComponent implements OnChanges {
       this.disableDrawForMeasure();
       return measures;
     }
+  }
+
+  private onScenarioChange() {
+    this.mapService.clearMap();
+    this.manageDrawing();
   }
 
   private manageDrawing() {
