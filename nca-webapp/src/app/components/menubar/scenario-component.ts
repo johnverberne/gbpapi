@@ -6,6 +6,7 @@ import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequest } from '../../models/assessment-request-model';
 import { MenuEventService } from '../../services/menu-event-service';
 import { MeasureComponent } from './measure-component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'gbp-scenario',
@@ -25,7 +26,8 @@ export class ScenarioComponent implements OnInit {
     public cdRef: ChangeDetectorRef,
     public projectService: CurrentProjectService,
     private calculationService: CalculationService,
-    private menuService: MenuEventService) {
+    private menuService: MenuEventService,
+    private translateService: TranslateService) {
     this.scenarioForm = this.constructForm(this.fb);
   }
 
@@ -46,8 +48,8 @@ export class ScenarioComponent implements OnInit {
 
   public constructForm(fb: FormBuilder): FormGroup {
     return fb.group({
-      id: new FormControl(),
-      name: new FormControl(),
+      id: '',
+      name: '',
       measures: MeasureComponent.constructForm(this.fb)
     });
   }
@@ -66,7 +68,9 @@ export class ScenarioComponent implements OnInit {
 
   public addScenario() {
     if (this.scenarios.length < this.MAX_SCENARIO_THRESHOLD) {
-      this.scenarios.push(new ScenarioModel());
+      const scenario = new ScenarioModel();
+      scenario.scenarioName = this.translateService.instant('SCENARIO') + ' ' + (this.scenarios.length + 1);
+      this.scenarios.push(scenario);
       this.currentScenarioIndex = this.scenarios.length - 1;
       this.currentScenario = this.scenarios[this.currentScenarioIndex];
       this.scenarioForm = this.constructForm(this.fb);
@@ -100,12 +104,17 @@ export class ScenarioComponent implements OnInit {
     const request = new AssessmentRequest();
     request.name = 'Test scenario Geert';
     request.eco_system_service = 'AIR_REGULATION';
-    this.calculationService.startCalculation(request).subscribe((result) => {
-      if (result) {
-        this.projectService.currentProject.results = result;
-        console.log('Result: ' + result.successful);
+    this.calculationService.startCalculation(request).subscribe(
+      (result) => {
+        if (result) {
+          this.projectService.currentProject.results = result;
+          console.log('Result: ' + result.successful);
+        }
+      },
+      (error) => {
+        this.projectService.currentProject.results = error;
       }
-    });
+    );
   }
 
   public saveClick() {

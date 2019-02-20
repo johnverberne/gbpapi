@@ -1,4 +1,5 @@
 {
+  "AREA": "Gebied",
   "BUTTON_REFERENCE": "Referentie",
   "BUTTON_EXPORT": "Exporteer",
   "BUTTON_CALCULATE": "Bereken",
@@ -14,7 +15,6 @@
   "UPDATED_REFERENCE": "Aangepaste referentie",
   "REFERENCE": "Referentie",
   "REFERENCE_DESCIPTION": "Start een berekening met het vastleggen hierboven van de referentiesituatie waartegen u wilt rekenen. Open het kaartlagenpaneel als u de huidige situatie wilt raadplegen.",
-  "SCENARIO": "Scenario",
   "RESULT": "Resultaat",
   "LANDUSE": "Landgebruik",
   "LANDUSE_RESIDENTIAL": "Woongebied",
@@ -22,6 +22,7 @@
   "MEASURE": "Maatregelen",
   "MEASURE_CREATION_EXPLANATION": "Er zijn geen maatregelen in dit scenario. Gebruik de upload-knop om bestaande maatregelen te importeren of zoom in op de kaart en selecteer een of meer vakken om een maatregel op te nemen.",
   "MEASURE_NAME_PLACEHOLDER": "Naamloos gebied ",
+  "SCENARIO": "Scenario",
   "SCENARIO_NAME_PLACEHOLDER": "Naamloos scenario ",
   "VEGETATION": "Groen",
   "VEGETATION_LOW": "Lage vegetatie",

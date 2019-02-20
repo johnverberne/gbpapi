@@ -6,9 +6,11 @@ import Draw from 'ol/interaction/Draw';
 import OlView from 'ol/View';
 import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
-import { DrawEvent } from 'ol/events';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
+import { FeatureModel } from '../../../models/feature-model';
+import { Style, Fill, RegularShape } from 'ol/style';
+import { Point } from 'ol/src/geom';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -17,22 +19,30 @@ import { MapService } from '../../../services/map-service';
 })
 export class OpenlayersComponent implements OnInit {
 
-  map: OlMap;
-  source: OlXYZ;
-  layer: TileLayer;
-  view: OlView;
-  draw: Draw;
-  vectorSource: VectorSource;
-  vector: VectorLayer;
-
-  private coords: any[] = [];
+  public map: OlMap;
+  private source: OlXYZ;
+  private layer: TileLayer;
+  private view: OlView;
+  private draw: Draw;
+  private vectorSource: VectorSource;
+  private vector: VectorLayer;
+  private style1: Style;
+  private style2: Style;
+  private style3: Style;
+  private style4: Style;
 
   constructor(private mapService: MapService) {
-    this.mapService.onStartDrawing().subscribe((coords) => {
-      this.enableDrawPoint(coords);
+    this.mapService.onStartDrawing().subscribe((geom) => {
+      this.enableDrawPoint(geom);
     });
     this.mapService.onStopDrawing().subscribe(() => {
       this.disableDrawPoint();
+    });
+    this.mapService.onRemoveMeasure().subscribe((id) => {
+      this.clearFeatures(id);
+    });
+    this.mapService.onClearMap().subscribe(() => {
+      this.clearMap();
     });
   }
 
@@ -43,6 +53,42 @@ export class OpenlayersComponent implements OnInit {
 
     this.layer = new TileLayer({
       source: this.source
+    });
+
+    this.style1 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#D63327' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style2 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#93278F' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style3 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#1C0078' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
+    });
+
+    this.style4 = new Style({
+      image: new RegularShape({
+        fill: new Fill({ color: '#FF931E' }),
+        points: 4,
+        radius: 10,
+        angle: Math.PI / 4
+      })
     });
 
     this.vectorSource = new VectorSource({ wrapX: false });
@@ -62,24 +108,51 @@ export class OpenlayersComponent implements OnInit {
     });
   }
 
-  private getFeature(coords: any[], event: DrawEvent) {
+  private getFeature(geom: FeatureModel, event: any) {
     const feature = event.feature as Feature;
-    coords.push(feature.getGeometry().getCoordinates());
+    feature.setStyle(this.getStyle(geom.color));
+    feature.set('measureId', geom.id);
+    geom.cells.push((feature.getGeometry() as Point));
     this.mapService.featureDrawn();
   }
 
-  private disableDrawPoint() {
-    this.draw = null;
+  private getStyle(color: string) {
+    if (color === '#D63327') {
+      return this.style1;
+    } else if (color === '#93278F') {
+      return this.style2;
+    } else if (color === '#1C0078') {
+      return this.style3;
+    } else if (color === '#FF931E') {
+      return this.style4;
+    }
   }
 
-  private enableDrawPoint(coords: any[]) {
+  private disableDrawPoint() {
+    this.map.removeInteraction(this.draw);
+    // this.clearMap();
+  }
+
+  private clearFeatures(id: number) {
+    this.vectorSource.getFeatures().forEach((feature) => {
+      if (feature.get('measureId') === id) {
+        this.vectorSource.removeFeature(feature);
+      }
+    });
+  }
+
+  private clearMap() {
+    this.vectorSource.clear();
+  }
+
+  private enableDrawPoint(geom: FeatureModel) {
     this.draw = new Draw({
       source: this.vectorSource,
       type: 'Point'
     });
     this.map.addInteraction(this.draw);
     this.draw.on('drawend', (e) => {
-      this.getFeature(coords, e);
+      this.getFeature(geom, e);
     });
   }
 

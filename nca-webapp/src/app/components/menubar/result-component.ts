@@ -36,7 +36,7 @@ export class ResultComponent {
   }
 
   public getMeasureSize(measure: MeasureModel) {
-    return measure.cells.length;
+    return measure.geom.cells.length;
   }
 
   public exportClick() {

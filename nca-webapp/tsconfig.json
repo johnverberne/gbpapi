@@ -1,7 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
     "baseUrl": "./",
+    "paths": {
+      "ol": ["node_modules/ol/src"],
+      "ol/*": ["node_modules/ol/src/*"]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -16,5 +21,10 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "include": [
+      "src/**/*",
+      // Include JavaScript files from the ol package
+      "node_modules/ol/**/*.js"
+  ]
 }

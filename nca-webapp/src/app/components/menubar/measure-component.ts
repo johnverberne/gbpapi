@@ -6,6 +6,8 @@ import { VegetationModel } from '../../models/vegetation-model';
 import { MapService } from '../../services/map-service';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
+import { FeatureModel } from '../../models/feature-model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'gbp-measure',
@@ -25,18 +27,21 @@ export class MeasureComponent implements OnChanges {
   public isOpen: boolean = true;
   public landUseValues: any[];
   public validated: boolean = false;
+  public addMeasureColor: string;
   private numberPattern: '^[0-9][0-9]?$|^100$';
   private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
-  private coordinatesPerMeasure: number[][][] = [];
+  private usedColors: string[] = [];
+  private geomPerMeasure: FeatureModel[] = [];
   private featureSubsciption: Subscription;
 
   constructor(private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
     private mapService: MapService,
-    private menuService: MenuEventService) {
-      this.landUseValues = Object.keys(LandUseType);
-      this.menuService.onScenarioChange().subscribe(() => this.manageDrawing());
-      this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
+    private menuService: MenuEventService,
+    private translateService: TranslateService) {
+    this.landUseValues = Object.keys(LandUseType);
+    this.menuService.onScenarioChange().subscribe(() => this.onScenarioChange());
+    this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
   public static constructForm(fb: FormBuilder): FormGroup {
@@ -58,11 +63,24 @@ export class MeasureComponent implements OnChanges {
     return this.measureForm.get('measures') as FormArray;
   }
 
-  public getColor(index?: number): string {
-    if (index !== undefined) {
-      return this.colors[index];
+  public getColor(): string {
+    const color = this.colors.pop();
+    this.usedColors.push(color);
+    return color;
+  }
+
+  public getAddMeasureColor(): string {
+    if (!this.addMeasureColor) {
+      this.addMeasureColor = this.colors[this.colors.length - 1];
+    }
+    return this.addMeasureColor;
+  }
+
+  public getColorForMeasure(measure): string {
+    if (measure.value.geom.color) {
+      return measure.value.geom.color;
     } else {
-      return this.colors[this.measures.length];
+      return this.usedColors[0];
     }
   }
 
@@ -76,6 +94,9 @@ export class MeasureComponent implements OnChanges {
         this.openMeasure = -1;
       }
     } else {
+      if (this.isOpen) {
+        this.disableDrawForMeasure();
+      }
       this.isOpen = true;
       this.openMeasure = event;
       this.enableDrawForMeasure();
@@ -83,8 +104,14 @@ export class MeasureComponent implements OnChanges {
   }
 
   public onDeleteClick(index: number) {
+    const color: string = this.measures.value[index].geom.color;
+    const colorIndex = this.usedColors.findIndex((usedColor) => usedColor === color);
+    this.colors.push(this.usedColors[colorIndex]);
+    this.usedColors.splice(colorIndex, 1);
     this.measures.removeAt(index);
     this.measureModels.splice(index, 1);
+    this.mapService.removeMeasure(this.geomPerMeasure[index].id);
+    this.geomPerMeasure.splice(index, 1);
     this.measureForm.markAsDirty();
     this.openMeasure = -1;
     this.measureModelsChange.emit(this.measureModels);
@@ -106,15 +133,21 @@ export class MeasureComponent implements OnChanges {
       const measures: MeasureModel[] = [];
       for (const index in this.measures.controls) {
         if (this.measures.controls[index] instanceof FormGroup) {
-        const measureFormGroup = this.measures.controls[index] as FormGroup;
-        const measureModel = this.fromFormGroupToModel(measureFormGroup);
-        measures.push(measureModel);
+          const measureFormGroup = this.measures.controls[index] as FormGroup;
+          const measureModel = this.fromFormGroupToModel(measureFormGroup);
+          measureModel.geom.cells = this.geomPerMeasure[index].cells;
+          measures.push(measureModel);
         }
       }
       this.validated = false;
       this.disableDrawForMeasure();
       return measures;
     }
+  }
+
+  private onScenarioChange() {
+    this.mapService.clearMap();
+    this.manageDrawing();
   }
 
   private manageDrawing() {
@@ -125,15 +158,16 @@ export class MeasureComponent implements OnChanges {
   }
 
   private enableDrawForMeasure() {
-    let measureCoordinates;
-    if (this.openMeasure === -1) {
-      const length = this.coordinatesPerMeasure.push([]);
-      measureCoordinates = this.coordinatesPerMeasure[length - 1];
+    let measureGeom: FeatureModel;
+    if (this.measures.length === 0) {
+      measureGeom = new FeatureModel();
+      measureGeom.color = this.getColor();
+      measureGeom.id = this.measures.length;
     } else {
-      measureCoordinates = this.coordinatesPerMeasure[this.openMeasure];
+      measureGeom = this.geomPerMeasure[this.openMeasure];
     }
-    this.mapService.startDrawing( measureCoordinates );
-    this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureCoordinates));
+    this.mapService.startDrawing(measureGeom);
+    this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureGeom));
   }
 
   private disableDrawForMeasure() {
@@ -143,7 +177,7 @@ export class MeasureComponent implements OnChanges {
 
   private setMeasures(measures: MeasureModel[]) {
     if (measures) {
-      this.coordinatesPerMeasure = [];
+      this.geomPerMeasure = [];
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));
       this.measureForm.setControl('measures', measureFormArray);
     }
@@ -159,14 +193,18 @@ export class MeasureComponent implements OnChanges {
       vegetation: measureFormModel.vegetation,
       inhabitants: measureFormModel.inhabitants,
       woz: measureFormModel.woz,
-      cells: []
+      geom: {
+        id: measureFormModel.geom.id,
+        color: measureFormModel.geom.color,
+        cells: []
+      }
     };
 
     return measureModel;
   }
 
   private fromModelToFormGroup(measure: MeasureModel): FormGroup {
-    this.coordinatesPerMeasure.push(measure.cells);
+    this.geomPerMeasure.push(measure.geom);
     return this.fb.group({
       id: measure.measureId,
       name: [measure.measureName, Validators.required],
@@ -177,19 +215,32 @@ export class MeasureComponent implements OnChanges {
         high: [measure.vegetation.high, Validators.pattern(this.numberPattern)]
       }),
       inhabitants: measure.inhabitants,
-      woz: measure.woz
+      woz: measure.woz,
+      geom: this.fb.group({
+        id: measure.geom.id,
+        color: measure.geom.color
+      })
     });
   }
 
-  private addFeatures(coordinates: number[]) {
+  private addFeatures(geom: FeatureModel) {
     if (this.openMeasure === -1) {
-      this.addNewMeasure();
+      this.addNewMeasure(geom);
       this.openMeasure = this.measures.length - 1;
     }
   }
 
-  private addNewMeasure() {
+  private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
+    newModel.measureName = this.generateUniqueMeasureName();
+    if (geom) {
+      newModel.geom = geom;
+    } else {
+      newModel.geom = new FeatureModel();
+      newModel.geom.color = this.getColor();
+      newModel.geom.id = this.geomPerMeasure.length;
+      this.addMeasureColor = this.colors[this.colors.length - 1];
+    }
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
@@ -199,5 +250,20 @@ export class MeasureComponent implements OnChanges {
     const measureFG = this.fromModelToFormGroup(measure);
     const formArray = this.measureForm.get('measures') as FormArray;
     formArray.push(measureFG);
+  }
+
+  private generateUniqueMeasureName(): string {
+    const returnValue = this.translateService.instant('AREA');
+    let ix = this.measures.length + 1;
+    let name = returnValue + ' ' + ix;
+    while (!this.isUniqueName(name)) {
+      ix = ix + 1;
+      name = returnValue + ' ' + ix;
+    }
+    return name;
+  }
+
+  private isUniqueName(name: string): boolean {
+    return this.measures.value.findIndex((x) => x.name === name) === -1;
   }
 }
