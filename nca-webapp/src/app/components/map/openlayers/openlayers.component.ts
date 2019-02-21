@@ -6,11 +6,20 @@ import Draw from 'ol/interaction/Draw';
 import OlView from 'ol/View';
 import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
+import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
 import { FeatureModel } from '../../../models/feature-model';
 import { Style, Fill, RegularShape } from 'ol/style';
 import { Point } from 'ol/src/geom';
+import { TileWMS } from 'ol/source';
+import { environment } from '../../../../environments/environment';
+import { bbox } from 'ol/loadingstrategy';
+import { Select } from 'ol/interaction';
+import { Stroke } from 'ol/style';
+import { DragBox } from 'ol/interaction';
+import { platformModifierKeyOnly } from 'ol/events/condition';
+import { Collection } from 'ol/src';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -20,12 +29,14 @@ import { Point } from 'ol/src/geom';
 export class OpenlayersComponent implements OnInit {
 
   public map: OlMap;
-  private source: OlXYZ;
-  private layer: TileLayer;
+  private osmLayer: TileLayer;
+  private resultLayer: TileLayer;
   private view: OlView;
   private draw: Draw;
   private vectorSource: VectorSource;
+  private gridSource: VectorSource;
   private vector: VectorLayer;
+  private gridLayer: VectorLayer;
   private style1: Style;
   private style2: Style;
   private style3: Style;
@@ -47,12 +58,19 @@ export class OpenlayersComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.source = new OlXYZ({
-      url: 'http://tile.osm.org/{z}/{x}/{y}.png'
+    this.osmLayer = new TileLayer({
+      source: new OlXYZ({
+        url: 'http://tile.osm.org/{z}/{x}/{y}.png'
+      })
     });
 
-    this.layer = new TileLayer({
-      source: this.source
+    this.resultLayer = new TileLayer({
+      source: new TileWMS({
+        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
+        params: { 'LAYERS': 'bomen', 'TILED': true },
+        serverType: 'geoserver',
+        transition: 0
+      })
     });
 
     this.style1 = new Style({
@@ -91,6 +109,19 @@ export class OpenlayersComponent implements OnInit {
       })
     });
 
+    this.gridSource = new VectorSource({
+      url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
+          'version=1.0.0&request=GetFeature&typeName=wms_grids_view&' +
+          'maxFeatures=1000&outputFormat=application/json&' +
+          'bbox=' + extent.join(',') + ',EPSG:28992',
+      format: new GeoJSON(),
+      strategy: bbox,
+    });
+
+    this.gridLayer = new VectorLayer({
+      source: this.gridSource
+    });
+
     this.vectorSource = new VectorSource({ wrapX: false });
     this.vector = new VectorLayer({
       source: this.vectorSource
@@ -103,9 +134,11 @@ export class OpenlayersComponent implements OnInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.layer, this.vector],
+      layers: [this.osmLayer, this.resultLayer, this.vector, this.gridLayer],
       view: this.view
     });
+
+    this.enableGetGrid();
   }
 
   private getFeature(geom: FeatureModel, event: any) {
@@ -156,4 +189,25 @@ export class OpenlayersComponent implements OnInit {
     });
   }
 
+  private enableGetGrid() {
+    let selectedFeatures: Feature[];
+    const select = new Select({
+      layers: [this.gridLayer]
+    });
+    this.map.addInteraction(select);
+    select.on('select', (e) => {
+      selectedFeatures = select.getFeatures().array_;
+    });
+
+    const dragBox = new DragBox({
+      condition: platformModifierKeyOnly
+    });
+    this.map.addInteraction(dragBox);
+    dragBox.on('boxend', () => {
+      const extent = dragBox.getGeometry().getExtent();
+      this.gridSource.forEachFeatureIntersectingExtent(extent, (feature) => {
+        selectedFeatures.push(feature);
+      });
+    });
+  }
 }
