@@ -29,7 +29,7 @@
   "VEGETATION_BUSH": "Struiken",
   "VEGETATION_TREE": "Bomen",
   "INHABITANTS": "Inwoners",
-  "NUMBER_PER_TILE": "Aantal per vak",
-  "WOZ": "WOZ-waarde",
+  "NUMBER_PER_TILE": "Aantal in gebied",
+  "WOZ": "Gem. WOZ-waarde",
   "WIP": "Deze functie is nog niet geïmplementeerd"
 }
