@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.junit.Test;
 
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
-import nl.rivm.nca.db.CalculationRepository;
+import nl.rivm.nca.db.GbpRepository;
 
 public class CalculationRepositoryTest {
 
@@ -21,19 +21,19 @@ public class CalculationRepositoryTest {
   @Test
   public void testInsertCalculation() throws SQLException {
     final String uuid = UUID.randomUUID().toString();
-    int createdCalculation = CalculationRepository.insertCalculation(getConnection(), uuid);
+    int createdCalculation = GbpRepository.insertCalculation(getConnection(), uuid);
     assertNotEquals("Calculation ID", 0, createdCalculation);
   }
   
   @Test
   public void testInsertCalculationResult() throws SQLException {
     final String uuid = UUID.randomUUID().toString();
-    int createdCalculationId = CalculationRepository.insertCalculation(getConnection(), uuid);
+    int createdCalculationId = GbpRepository.insertCalculation(getConnection(), uuid);
     
     for(int i=1; i<4; i++){
-      CalculationRepository.insertCalculationResult(getConnection(), createdCalculationId, "{}");
+      GbpRepository.insertCalculationResult(getConnection(), createdCalculationId, "{}");
     }
-    List<AssessmentResultResponse> list = CalculationRepository.getCalculationResult(getConnection(), uuid);
+    List<AssessmentResultResponse> list = GbpRepository.getCalculationResult(getConnection(), uuid);
     assertNotEquals("CalculationResult", 0, list.size());
   }
   

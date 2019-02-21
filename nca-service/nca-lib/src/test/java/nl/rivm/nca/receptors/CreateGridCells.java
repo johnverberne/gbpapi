@@ -23,7 +23,7 @@ public class CreateGridCells {
 
 		List<GridSource> list = new ArrayList<GridSource>();
 		boolean firstRow = true;
-		int count = 10;
+		int count = 0;
 		try {
 			br = new BufferedReader(new FileReader(fileIn));
 			PrintWriter writer = new PrintWriter(fileOut, "UTF-8");
@@ -39,15 +39,34 @@ public class CreateGridCells {
 					source.setSrid(Integer.parseInt(row[4]));
 					list.add(source);
 
+					
+					// build 10x10 poly from 100x100 coordinates
+					for (int x=0; x<100; x=x+10) {
+						for (int y=0; y<100; y=y+10) {
+							double nx = source.getX() - x;
+							double ny = source.getY() - y;
+							double nxb = nx - 10;
+							double nyb = ny - 10;
+							String poly10 = "POLYGON((" 
+							        + nx + " " + ny + "," 
+									+ nxb + " " + ny + "," 
+							        + nxb + " " + nyb + 
+							        "," + nx + " " +nyb + "," 
+							        + nx + " " + ny + "))";
+							//writer.println(row[4]+x+y + "\t" + poly10); //tab column seperator
+							//System.out.println(row[4]+":"+x+":"+y + "\t" + poly10);
+						}
+					}
+					
 					// build a poly
-					String poly = "POLYGON((" 
+					String poly100 = "POLYGON((" 
 					        + source.getX() + " " + source.getY() + "," + source.getXB() + " "
 							+ source.getY() + "," + source.getXB() + " " + source.getYB() + "," + source.getX() + " "
 							+ source.getYB() + "," + source.getX() + " " + source.getY() + "))";
-					// System.out.println(row[4] + "\t" + poly);
-					writer.println(row[4] + "\t" + poly); //tab column seperator
-					if (count > 250) {
-						// break;
+					System.out.println(row[4] + "\t" + poly100);
+					writer.println(row[4] + "\t" + poly100); //tab column seperator
+					if (count > 10) {
+						break;
 					}
 
 				}

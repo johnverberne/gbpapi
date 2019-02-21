@@ -1,10 +1,10 @@
 <dataStore>
-  <id>DataStoreInfoImpl-6fd55d45:168c6e33a0c:-7fff</id>
-  <name>last</name>
+  <id>DataStoreInfoImpl-69610152:1690a6cd286:-7ffd</id>
+  <name>unittest_NCA-gbp</name>
   <type>PostGIS</type>
   <enabled>true</enabled>
   <workspace>
-    <id>WorkspaceInfoImpl--6f3bb491:168c29c6c63:-8000</id>
+    <id>WorkspaceInfoImpl-69610152:1690a6cd286:-7fff</id>
   </workspace>
   <connectionParameters>
     <entry key="schema">public</entry>
@@ -12,7 +12,7 @@
     <entry key="Max open prepared statements">50</entry>
     <entry key="encode functions">false</entry>
     <entry key="preparedStatements">false</entry>
-    <entry key="database">NCA-gbp-1.0-SNAPSHOT_20190206_39696efd62</entry>
+    <entry key="database">unittest_NCA-gbp</entry>
     <entry key="host">localhost</entry>
     <entry key="Loose bbox">true</entry>
     <entry key="Estimated extends">true</entry>
@@ -23,7 +23,7 @@
     <entry key="Connection timeout">20</entry>
     <entry key="create database">false</entry>
     <entry key="port">5432</entry>
-    <entry key="passwd">crypt1:Y4rggI7U+sp21SqDLGL0xW0m/ysoO2bh</entry>
+    <entry key="passwd">crypt1:eCcs4I8WYqz3dQzcsKEzQeA0PwIvOpAU</entry>
     <entry key="min connections">1</entry>
     <entry key="dbtype">postgis</entry>
     <entry key="namespace">gbp</entry>

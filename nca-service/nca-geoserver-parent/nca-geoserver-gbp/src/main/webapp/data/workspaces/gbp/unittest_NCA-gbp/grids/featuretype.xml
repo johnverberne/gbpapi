@@ -1,14 +1,14 @@
 <featureType>
-  <id>FeatureTypeInfoImpl-6fd55d45:168c6e33a0c:-7ffe</id>
-  <name>receptors</name>
-  <nativeName>receptors</nativeName>
+  <id>FeatureTypeInfoImpl-69610152:1690a6cd286:-7ffc</id>
+  <name>grids</name>
+  <nativeName>grids</nativeName>
   <namespace>
-    <id>NamespaceInfoImpl--6f3bb491:168c29c6c63:-7fff</id>
+    <id>NamespaceInfoImpl-69610152:1690a6cd286:-7ffe</id>
   </namespace>
-  <title>receptors</title>
+  <title>grids</title>
   <keywords>
     <string>features</string>
-    <string>receptors</string>
+    <string>grids</string>
   </keywords>
   <nativeCRS class="projected">PROJCS[&quot;Amersfoort / RD New&quot;, &#xd;
   GEOGCS[&quot;Amersfoort&quot;, &#xd;
@@ -33,17 +33,17 @@
   AUTHORITY[&quot;EPSG&quot;,&quot;28992&quot;]]</nativeCRS>
   <srs>EPSG:28992</srs>
   <nativeBoundingBox>
-    <minx>12992.8720703125</minx>
-    <maxx>278235.75</maxx>
-    <miny>305607.4375</miny>
-    <maxy>621162.9375</maxy>
+    <minx>8650.0</minx>
+    <maxx>281350.0</maxx>
+    <miny>298375.0</miny>
+    <maxy>626625.0</maxy>
     <crs class="projected">EPSG:28992</crs>
   </nativeBoundingBox>
   <latLonBoundingBox>
-    <minx>3.2452843197204944</minx>
-    <maxx>7.24814270303217</maxx>
-    <miny>50.72311690287639</miny>
-    <maxy>53.57659609975418</maxy>
+    <minx>3.177258866539587</minx>
+    <maxx>7.297307559131453</maxx>
+    <miny>50.65705326254606</miny>
+    <maxy>53.625657563700024</maxy>
     <crs>GEOGCS[&quot;WGS84(DD)&quot;, &#xd;
   DATUM[&quot;WGS84&quot;, &#xd;
     SPHEROID[&quot;WGS84&quot;, 6378137.0, 298.257223563]], &#xd;
@@ -54,11 +54,8 @@
   </latLonBoundingBox>
   <projectionPolicy>FORCE_DECLARED</projectionPolicy>
   <enabled>true</enabled>
-  <metadata>
-    <entry key="cachingEnabled">false</entry>
-  </metadata>
   <store class="dataStore">
-    <id>DataStoreInfoImpl-6fd55d45:168c6e33a0c:-7fff</id>
+    <id>DataStoreInfoImpl-69610152:1690a6cd286:-7ffd</id>
   </store>
   <maxFeatures>0</maxFeatures>
   <numDecimals>0</numDecimals>

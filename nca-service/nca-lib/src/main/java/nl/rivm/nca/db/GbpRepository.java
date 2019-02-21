@@ -6,9 +6,9 @@ import java.util.List;
 
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 
-public class CalculationRepository {
+public class GbpRepository {
   
-  private CalculationRepository() {};
+  private GbpRepository() {};
 
   public static int insertCalculation(Connection connection, String uuid) {
     return 0;
