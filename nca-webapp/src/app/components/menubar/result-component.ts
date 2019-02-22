@@ -4,10 +4,6 @@ import { Router } from '@angular/router';
 import { MenuEventService } from '../../services/menu-event-service';
 import { MeasureModel } from '../../models/measure-model';
 import { MessageEventService } from '../../services/message-event-service';
-import { ScenarioModel } from '../../models/scenario-model';
-import { FeatureModel } from '../../models/feature-model';
-import { LandUseType } from '../../models/enums/landuse-type';
-import { VegetationModel } from '../../models/vegetation-model';
 
 @Component({
   selector: 'gbp-result',
