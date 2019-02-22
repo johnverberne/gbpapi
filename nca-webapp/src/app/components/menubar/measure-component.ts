@@ -151,9 +151,7 @@ export class MeasureComponent implements OnChanges {
   }
 
   private manageDrawing() {
-    if (this.featureSubsciption) {
-      this.disableDrawForMeasure();
-    }
+    this.disableDrawForMeasure();
     this.enableDrawForMeasure();
   }
 
@@ -172,7 +170,9 @@ export class MeasureComponent implements OnChanges {
 
   private disableDrawForMeasure() {
     this.mapService.stopDrawing();
-    this.featureSubsciption.unsubscribe();
+    if (this.featureSubsciption) {
+      this.featureSubsciption.unsubscribe();
+    }
   }
 
   private setMeasures(measures: MeasureModel[]) {
