@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
 import { FeatureModel } from '../../models/feature-model';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageEventService } from '../../services/message-event-service';
 
 @Component({
   selector: 'gbp-measure',
@@ -38,7 +39,8 @@ export class MeasureComponent implements OnChanges {
     private cdRef: ChangeDetectorRef,
     private mapService: MapService,
     private menuService: MenuEventService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,
+    private messageService: MessageEventService) {
     this.landUseValues = Object.keys(LandUseType);
     this.menuService.onScenarioChange().subscribe(() => this.onScenarioChange());
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
@@ -128,7 +130,7 @@ export class MeasureComponent implements OnChanges {
 
   public saveMeasures(): MeasureModel[] {
     this.validated = true;
-    if (this.measureForm.valid) {
+    if (this.validateVegetation() && this.measureForm.valid) {
       this.openMeasure = -1;
       const measures: MeasureModel[] = [];
       for (const index in this.measures.controls) {
@@ -143,6 +145,21 @@ export class MeasureComponent implements OnChanges {
       this.disableDrawForMeasure();
       return measures;
     }
+  }
+
+  private validateVegetation(): boolean {
+    for (const index in this.measures.controls) {
+      if (this.measures.controls[index] instanceof FormGroup) {
+        const measureFormGroup = this.measures.controls[index] as FormGroup;
+        const vegFG = measureFormGroup.get('vegetation') as FormGroup;
+        const value = vegFG.get('low').value + vegFG.get('middle').value + vegFG.get('high').value;
+        if (value > 100 || value < 0) {
+          this.messageService.sendMessage('VEGETATION_VALUES_INVALID');
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   private onScenarioChange() {

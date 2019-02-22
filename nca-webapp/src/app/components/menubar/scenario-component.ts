@@ -92,12 +92,8 @@ export class ScenarioComponent implements OnInit {
     if (this.currentScenarioIndex < 0) {
       this.currentScenarioIndex = 0;
     }
-    this.updateScenarioForm();
     this.ensureOneScenarioExists();
-  }
-
-  public hasMeasures(): boolean {
-    return this.scenarios[this.currentScenarioIndex].measures.length > 0;
+    this.updateScenarioForm();
   }
 
   public calculateClick(index: number) {
@@ -122,11 +118,20 @@ export class ScenarioComponent implements OnInit {
       const name = this.scenarioForm.get('name').value;
       this.scenarios[this.currentScenarioIndex].scenarioName = name;
       this.scenarios[this.currentScenarioIndex].measures = this.gbpMeasures.saveMeasures();
+      this.scenarios[this.currentScenarioIndex].valid = true;
     }
   }
 
   public cancelClick(index: number) {
     // TODO needs to be defined by Taco
+  }
+
+  public hasMeasures() {
+    return this.gbpMeasures.measures.length > 0;
+  }
+
+  public isValidScenario() {
+    return this.scenarios[this.currentScenarioIndex].valid;
   }
 
   private ensureOneScenarioExists() {
