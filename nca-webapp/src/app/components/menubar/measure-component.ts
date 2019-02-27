@@ -16,7 +16,7 @@ import { MessageEventService } from '../../services/message-event-service';
   styleUrls: ['./menubar-component.scss', './measure-component.scss']
 })
 
-export class MeasureComponent implements OnChanges {
+export class MeasureComponent implements OnInit, OnChanges {
 
   @Input() public measureForm: FormGroup;
   @Input() public measureModels: MeasureModel[] = [];
@@ -52,6 +52,10 @@ export class MeasureComponent implements OnChanges {
     });
   }
 
+  public ngOnInit(): void {
+    this.manageDrawing();
+  }
+
   public ngOnChanges(): void {
     const resetObject = {
       measures: this.fb.array([])
@@ -62,7 +66,9 @@ export class MeasureComponent implements OnChanges {
   }
 
   public get measures(): FormArray {
-    return this.measureForm.get('measures') as FormArray;
+    if (this.measureForm) {
+      return this.measureForm.get('measures') as FormArray;
+    }
   }
 
   public getColor(): string {
@@ -116,6 +122,10 @@ export class MeasureComponent implements OnChanges {
     this.geomPerMeasure.splice(index, 1);
     this.measureForm.markAsDirty();
     this.openMeasure = -1;
+    this.disableDrawForMeasure();
+    if (this.measures.length === 0) {
+      this.enableDrawForMeasure();
+    }
     this.measureModelsChange.emit(this.measureModels);
   }
 
