@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { MeasureModel } from '../../models/measure-model';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { LandUseType } from '../../models/enums/landuse-type';
@@ -9,6 +9,8 @@ import { MenuEventService } from '../../services/menu-event-service';
 import { FeatureModel } from '../../models/feature-model';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageEventService } from '../../services/message-event-service';
+import { MeasureStyles } from '../map/openlayers/measure-styles';
+import { RegularShape } from 'ol/style';
 
 @Component({
   selector: 'gbp-measure',
@@ -16,7 +18,7 @@ import { MessageEventService } from '../../services/message-event-service';
   styleUrls: ['./menubar-component.scss', './measure-component.scss']
 })
 
-export class MeasureComponent implements OnInit, OnChanges {
+export class MeasureComponent implements OnChanges {
 
   @Input() public measureForm: FormGroup;
   @Input() public measureModels: MeasureModel[] = [];
@@ -30,8 +32,7 @@ export class MeasureComponent implements OnInit, OnChanges {
   public validated: boolean = false;
   public addMeasureColor: string;
   private numberPattern: '^[0-9][0-9]?$|^100$';
-  private colors: string[] = ['#D63327', '#93278F', '#1C0078', '#FF931E'];
-  private usedColors: string[] = [];
+  private styles: string[] = Array.from(MeasureStyles.measureStyles.keys());
   private geomPerMeasure: FeatureModel[] = [];
   private featureSubsciption: Subscription;
 
@@ -42,7 +43,6 @@ export class MeasureComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private messageService: MessageEventService) {
     this.landUseValues = Object.keys(LandUseType);
-    this.menuService.onScenarioChange().subscribe(() => this.onScenarioChange());
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
   }
 
@@ -52,10 +52,6 @@ export class MeasureComponent implements OnInit, OnChanges {
     });
   }
 
-  public ngOnInit(): void {
-    this.manageDrawing();
-  }
-
   public ngOnChanges(): void {
     const resetObject = {
       measures: this.fb.array([])
@@ -63,6 +59,9 @@ export class MeasureComponent implements OnInit, OnChanges {
     this.measureForm.reset(resetObject);
     this.setMeasures(this.measureModels);
     this.cdRef.detectChanges();
+    this.mapService.clearMap();
+    this.openMeasure = -1;
+    this.manageDrawing();
   }
 
   public get measures(): FormArray {
@@ -72,24 +71,17 @@ export class MeasureComponent implements OnInit, OnChanges {
   }
 
   public getColor(): string {
-    const color = this.colors.pop();
-    this.usedColors.push(color);
-    return color;
+    const styles = this.styles.filter((style => !this.geomPerMeasure.map(geom => geom.styleName).includes(style)));
+    return styles[0];
   }
 
   public getAddMeasureColor(): string {
-    if (!this.addMeasureColor) {
-      this.addMeasureColor = this.colors[this.colors.length - 1];
-    }
-    return this.addMeasureColor;
+    const styleName = this.getColor();
+    return this.getColorFromStyle(styleName);
   }
 
   public getColorForMeasure(measure): string {
-    if (measure.value.geom.color) {
-      return measure.value.geom.color;
-    } else {
-      return this.usedColors[0];
-    }
+    return this.getColorFromStyle(measure.value.geom.styleName);
   }
 
   public onOpenMeasure(event: number) {
@@ -112,10 +104,6 @@ export class MeasureComponent implements OnInit, OnChanges {
   }
 
   public onDeleteClick(index: number) {
-    const color: string = this.measures.value[index].geom.color;
-    const colorIndex = this.usedColors.findIndex((usedColor) => usedColor === color);
-    this.colors.push(this.usedColors[colorIndex]);
-    this.usedColors.splice(colorIndex, 1);
     this.measures.removeAt(index);
     this.measureModels.splice(index, 1);
     this.mapService.removeMeasure(this.geomPerMeasure[index].id);
@@ -157,6 +145,10 @@ export class MeasureComponent implements OnInit, OnChanges {
     }
   }
 
+  private getColorFromStyle(styleName: string): string {
+    return (MeasureStyles.measureStyles.get(styleName).getImage() as RegularShape).getFill().getColor().toString();
+  }
+
   private validateVegetation(): boolean {
     for (const index in this.measures.controls) {
       if (this.measures.controls[index] instanceof FormGroup) {
@@ -172,11 +164,6 @@ export class MeasureComponent implements OnInit, OnChanges {
     return true;
   }
 
-  private onScenarioChange() {
-    this.mapService.clearMap();
-    this.manageDrawing();
-  }
-
   private manageDrawing() {
     this.disableDrawForMeasure();
     this.enableDrawForMeasure();
@@ -186,7 +173,7 @@ export class MeasureComponent implements OnInit, OnChanges {
     let measureGeom: FeatureModel;
     if (this.measures.length === 0) {
       measureGeom = new FeatureModel();
-      measureGeom.color = this.getColor();
+      measureGeom.styleName = this.getColor();
       measureGeom.id = this.measures.length;
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
@@ -207,6 +194,7 @@ export class MeasureComponent implements OnInit, OnChanges {
       this.geomPerMeasure = [];
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));
       this.measureForm.setControl('measures', measureFormArray);
+      // TODO add mapservice call to show existing geoms
     }
   }
 
@@ -222,7 +210,7 @@ export class MeasureComponent implements OnInit, OnChanges {
       woz: measureFormModel.woz,
       geom: {
         id: measureFormModel.geom.id,
-        color: measureFormModel.geom.color,
+        styleName: measureFormModel.geom.styleName,
         cells: []
       }
     };
@@ -245,7 +233,7 @@ export class MeasureComponent implements OnInit, OnChanges {
       woz: measure.woz,
       geom: this.fb.group({
         id: measure.geom.id,
-        color: measure.geom.color
+        styleName: measure.geom.styleName
       })
     });
   }
@@ -264,9 +252,9 @@ export class MeasureComponent implements OnInit, OnChanges {
       newModel.geom = geom;
     } else {
       newModel.geom = new FeatureModel();
-      newModel.geom.color = this.getColor();
+      newModel.geom.styleName = this.getColor();
       newModel.geom.id = this.geomPerMeasure.length;
-      this.addMeasureColor = this.colors[this.colors.length - 1];
+      this.addMeasureColor = this.styles[this.styles.length - 1];
     }
     newModel.measureId = -1;
     newModel.vegetation = new VegetationModel();

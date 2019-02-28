@@ -13,7 +13,7 @@ import { MenuEventService } from '../../services/menu-event-service';
   templateUrl: './scenario-component.html',
   styleUrls: ['./menubar-component.scss', './scenario-component.scss']
 })
-export class ScenarioComponent {
+export class ScenarioComponent implements OnChanges {
 
   @ViewChild(MeasureComponent) private gbpMeasures: MeasureComponent;
   @Input() public scenarioModel: ScenarioModel;
@@ -23,19 +23,20 @@ export class ScenarioComponent {
     public cdRef: ChangeDetectorRef,
     public projectService: CurrentProjectService,
     private calculationService: CalculationService,
-    private translateService: TranslateService,
-    private menuService: MenuEventService) {
-    this.menuService.onScenarioChange().subscribe(() => this.updateScenarioForm());
+    private translateService: TranslateService) {
     this.scenarioForm = this.constructForm(this.fb);
   }
 
-  public updateScenarioForm(): void {
+  public ngOnChanges(): void {
     const resetObject = {
       id: this.scenarioModel.scenarioId,
-      name: this.scenarioModel.scenarioName
+      name: this.scenarioModel.scenarioName,
+      measures: MeasureComponent.constructForm(this.fb)
     };
     this.scenarioForm.reset(resetObject);
-    this.cdRef.detectChanges();
+    if (this.cdRef) {
+      this.cdRef.detectChanges();
+    }
   }
 
   public constructForm(fb: FormBuilder): FormGroup {
@@ -79,7 +80,8 @@ export class ScenarioComponent {
   }
 
   public cancelClick() {
-    // TODO needs to be defined by Taco
+    this.gbpMeasures.ngOnChanges();
+    this.ngOnChanges();
   }
 
   public hasMeasures() {

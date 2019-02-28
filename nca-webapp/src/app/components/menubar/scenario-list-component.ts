@@ -36,9 +36,9 @@ export class ScenarioListComponent implements OnInit {
 
   public onAddScenarioClick() {
     this.addScenario();
-    this.menuService.scenarioChange();
     this.currentScenarioIndex = this.scenarios.length - 1;
     this.currentScenario = this.scenarios[this.currentScenarioIndex];
+    this.menuService.scenarioChange();
   }
 
   public addScenario() {
