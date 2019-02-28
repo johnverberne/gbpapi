@@ -20,7 +20,7 @@ import { DialogHostDirective } from './directives/dialog-host-directive';
 import { HomeComponent } from './components/home/home-component';
 import { MenubarComponent } from './components/menubar/menubar-component';
 import { MessageEventService } from './services/message-event-service';
-import { ScenarioComponent } from './components/menubar/scenario-component';
+import { ScenarioListComponent } from './components/menubar/scenario-list-component';
 import { ReferenceComponent } from './components/menubar/reference-component';
 import { ScenarioService } from './services/scenario-service';
 import { CurrentProjectService } from './services/current-project-service';
@@ -31,6 +31,7 @@ import { ResultComponent } from './components/menubar/result-component';
 import { ResultBarComponent } from './components/menubar/resultbar/resultbar-component';
 import { MenuEventService } from './services/menu-event-service';
 import { MapService } from './services/map-service';
+import { ScenarioComponent } from './components/menubar/scenario-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -47,6 +48,7 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmDialogComponent,
     HomeComponent,
     MenubarComponent,
+    ScenarioListComponent,
     ScenarioComponent,
     ReferenceComponent,
     DummyComponent,
