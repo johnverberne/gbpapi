@@ -194,7 +194,7 @@ export class MeasureComponent implements OnChanges {
       this.geomPerMeasure = [];
       const measureFormArray = this.fb.array(measures.map((measure) => this.fromModelToFormGroup(measure)));
       this.measureForm.setControl('measures', measureFormArray);
-      // TODO add mapservice call to show existing geoms
+      measures.forEach((measure) => this.mapService.showFeatures(measure.geom));
     }
   }
 
@@ -247,6 +247,15 @@ export class MeasureComponent implements OnChanges {
 
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
+    // Mock data
+    newModel.inhabitants = 1;
+    newModel.landuse = LandUseType.RESIDENTIAL;
+    newModel.woz = 10;
+    newModel.vegetation = new VegetationModel();
+    newModel.vegetation.low = 10;
+    newModel.vegetation.middle = 50;
+    newModel.vegetation.high = 40;
+    // End mock data
     newModel.measureName = this.generateUniqueMeasureName();
     if (geom) {
       newModel.geom = geom;
