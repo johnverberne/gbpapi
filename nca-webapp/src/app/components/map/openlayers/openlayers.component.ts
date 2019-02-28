@@ -18,7 +18,7 @@ import { MeasureStyles } from './measure-styles';
   styleUrls: ['./openlayers.component.css']
 })
 export class OpenlayersComponent implements OnInit {
-
+  // Default projection: EPSG:3857
   public map: OlMap;
   private source: OlXYZ;
   private layer: TileLayer;

@@ -53,13 +53,13 @@ export class MeasureComponent implements OnChanges {
   }
 
   public ngOnChanges(): void {
+    this.mapService.clearMap();
     const resetObject = {
       measures: this.fb.array([])
     };
     this.measureForm.reset(resetObject);
     this.setMeasures(this.measureModels);
     this.cdRef.detectChanges();
-    this.mapService.clearMap();
     this.openMeasure = -1;
     this.manageDrawing();
   }
