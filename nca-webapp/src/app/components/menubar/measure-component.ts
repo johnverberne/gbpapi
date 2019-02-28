@@ -251,7 +251,6 @@ export class MeasureComponent implements OnChanges {
     newModel.inhabitants = 1;
     newModel.landuse = LandUseType.RESIDENTIAL;
     newModel.woz = 10;
-    newModel.vegetation = new VegetationModel();
     newModel.vegetation.low = 10;
     newModel.vegetation.middle = 50;
     newModel.vegetation.high = 40;
@@ -266,7 +265,6 @@ export class MeasureComponent implements OnChanges {
       this.addMeasureColor = this.styles[this.styles.length - 1];
     }
     newModel.measureId = -1;
-    newModel.vegetation = new VegetationModel();
     this.addMeasure(newModel);
   }
 
