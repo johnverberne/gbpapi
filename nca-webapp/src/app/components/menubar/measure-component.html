@@ -88,7 +88,7 @@
     </div>
   </div>
   <div *ngIf="measures.length !== 0 && measures.length < MAX_MEASURES_THRESHOLD">
-    <button type="button" class="btn" (click)="onAddMeasureClick()">
+    <button type="button" class="btn add-measure" (click)="onAddMeasureClick()">
       <svg-icon [style.fill]="getAddMeasureColor()" src="assets/img/ui-map-plus.svg"></svg-icon>
     </button>
   </div>
