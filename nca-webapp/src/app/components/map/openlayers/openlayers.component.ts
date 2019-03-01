@@ -33,6 +33,7 @@ export class OpenlayersComponent implements OnInit {
   private resultLayer: TileLayer;
   private view: OlView;
   private draw: Draw;
+  private hexagonLayer: VectorLayer;
   private vectorSource: VectorSource;
   private gridSource: VectorSource;
   private vector: VectorLayer;
@@ -64,15 +65,27 @@ export class OpenlayersComponent implements OnInit {
       })
     });
 
+    // gbp:wms_hexagons_view
+    // gbp:wms_grids10_view
     this.resultLayer = new TileLayer({
       source: new TileWMS({
         url: `${environment.GEOSERVER_ENDPOINT}/wms`,
-        params: { 'LAYERS': 'bomen', 'TILED': true },
+        params: { 'LAYERS': 'gbp:wms_grids10_view', 'TILED': true },
         serverType: 'geoserver',
         transition: 0
       })
     });
-
+    
+    // gbp:wms_hexagons_view
+    // gbp:wms_grids10_view
+    this.hexagonLayer = new TileLayer({
+      source: new TileWMS({
+        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
+        params: { 'LAYERS': 'gbp:wms_hexagons_view', 'TILED': true },
+        serverType: 'geoserver',
+        transition: 0
+      })
+    });
     this.style1 = new Style({
       image: new RegularShape({
         fill: new Fill({ color: '#D63327' }),
@@ -134,7 +147,7 @@ export class OpenlayersComponent implements OnInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.resultLayer, this.vector, this.gridLayer],
+      layers: [this.osmLayer, this.hexagonLayer, this.resultLayer, this.vector, this.gridLayer],
       view: this.view
     });
 
