@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnChanges } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { MenuEventService } from '../../services/menu-event-service';
@@ -24,8 +24,8 @@ export class ScenarioListComponent implements OnInit {
   public ngOnInit(): void {
     if (this.scenarios.length === 0) {
       this.addScenario();
-      this.currentScenario = this.scenarios[this.currentScenarioIndex];
     }
+    this.currentScenario = this.scenarios[this.currentScenarioIndex];
   }
 
   public get scenarios() {
