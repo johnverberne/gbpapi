@@ -7,4 +7,7 @@ BEGIN; SELECT setup.ae_load_table('hexagons', '{data_folder}/public/hexagons_201
 ---100x100 grid for geoserver
 BEGIN; SELECT setup.ae_load_table('grids', '{data_folder}/public/grids.geo_20190207.txt'); COMMIT;
 
+---10x10 grid subselection
+BEGIN; SELECT setup.ae_load_table('grids10', '{data_folder}/public/grids10x10.geo_20190301.txt'); COMMIT;
+
 INSERT INTO system.constants (key, value) VALUES ('NUMBER_OF_TASKCLIENT_THREADS', '40');
