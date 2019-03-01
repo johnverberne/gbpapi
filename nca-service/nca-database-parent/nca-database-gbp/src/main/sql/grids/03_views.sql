@@ -8,3 +8,14 @@ SELECT
 	*
 	FROM grids
 ;
+
+/*
+ * wms_grids_view 10x10
+ * ---------
+ * View voor de buitenwereld.
+ */
+CREATE OR REPLACE VIEW wms_grids10_view AS
+SELECT
+	*
+	FROM grids10
+;
