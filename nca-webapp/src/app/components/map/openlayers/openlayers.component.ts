@@ -16,10 +16,9 @@ import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
 import { bbox } from 'ol/loadingstrategy';
 import { Select } from 'ol/interaction';
-import { Stroke } from 'ol/style';
 import { DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
-import { Collection } from 'ol/src';
+import { LayerSwitcher } from 'ol-layerswitcher';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -33,7 +32,6 @@ export class OpenlayersComponent implements OnInit {
   private resultLayer: TileLayer;
   private view: OlView;
   private draw: Draw;
-  private hexagonLayer: TileLayer;
   private vectorSource: VectorSource;
   private gridSource: VectorSource;
   private gridSource10: VectorSource;
@@ -69,8 +67,6 @@ export class OpenlayersComponent implements OnInit {
       })
     });
 
-    // gbp:wms_hexagons_view
-    // gbp:wms_grids10_view
     this.resultLayer = new TileLayer({
       source: new TileWMS({
         url: `${environment.GEOSERVER_ENDPOINT}/wms`,
@@ -83,7 +79,7 @@ export class OpenlayersComponent implements OnInit {
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
-          'version=1.0.0&request=GetFeature&typeName=wms_grids10_view&TRANSPARANT=TRUE&' +
+          'version=1.0.0&request=GetFeature&typeName=gbp:wms_grids10_view&TRANSPARANT=TRUE&' +
           'outputFormat=application/json&srsname=EPSG:3857&' +
           'bbox=' + extent.join(',') + ',EPSG:3857',
       format: new GeoJSON(),
@@ -91,14 +87,14 @@ export class OpenlayersComponent implements OnInit {
     });
 
     this.gridLayer10 = new VectorLayer({
-      source: this.gridSource10
+      source: this.gridSource10,
+      maxResolution: 2
     });
 
     this.bagVector = new VectorSource({
       url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs?service=WFS&LAYERS=BU.Building&` +
           'version=1.1.0&request=GetFeature&typename=bag:pand&STYLES=&TRANSPARANT=TRUE&' +
           'outputFormat=application/json&srsname=EPSG:3857&' +
-          //'maxFeatures=50000&' +
           'bbox=' + extent.join(',') + ',EPSG:3857',
       format: new GeoJSON(),
       strategy: bbox,
@@ -106,17 +102,6 @@ export class OpenlayersComponent implements OnInit {
 
     this.bagLayer =  new VectorLayer({
       source: this.bagVector
-    });
-
-    // gbp:wms_hexagons_view
-    // gbp:wms_grids10_view
-    this.hexagonLayer = new TileLayer({
-      source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
-        params: { 'LAYERS': 'gbp:wms_hexagons_view', 'TILED': true },
-        serverType: 'geoserver',
-        transition: 0
-      })
     });
 
     this.style1 = new Style({
@@ -174,17 +159,16 @@ export class OpenlayersComponent implements OnInit {
     });
 
     this.view = new OlView({
-      center: fromLonLat([5.183735, 52.118362]), // 52.118362, 5.183735
+      center: fromLonLat([5.183735, 52.118362]),
       zoom: 18
     });
 
-    // this.resultLayer,
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.hexagonLayer,  this.vector, this.gridLayer10, this.bagLayer],
+      layers: [this.osmLayer, this.vector, this.gridLayer10, this.bagLayer],
       view: this.view
     });
-
+    // this.map.addControl(new LayerSwitcher());
     this.enableGetGrid();
   }
 
@@ -210,7 +194,6 @@ export class OpenlayersComponent implements OnInit {
 
   private disableDrawPoint() {
     this.map.removeInteraction(this.draw);
-    // this.clearMap();
   }
 
   private clearFeatures(id: number) {
