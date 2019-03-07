@@ -13,7 +13,7 @@ export class ResultGuard implements CanActivate {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.currentProjectService.currentProject.results) {
+    if (this.currentProjectService.currentProject.scenarios[0].results) {
       return Observable.create((canActivateObserver: Subscriber<boolean>) => {
         canActivateObserver.next(true);
         canActivateObserver.complete();
@@ -22,6 +22,10 @@ export class ResultGuard implements CanActivate {
       this.router.navigate(['scenario']);
       return false;
     }
+  }
+
+  private hasValidResults() {
+    return this.currentProjectService.currentProject.scenarios.findIndex((scenario) => scenario.results) !== -1;
   }
 
 }

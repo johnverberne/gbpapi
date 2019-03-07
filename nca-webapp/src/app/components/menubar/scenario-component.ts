@@ -60,12 +60,12 @@ export class ScenarioComponent implements OnChanges {
     this.calculationService.startCalculation(request).subscribe(
       (result) => {
         if (result) {
-          this.projectService.currentProject.results = result;
+          this.scenarioModel.results = result;
           console.log('Result: ' + result.successful);
         }
       },
       (error) => {
-        this.projectService.currentProject.results = error;
+        this.scenarioModel.results = error;
       }
     );
   }
