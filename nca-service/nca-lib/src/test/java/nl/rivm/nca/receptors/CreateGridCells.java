@@ -15,8 +15,8 @@ public class CreateGridCells {
 
 	public static void main(String[] args) {
 
-		String fileIn = "d:/nkmodel/receptors10x10.csv";
-		String fileOut = "d:/nkmodel/grids_polygon10x10.txt";
+		String fileIn = "d:/nkmodel/receptors100x100.csv";
+		String fileOut = "d:/nkmodel/grids_polygon.txt";
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
@@ -66,7 +66,7 @@ public class CreateGridCells {
 					System.out.println(row[4] + "\t" + poly100);
 					writer.println(row[4] + "\t" + poly100); //tab column seperator
 					if (count > 10) {
-						//break;
+						break;
 					}
 
 				}
@@ -95,20 +95,17 @@ public class CreateGridCells {
 }
 
 /*
- * mmm.. gebruik QGIS om database (GridPolyTrees.dbf) in te lezen en te exporteren met DB manager als CSV
- * gebruik java om csv om te zetten naar database structuur die we kunnen converteren naar geometry;
- * export maken en deze bij de bouw van project/ database importeren
- * 
- * 
  * 
  * drop table grids;
  * 
  * delete from grids;
  * 
  * 
- * CREATE TABLE grids ( grid_id integer NOT NULL, geometry geometry(Polygon), CONSTRAINT grids_pkey PRIMARY KEY (grid_id) );
+ * CREATE TABLE grids ( grid_id integer NOT NULL, geometry geometry(Polygon),
+ * CONSTRAINT grids_pkey PRIMARY KEY (grid_id) );
  * 
- * select * from grids; BEGIN; SELECT setup.ae_load_table('grids','d:/nkmodel/grids.geo_20190207.txt', false); COMMIT;
+ * select * from grids; BEGIN; SELECT setup.ae_load_table('grids',
+ * 'd:/nkmodel/grids.geo_20190207.txt', false); COMMIT;
  * 
  * CREATE OR REPLACE VIEW wms_grids_view AS SELECT
  *
@@ -121,7 +118,9 @@ public class CreateGridCells {
  * );
  * 
  * 
- * BEGIN; SELECT setup.ae_load_table('gridstemp', 'd:/nkmodel/grids_polygon.txt', false); COMMIT;
+ * 
+ * BEGIN; SELECT setup.ae_load_table('gridstemp',
+ * 'd:/nkmodel/grids_polygon.txt', false); COMMIT;
  * 
  * 
  * delete from gridstemp
@@ -144,15 +143,4 @@ public class CreateGridCells {
  * select * from gridstemp_view BEGIN; COPY (SELECT * FROM gridstemp_view) TO
  * 'd:/nkmodel/grids.geo_20190207.txt' DELIMITER E'\t' CSV; COMMIT;
  * 
- * 
- *
  */
-
- /* 10 x 10 grid
- CREATE TABLE gridstemp (grid_id integer NOT NULL, geo text, CONSTRAINT gridstemp_pkey PRIMARY KEY (grid_id));
- BEGIN; SELECT setup.ae_load_table('gridstemp', 'd:/nkmodel/grids_polygon10x10.txt', false); COMMIT;
- select * from gridstemp limit 100;
- CREATE OR REPLACE VIEW gridstemp_view AS SELECT grid_id, ST_GeomFromText(geo, 28992) AS result FROM gridstemp;
- select * from gridstemp_view BEGIN; COPY (SELECT * FROM gridstemp_view) TO 'd:/nkmodel/grids10x10.geo_20190301.txt' DELIMITER E'\t' CSV; COMMIT;
- */ 
- 

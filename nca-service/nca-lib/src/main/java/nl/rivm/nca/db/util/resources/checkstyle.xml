@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+          "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+          "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!--
+
+  Checkstyle configuration that checks the sun coding conventions from:
+
+    - the Java Language Specification at
+      http://java.sun.com/docs/books/jls/second_edition/html/index.html
+
+    - the Sun Code Conventions at http://java.sun.com/docs/codeconv/
+
+    - the Javadoc guidelines at
+      http://java.sun.com/j2se/javadoc/writingdoccomments/index.html
+
+    - the JDK Api documentation http://java.sun.com/j2se/docs/api/index.html
+
+    - some best practices
+
+  Checkstyle is very configurable. Be sure to read the documentation at
+  http://checkstyle.sf.net (or in your downloaded distribution).
+
+  Most Checks are configurable, be sure to consult the documentation.
+
+  To completely disable a check, just comment it out or delete it from the file.
+
+  Finally, it is worth reading the documentation.
+
+-->
+
+<module name="Checker">
+    <!--
+        If you set the config_loc property below, then all reported file
+        names will be relative to the specified directory. See
+        http://checkstyle.sourceforge.net/5.x/config.html#Checker
+
+        <property name="config_loc" value="${config_loc}"/>
+    -->
+
+  <property name="severity" value="warning" />
+
+    <!-- Checks that a package-info.java file exists for each package.     -->
+    <!-- module name="JavadocPackage"/-->
+
+    <!-- Checks whether files end with a new line.                        -->
+  <module name="NewlineAtEndOfFile" />
+
+    <!-- Checks that property files contain the same keys.         -->
+  <module name="Translation" />
+    
+    <!-- Checks for Size Violations.                    -->
+  <module name="FileLength">
+    <property name="max" value="2000" />
+  </module>
+    
+    <!-- Checks for whitespace                               -->
+  <module name="FileTabCharacter">
+    <property name="eachLine" value="true" />
+    <property name="fileExtensions" value="java, xml, css" />
+  </module>
+
+    <!-- Checks for trailing spaces.                   -->
+  <module name="RegexpSingleline">
+    <property name="format" value="^\s+$" />
+    <property name="minimum" value="0" />
+    <property name="maximum" value="0" />
+    <property name="message" value="Line has trailing spaces." />
+  </module>
+    
+    <!-- Checks for Headers                                -->
+  <module name="Header">
+    <property name="headerFile" value="${config_loc}/checkstyle-header.txt" />
+    <property name="fileExtensions" value="java" />
+  </module>
+
+  <module name="TreeWalker">
+        <!-- Checks for System.out/err.print(ln).                   -->
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="System\.(out)|(err)\.print(ln)?" />
+      <property name="ignoreComments" value="true" />
+    </module>
+
+        <!-- Checks for Javadoc comments.                     -->
+    <module name="JavadocMethod">
+      <property name="scope" value="public" />
+      <property name="allowMissingPropertyJavadoc" value="true" />
+      <property name="allowUndeclaredRTE" value="true" />
+    </module>
+    <module name="JavadocType">
+      <property name="scope" value="public" />
+    </module>
+    <module name="JavadocVariable">
+      <property name="scope" value="public" />
+    </module>
+    <module name="JavadocStyle">
+      <property name="scope" value="public" />
+    </module>
+
+        <!-- Checks for Naming Conventions.                  -->
+    <module name="ConstantName" />
+    <module name="LocalFinalVariableName" />
+    <module name="LocalVariableName" />
+    <module name="MemberName" />
+    <module name="MethodName" />
+    <module name="PackageName" />
+    <module name="ParameterName" />
+    <module name="StaticVariableName" />
+    <module name="TypeName" />
+        
+        <!-- Checks for imports                              -->
+    <module name="AvoidStarImport" />
+    <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
+    <module name="RedundantImport" />
+    <module name="UnusedImports" />
+
+
+        <!-- Checks for Size Violations.                    -->
+    <module name="LineLength">
+      <property name="max" value="150" />
+            <!-- property name="ignorePattern" value="^ *\* *[^ ]+$"/-->
+    </module>
+    <module name="MethodLength">
+      <property name="max" value="150" />
+      <property name="countEmpty" value="true" />
+    </module>
+    <module name="ParameterNumber">
+      <property name="max" value="7" />
+      <property name="tokens" value="METHOD_DEF, CTOR_DEF" />
+    </module>
+
+        <!-- Checks for whitespace                               -->
+    <module name="EmptyForIteratorPad" />
+    <module name="GenericWhitespace" />
+    <module name="MethodParamPad" />
+    <module name="NoWhitespaceAfter" />
+    <module name="NoWhitespaceBefore" />
+    <module name="OperatorWrap">
+      <property name="option" value="nl" />
+    </module>
+    <module name="ParenPad" />
+    <module name="TypecastParenPad" />
+    <module name="WhitespaceAfter">
+      <property name="tokens" value="COMMA, SEMI, TYPECAST" />
+    </module>
+    <module name="WhitespaceAround">
+      <property name="allowEmptyConstructors" value="true" />
+    </module>
+
+
+        <!-- Modifier Checks                                    -->
+    <module name="ModifierOrder" />
+    <module name="RedundantModifier">
+      <property name="tokens"
+        value="METHOD_DEF, VARIABLE_DEF, ANNOTATION_FIELD_DEF, INTERFACE_DEF" />
+    </module>
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+    <module name="AvoidNestedBlocks" />
+    <module name="EmptyBlock">
+      <property name="option" value="text" />
+      <property name="tokens"
+        value="LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_IF, LITERAL_FOR, LITERAL_TRY, LITERAL_WHILE, INSTANCE_INIT, STATIC_INIT" />
+    </module>
+    <module name="LeftCurly">
+      <property name="option" value="eol" />
+      <property name="tokens"
+        value="CLASS_DEF, CTOR_DEF, INTERFACE_DEF, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF" />
+    </module>
+    <module name="NeedBraces">
+      <property name="tokens"
+        value="LITERAL_DO, LITERAL_ELSE, LITERAL_IF, LITERAL_FOR, LITERAL_WHILE" />
+    </module>
+    <module name="RightCurly">
+      <property name="option" value="same" />
+      <property name="tokens"
+        value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE" />
+      <property name="shouldStartLine" value="true" />
+    </module>
+
+        <!-- Checks for common coding problems               -->
+        <!--module name="AvoidInlineConditionals"/-->
+    <module name="EmptyStatement" />
+    <module name="EqualsHashCode" />
+        <!--module name="HiddenField"/-->
+    <module name="IllegalInstantiation" />
+    <module name="InnerAssignment" />
+    <module name="MagicNumber">
+      <property name="tokens" value="NUM_DOUBLE, NUM_FLOAT, NUM_INT, NUM_LONG" />
+      <property name="ignoreNumbers" value="-1, 0, 1, 2, 3, 10, 31, 37" />
+      <property name="ignoreHashCodeMethod" value="false" />
+      <property name="ignoreAnnotation" value="false" />
+    </module>
+    <module name="MissingSwitchDefault" />
+    <module name="SimplifyBooleanExpression" />
+    <module name="SimplifyBooleanReturn" />
+    <module name="EqualsAvoidNull" />
+    <module name="FallThrough">
+      <property name="checkLastCaseGroup" value="false" />
+      <property name="reliefPattern" value="fallthru|falls? ?through" />
+    </module>
+
+        <!-- Checks for class design                         -->
+        <!-- module name="DesignForExtension"/-->
+    <module name="FinalClass" />
+    <module name="HideUtilityClassConstructor" />
+    <module name="InterfaceIsType" />
+    <module name="VisibilityModifier">
+      <property name="packageAllowed" value="false" />
+      <property name="protectedAllowed" value="true" />
+      <property name="publicMemberPattern" value="^serialVersionUID$" />
+    </module>
+
+        <!-- Miscellaneous other checks.                   -->
+    <module name="ArrayTypeStyle">
+      <property name="javaStyle" value="true" />
+    </module>
+        <!-- module name="FinalParameters">
+            <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
+        </module-->
+    <module name="TodoComment">
+      <property name="format" value="TODO|FIXME" />
+    </module>
+        <!-- Long constants should contain an upper L instead of the lowercase l which you could be mistaken for the number 1 -->
+    <module name="UpperEll" />
+        <!-- Default block in a switch, should always be the last block. -->
+    <module name="DefaultComesLast" />
+        <!-- Declaration of variables/constructors/methods as described in http://checkstyle.sourceforge.net/config_coding.html#DeclarationOrder -->
+    <module name="DeclarationOrder" />
+        <!-- Member variables shouldn't be initialized with the default value, which means double initialization. -->
+    <module name="ExplicitInitialization" />
+        <!-- Identation rules http://checkstyle.sourceforge.net/config_misc.html#Indentation, should be enabled for AERIUS! -->
+        <!-- module name="Indentation">
+            <property name="basicOffset" value="2" />
+            <property name="caseIdent" value="2" />
+        </module-->
+        <!-- Inner classes/interfaces should be declared at the bottom after all methods/fields. -->
+    <module name="InnerTypeLast" />
+    
+        <!-- Ensure that for loop control variables are not modified inside the for block. -->
+    <module name="ModifiedControlVariable" />
+        <!-- Don't allow multiple variable declarations on a single line. -->
+    <module name="MultipleVariableDeclarations" />
+        <!-- Ensure that the information provided by the exception type is unchangeable, http://checkstyle.sourceforge.net/config_design.html#MutableException -->
+    <module name="MutableException" />
+        <!-- Disallow assignment of parameters. -->
+    <module name="ParameterAssignment" />
+        <!-- Restricts the number of return statements in methods. -->
+    <module name="ReturnCount">
+      <property name="max" value="3" />
+    </module>
+        <!-- Check that string literals are not used with == or != . -->
+    <module name="StringLiteralEquality" />
+        <!-- Checks for uncommented main() methods (debugging leftovers). -->
+    <module name="UncommentedMain">
+      <property name="excludedClasses" value="\.Main$"/>
+    </module>
+        <!-- Checks for the use of unnecessary parentheses. -->
+    <module name="UnnecessaryParentheses" />
+  </module>
+
+  <module name="SuppressionFilter">
+    <property name="file" value="${config_loc}/checkstyle-suppressions.xml" />
+  </module>
+</module>

@@ -1,5 +1,7 @@
 package nl.rivm.nca.api.service.impl;
 
+import java.sql.Connection;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
@@ -17,22 +19,22 @@ public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 
 	private ValidateResponse generateAPIKey(String email) {
 	    final ValidateResponse result = new ValidateResponse().successful(Boolean.FALSE);
-/*
-	    try {
-	      ValidationUtil.email(email, context.getLocale());
 
-	      try (final Connection con = context.getPMF().getConnection()) {
-	        ValidationUtil.userRegistrationsAllowed(con);
+//	    try {
+//	      ValidationUtil.email(email, context.getLocale());
+//
+//	      try (final Connection con = context.getPMF().getConnection()) {
+//	        //ValidationUtil.userRegistrationsAllowed(con);
+//	    	   Object user = UserUtil.generateAPIKey(con, email); 
+//	        //sendMail();
+//	        result.successful(Boolean.TRUE);
+//	      }
+//	      // catching exception is allowed here
+//	    } catch (final Exception e) {
+//	      LOG.error("Generating API key failed:", e);
+//	      throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
+//	    }
 
-	        sendMail(UserUtil.generateAPIKey(con, email));
-	        result.successful(Boolean.TRUE);
-	      }
-	      // catching exception is allowed here
-	    } catch (final Exception e) {
-	      LOG.error("Generating API key failed:", e);
-	      throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
-	    }
-*/
 	    result.setWarnings(WarningUtil.WarningValidationMessageNoImplementation());
 	    return result;
 	  }
