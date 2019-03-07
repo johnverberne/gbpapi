@@ -29,6 +29,8 @@
         <postgresql.version>9.4.1207.jre7</postgresql.version>
         <jogamp.version>2.3.1</jogamp.version>
 		<tomcat-servlet-api.version>8.5.28</tomcat-servlet-api.version>
+		<postgis-jdbc.version>2.2.0</postgis-jdbc.version>
+    	<postgresql.version>9.4.1207.jre7</postgresql.version>
 	</properties>
 
 	<repositories>

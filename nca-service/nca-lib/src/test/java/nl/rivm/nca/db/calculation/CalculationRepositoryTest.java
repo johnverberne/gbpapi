@@ -1,4 +1,4 @@
-package nl.rivm.nca.db;
+package nl.rivm.nca.db.calculation;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -11,12 +11,9 @@ import org.junit.Test;
 
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.db.GbpRepository;
+import nl.rivm.nca.db.TestPMF;
 
 public class CalculationRepositoryTest {
-
-  private Connection getConnection() {
-    return null;
-  }
   
   @Test
   public void testInsertCalculation() throws SQLException {
@@ -37,6 +34,13 @@ public class CalculationRepositoryTest {
     assertNotEquals("CalculationResult", 0, list.size());
   }
   
+	protected Connection getConnection() throws SQLException {
+		TestPMF pmf = new TestPMF(true);
+		pmf.setJdbcURL("jdbc:postgresql://localhost/unittest_NCA-gbp");
+		pmf.setDbUsername("aerius");
+		pmf.setDbPassword("hallo2dirk337");
+		return pmf.getConnection();
+	}
   
   
 }

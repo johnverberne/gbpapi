@@ -31,7 +31,7 @@ public class ServerPMF implements PMF {
       instance = new ServerPMF();
       } catch (final NamingException e) {
         LOGGER.error("Data source for database connection is't correct", e);
-        //throw new RuntimeErrorException(e);
+        throw new RuntimeException(e);
       }
       
     }
@@ -45,5 +45,10 @@ public class ServerPMF implements PMF {
       throw e;
     }
   }
+
+@Override
+public String getDatabaseVersion() throws SQLException {
+	return "1";
+}
 
 }

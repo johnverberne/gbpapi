@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<suppressions>
+  <!-- Tone down the checking for test code -->
+  <suppress checks="EmptyBlock" files=".*[\\/]src[\\/]test[\\/]"/>
+  <suppress checks="ImportControl" files=".*[\\/]src[\\/]test[\\/]"/>
+  <suppress checks="Javadoc" files=".*[\\/]src[\\/]test[\\/]"/>
+  <suppress checks="MagicNumber" files=".*[\\/]src[\\/]test[\\/]"/>
+
+  <!-- suppressions to remove over time -->
+  <suppress checks="FinalLocalVariable" files=".*[\\/]src[\\/]test[\\/]"/>
+  <suppress checks="LineLength" files=".*[\\/]src[\\/]test[\\/]"/>
+  <suppress checks="Name" files=".*[\\/]src[\\/]test[\\/]"/>    
+
+	<!-- suppress AERIUS 1 code -->
+  <suppress checks="." files=".*[\\/]nl[\\/]aerius_app[\\/].*"/>
+
+  <!-- suppress generated and external code -->
+	<suppress checks="." files=".*[\\/]\\.generated[\\/].*"/>
+	<suppress checks="." files=".*[\\/]generated-sources[\\/].*"/>
+  <suppress checks="." files=".*[\\/]com[\\/]google[\\/].*"/>
+  <suppress checks="." files=".*[\\/]org[\\/]gwtopenmaps[\\/].*"/>
+  <suppress checks="." files=".*[\\/]main.*[\\/]resources[\\/].*"/>
+
+  <!-- suppress project specific rules -->
+
+  <!-- suppress check because GWT uibinder requires fields to be non private -->
+  <suppress checks="VisibilityModifier" files=".*nl[\\/]overheid[\\/]aerius[\\/]wui[\\/].*"/>
+  <suppress checks="VisibilityModifier" files=".*nl[\\/]overheid[\\/]aerius[\\/]geo[\\/]client[\\/].*"/>
+
+  <!-- suppress check because GWT style places interface at top of file -->
+  <suppress checks="InnerTypeLast" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/].*"/>
+  <suppress checks="InnerTypeLast" files=".*nl[\\/]overheid[\\/]aerius[\\/]wui[\\/].*"/>
+  <suppress checks="InnerTypeLast" files=".*nl[\\/]overheid[\\/]aerius[\\/]geo[\\/]client[\\/].*"/>
+
+  <!-- suppress check because GWT style places interface at top of file -->
+  <suppress checks="DeclarationOrder" files=".*nl[\\/]overheid[\\/]aerius[\\/]wui[\\/].*"/>
+  <suppress checks="DeclarationOrder" files=".*nl[\\/]overheid[\\/]aerius[\\/]geo[\\/]client[\\/].*"/>
+
+  <!-- suppress check because GWT serialized classes have specific requirements  -->
+  <suppress checks="IllegalType" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/].*" />
+  <suppress checks="IllegalType" files=".*nl[\\/]overheid[\\/]aerius[\\/]geo[\\/]shared[\\/].*" />
+  <suppress checks="IllegalType" files=".*nl[\\/]overheid[\\/]aerius[\\/]server[\\/]servlet[\\/].*" />
+
+  <!-- ignore java doc on messages interfaces and test id class -->
+  <suppress checks="JavadocMethod" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/]i18n[\\/].*"/>
+  <suppress checks="JavadocVariable" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/]test[\\/]TestID.java"/>
+  <!-- allow non standard naming in HelpToolTipInfo class -->
+  <suppress checks="VisibilityModifier" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/]i18n[\\/]HelpToolTipInfo.java"/>
+  <suppress checks="JavadocVariable" files=".*nl[\\/]overheid[\\/]aerius[\\/]shared[\\/]i18n[\\/].*"/>
+</suppressions>

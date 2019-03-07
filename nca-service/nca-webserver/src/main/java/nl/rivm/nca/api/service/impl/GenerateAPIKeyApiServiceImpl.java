@@ -17,6 +17,7 @@ import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.SwaggerUtil;
 import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
+import nl.rivm.nca.shared.domain.ScenarioUser;
 
 public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 
@@ -46,7 +47,7 @@ public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
       try (final Connection con = context.getPMF().getConnection()) {
         //ValidationUtil.userRegistrationsAllowed(con);
 
-        result = UserUtil.generateAPIKey(con, email);
+        ScenarioUser user = UserUtil.generateAPIKey(con, email);
         //sendMail(UserUtil.generateAPIKey(con, email));
         result.successful(Boolean.TRUE);
         result.addWarningsItem(WarningUtil.ValidationInfoMessage("API key is aangemaakt"));

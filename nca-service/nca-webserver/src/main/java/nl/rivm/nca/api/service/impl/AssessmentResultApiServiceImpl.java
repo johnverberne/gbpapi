@@ -22,5 +22,9 @@ public class AssessmentResultApiServiceImpl extends AssessmentResultApiService {
     result.key("you specified a request with apiKey (" + apiKey + ") and resultId (" + resultId + ")");
     return result;
   }
+  
+  // build a result set for the user
+  
+  
 
 }
