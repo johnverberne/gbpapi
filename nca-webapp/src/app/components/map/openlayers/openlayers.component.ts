@@ -93,42 +93,6 @@ export class OpenlayersComponent implements OnInit {
       source: this.bagVector
     });
 
-    this.style1 = new Style({
-      image: new RegularShape({
-        fill: new Fill({ color: '#D63327' }),
-        points: 4,
-        radius: 10,
-        angle: Math.PI / 4
-      })
-    });
-
-    this.style2 = new Style({
-      image: new RegularShape({
-        fill: new Fill({ color: '#93278F' }),
-        points: 4,
-        radius: 10,
-        angle: Math.PI / 4
-      })
-    });
-
-    this.style3 = new Style({
-      image: new RegularShape({
-        fill: new Fill({ color: '#1C0078' }),
-        points: 4,
-        radius: 10,
-        angle: Math.PI / 4
-      })
-    });
-
-    this.style4 = new Style({
-      image: new RegularShape({
-        fill: new Fill({ color: '#FF931E' }),
-        points: 4,
-        radius: 10,
-        angle: Math.PI / 4
-      })
-    });
-
     this.gridSource = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/wfs?service=WFS&` +
           'version=1.0.0&request=GetFeature&typeName=wms_grids_view&transparant=true&' +
