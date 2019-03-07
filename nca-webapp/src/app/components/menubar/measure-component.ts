@@ -61,7 +61,9 @@ export class MeasureComponent implements OnChanges {
     this.setMeasures(this.measureModels);
     this.cdRef.detectChanges();
     this.openMeasure = -1;
-    this.manageDrawing();
+    if (this.measures.value.length === 0) {
+      this.manageDrawing();
+    }
   }
 
   public get measures(): FormArray {
@@ -146,7 +148,7 @@ export class MeasureComponent implements OnChanges {
   }
 
   private getColorFromStyle(styleName: string): string {
-    return (MeasureStyles.measureStyles.get(styleName).getImage() as RegularShape).getFill().getColor().toString();
+    return MeasureStyles.measureStyles.get(styleName).getFill().getColor().toString();
   }
 
   private validateVegetation(): boolean {
@@ -248,9 +250,9 @@ export class MeasureComponent implements OnChanges {
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
     // Mock data
-    newModel.inhabitants = 1;
+    newModel.inhabitants = 125;
     newModel.landuse = LandUseType.RESIDENTIAL;
-    newModel.woz = 10;
+    newModel.woz = 200000;
     newModel.vegetation.low = 10;
     newModel.vegetation.middle = 50;
     newModel.vegetation.high = 40;

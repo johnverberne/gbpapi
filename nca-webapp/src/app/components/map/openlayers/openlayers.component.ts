@@ -10,7 +10,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
 import { FeatureModel } from '../../../models/feature-model';
-import { Point } from 'ol/geom';
+import { Point, Polygon } from 'ol/geom';
 import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
@@ -19,6 +19,7 @@ import { Select } from 'ol/interaction';
 import { DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { LayerSwitcher } from 'ol-layerswitcher';
+import { MenuEventService } from '../../../services/menu-event-service';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -31,19 +32,19 @@ export class OpenlayersComponent implements OnInit {
   private osmLayer: TileLayer;
   private resultLayer: TileLayer;
   private view: OlView;
-  private draw: Draw;
-  private vectorSource: VectorSource;
+  private dragBox: DragBox;
+  private select: Select;
   private gridSource: VectorSource;
   private gridSource10: VectorSource;
   private bagVector: VectorSource;
-  private vector: VectorLayer;
   private gridLayer: VectorLayer;
   private gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
 
-  constructor(private mapService: MapService) {
-    this.mapService.onStartDrawing().subscribe((geom) => this.enableDrawPoint(geom));
-    this.mapService.onStopDrawing().subscribe(() => this.disableDrawPoint());
+  constructor(private mapService: MapService,
+              private menuService: MenuEventService) {
+    this.mapService.onStartDrawing().subscribe((geom) => this.enableGetGrid(geom));
+    this.mapService.onStopDrawing().subscribe(() => this.disableSelectGrid());
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
@@ -106,11 +107,6 @@ export class OpenlayersComponent implements OnInit {
       source: this.gridSource
     });
 
-    this.vectorSource = new VectorSource({ wrapX: false });
-    this.vector = new VectorLayer({
-      source: this.vectorSource
-    });
-
     this.view = new OlView({
       center: fromLonLat([5.183735, 52.118362]),
       zoom: 18
@@ -118,50 +114,26 @@ export class OpenlayersComponent implements OnInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.vector, this.gridLayer10, this.bagLayer],
+      layers: [this.osmLayer, this.bagLayer, this.gridLayer10],
       view: this.view
     });
     // this.map.addControl(new LayerSwitcher());
-    this.enableGetGrid();
-  }
-
-  private getFeature(geom: FeatureModel, event: any) {
-    const feature = event.feature as Feature;
-    feature.setStyle(this.getStyle(geom.styleName));
-    feature.set('measureId', geom.id);
-    geom.cells.push((feature.getGeometry() as Point).getCoordinates());
-    this.mapService.featureDrawn();
   }
 
   private getStyle(styleName: string) {
     return MeasureStyles.measureStyles.get(styleName);
   }
 
-  private disableDrawPoint() {
-    this.map.removeInteraction(this.draw);
-  }
-
   private clearFeatures(id: number) {
-    this.vectorSource.getFeatures().forEach((feature) => {
+    this.gridSource10.getFeatures().forEach((feature) => {
       if (feature.get('measureId') === id) {
-        this.vectorSource.removeFeature(feature);
+        this.gridSource10.removeFeature(feature);
       }
     });
   }
 
   private clearMap() {
-    this.vectorSource.clear();
-  }
-
-  private enableDrawPoint(geom: FeatureModel) {
-    this.draw = new Draw({
-      source: this.vectorSource,
-      type: 'Point'
-    });
-    this.map.addInteraction(this.draw);
-    this.draw.on('drawend', (e) => {
-      this.getFeature(geom, e);
-    });
+    this.gridSource10.clear();
   }
 
   private showFeatures(geom: FeatureModel) {
@@ -173,30 +145,46 @@ export class OpenlayersComponent implements OnInit {
       feature.setStyle(this.getStyle(geom.styleName));
       features.push(feature);
     });
-    this.vectorSource.addFeatures(features);
-    const extent = this.vectorSource.getExtent();
+    this.gridSource10.addFeatures(features);
+    const extent = this.gridSource10.getExtent();
     this.map.getView().fit(extent);
   }
 
-  private enableGetGrid() {
-    let selectedFeatures: Feature[];
-    const select = new Select({
-      layers: [this.gridLayer10]
+  private enableGetGrid(geom: FeatureModel) {
+    const selectedFeatures: Feature[] = [];
+    const style = this.getStyle(geom.styleName);
+    this.select = new Select({
+      layers: [this.gridLayer10],
+      multi: false
     });
-    this.map.addInteraction(select);
-    select.on('select', (e) => {
-      selectedFeatures = select.getFeatures().array_;
+    this.map.addInteraction(this.select);
+    this.select.on('select', (e) => {
+      const feature = e.selected[0];
+      feature.setStyle(style);
+      feature.set('measureId', geom.id);
+      geom.cells.push((feature.getGeometry() as Polygon).getFirstCoordinate());
+      selectedFeatures.push(feature);
+      this.mapService.featureDrawn();
     });
 
-    const dragBox = new DragBox({
+    this.dragBox = new DragBox({
       condition: platformModifierKeyOnly
     });
-    this.map.addInteraction(dragBox);
-    dragBox.on('boxend', () => {
-      const extent = dragBox.getGeometry().getExtent();
+    this.map.addInteraction(this.dragBox);
+    this.dragBox.on('boxend', () => {
+      const extent = this.dragBox.getGeometry().getExtent();
       this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
+        feature.setStyle(style);
+        feature.set('measureId', geom.id);
+        geom.cells.push((feature.getGeometry() as Point).getCoordinates());
         selectedFeatures.push(feature);
+        this.mapService.featureDrawn();
       });
     });
+  }
+
+  private disableSelectGrid() {
+    this.map.removeInteraction(this.select);
+    this.map.removeInteraction(this.dragBox);
   }
 }
