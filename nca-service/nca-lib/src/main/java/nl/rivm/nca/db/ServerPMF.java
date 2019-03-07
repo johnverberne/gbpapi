@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServerPMF {
+public class ServerPMF implements PMF {
   String DATASOURCE_NAME = "jdbc/nca";
   static Logger LOGGER = LoggerFactory.getLogger(ServerPMF.class);
   
@@ -31,7 +31,7 @@ public class ServerPMF {
       instance = new ServerPMF();
       } catch (final NamingException e) {
         LOGGER.error("Data source for database connection is't correct", e);
-        //throw new RuntimeErrorException(e);
+        throw new RuntimeException(e);
       }
       
     }
@@ -45,5 +45,10 @@ public class ServerPMF {
       throw e;
     }
   }
+
+@Override
+public String getDatabaseVersion() throws SQLException {
+	return "1";
+}
 
 }
