@@ -33,11 +33,15 @@ export class OpenlayersComponent implements OnInit {
   private resultLayer: TileLayer;
   private view: OlView;
   private draw: Draw;
-  private hexagonLayer: VectorLayer;
+  private hexagonLayer: TileLayer;
   private vectorSource: VectorSource;
   private gridSource: VectorSource;
+  private gridSource10: VectorSource;
+  private bagVector: VectorSource;
   private vector: VectorLayer;
   private gridLayer: VectorLayer;
+  private gridLayer10: VectorLayer;
+  private bagLayer: VectorLayer;
   private style1: Style;
   private style2: Style;
   private style3: Style;
@@ -75,7 +79,35 @@ export class OpenlayersComponent implements OnInit {
         transition: 0
       })
     });
-    
+
+
+    this.gridSource10 = new VectorSource({
+      url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
+          'version=1.0.0&request=GetFeature&typeName=wms_grids10_view&TRANSPARANT=TRUE&' +
+          'outputFormat=application/json&srsname=EPSG:3857&' +
+          'bbox=' + extent.join(',') + ',EPSG:3857',
+      format: new GeoJSON(),
+      strategy: bbox,
+    });
+
+    this.gridLayer10 = new VectorLayer({
+      source: this.gridSource10
+    });
+
+    this.bagVector = new VectorSource({
+      url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs?service=WFS&LAYERS=BU.Building&` +
+          'version=1.1.0&request=GetFeature&typename=bag:pand&STYLES=&TRANSPARANT=TRUE&' +
+          'outputFormat=application/json&srsname=EPSG:3857&' +
+          //'maxFeatures=50000&' +
+          'bbox=' + extent.join(',') + ',EPSG:3857',
+      format: new GeoJSON(),
+      strategy: bbox,
+    });
+
+    this.bagLayer =  new VectorLayer({
+      source: this.bagVector
+    });
+
     // gbp:wms_hexagons_view
     // gbp:wms_grids10_view
     this.hexagonLayer = new TileLayer({
@@ -86,6 +118,7 @@ export class OpenlayersComponent implements OnInit {
         transition: 0
       })
     });
+
     this.style1 = new Style({
       image: new RegularShape({
         fill: new Fill({ color: '#D63327' }),
@@ -123,9 +156,9 @@ export class OpenlayersComponent implements OnInit {
     });
 
     this.gridSource = new VectorSource({
-      url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
-          'version=1.0.0&request=GetFeature&typeName=wms_grids_view&' +
-          'maxFeatures=1000&outputFormat=application/json&' +
+      url: (extent) => `${environment.GEOSERVER_ENDPOINT}/wfs?service=WFS&` +
+          'version=1.0.0&request=GetFeature&typeName=wms_grids_view&transparant=true&' +
+          'maxFeatures=1000&outputFormat=application/json&srsname=EPSG:28992&' +
           'bbox=' + extent.join(',') + ',EPSG:28992',
       format: new GeoJSON(),
       strategy: bbox,
@@ -141,13 +174,14 @@ export class OpenlayersComponent implements OnInit {
     });
 
     this.view = new OlView({
-      center: fromLonLat([5.1776041, 52.1202117]),
-      zoom: 13
+      center: fromLonLat([5.183735, 52.118362]), // 52.118362, 5.183735
+      zoom: 18
     });
 
+    // this.resultLayer,
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.hexagonLayer, this.resultLayer, this.vector, this.gridLayer],
+      layers: [this.osmLayer, this.hexagonLayer,  this.vector, this.gridLayer10, this.bagLayer],
       view: this.view
     });
 
@@ -205,7 +239,7 @@ export class OpenlayersComponent implements OnInit {
   private enableGetGrid() {
     let selectedFeatures: Feature[];
     const select = new Select({
-      layers: [this.gridLayer]
+      layers: [this.gridLayer10]
     });
     this.map.addInteraction(select);
     select.on('select', (e) => {
@@ -218,7 +252,7 @@ export class OpenlayersComponent implements OnInit {
     this.map.addInteraction(dragBox);
     dragBox.on('boxend', () => {
       const extent = dragBox.getGeometry().getExtent();
-      this.gridSource.forEachFeatureIntersectingExtent(extent, (feature) => {
+      this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
         selectedFeatures.push(feature);
       });
     });
