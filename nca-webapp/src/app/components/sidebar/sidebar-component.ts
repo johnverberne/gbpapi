@@ -2,7 +2,6 @@ import { Component, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageEventService } from '../../services/message-event-service';
 import { Router } from '@angular/router';
-import { ProjectModel } from '../../models/project-model';
 import { CurrentProjectService } from '../../services/current-project-service';
 import { MenuEventService } from '../../services/menu-event-service';
 
