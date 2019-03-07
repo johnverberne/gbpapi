@@ -6,4 +6,8 @@ export class CurrentProjectService {
 
   public currentProject: ProjectModel = new ProjectModel();
 
+  public hasResults(): boolean {
+    return this.currentProject.scenarios.findIndex((scenario) => scenario.results) !== -1;
+  }
+
 }

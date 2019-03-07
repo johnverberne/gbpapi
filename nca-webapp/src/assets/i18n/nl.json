@@ -28,6 +28,7 @@
   "VEGETATION_LOW": "Lage vegetatie",
   "VEGETATION_BUSH": "Struiken",
   "VEGETATION_TREE": "Bomen",
+  "VEGETATION_VALUES_INVALID": "De vegetatie waarden zijn bij elkaar kleiner dan 0 of groter dan 100.",
   "INHABITANTS": "Inwoners",
   "NUMBER_PER_TILE": "Aantal in gebied",
   "WOZ": "Gem. WOZ-waarde",

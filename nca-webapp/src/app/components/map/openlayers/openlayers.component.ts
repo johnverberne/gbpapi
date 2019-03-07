@@ -10,8 +10,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
 import { FeatureModel } from '../../../models/feature-model';
-import { Style, Fill, RegularShape } from 'ol/style';
-import { Point } from 'ol/src/geom';
+import { Point } from 'ol/geom';
+import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
 import { bbox } from 'ol/loadingstrategy';
@@ -26,7 +26,7 @@ import { LayerSwitcher } from 'ol-layerswitcher';
   styleUrls: ['./openlayers.component.css']
 })
 export class OpenlayersComponent implements OnInit {
-
+  // Default projection: EPSG:3857
   public map: OlMap;
   private osmLayer: TileLayer;
   private resultLayer: TileLayer;
@@ -40,24 +40,13 @@ export class OpenlayersComponent implements OnInit {
   private gridLayer: VectorLayer;
   private gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
-  private style1: Style;
-  private style2: Style;
-  private style3: Style;
-  private style4: Style;
 
   constructor(private mapService: MapService) {
-    this.mapService.onStartDrawing().subscribe((geom) => {
-      this.enableDrawPoint(geom);
-    });
-    this.mapService.onStopDrawing().subscribe(() => {
-      this.disableDrawPoint();
-    });
-    this.mapService.onRemoveMeasure().subscribe((id) => {
-      this.clearFeatures(id);
-    });
-    this.mapService.onClearMap().subscribe(() => {
-      this.clearMap();
-    });
+    this.mapService.onStartDrawing().subscribe((geom) => this.enableDrawPoint(geom));
+    this.mapService.onStopDrawing().subscribe(() => this.disableDrawPoint());
+    this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
+    this.mapService.onClearMap().subscribe(() => this.clearMap());
+    this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
   }
 
   public ngOnInit() {
@@ -174,22 +163,14 @@ export class OpenlayersComponent implements OnInit {
 
   private getFeature(geom: FeatureModel, event: any) {
     const feature = event.feature as Feature;
-    feature.setStyle(this.getStyle(geom.color));
+    feature.setStyle(this.getStyle(geom.styleName));
     feature.set('measureId', geom.id);
     geom.cells.push((feature.getGeometry() as Point));
     this.mapService.featureDrawn();
   }
 
-  private getStyle(color: string) {
-    if (color === '#D63327') {
-      return this.style1;
-    } else if (color === '#93278F') {
-      return this.style2;
-    } else if (color === '#1C0078') {
-      return this.style3;
-    } else if (color === '#FF931E') {
-      return this.style4;
-    }
+  private getStyle(styleName: string) {
+    return MeasureStyles.measureStyles.get(styleName);
   }
 
   private disableDrawPoint() {
@@ -217,6 +198,21 @@ export class OpenlayersComponent implements OnInit {
     this.draw.on('drawend', (e) => {
       this.getFeature(geom, e);
     });
+  }
+
+  private showFeatures(geom: FeatureModel) {
+    const features: Feature[] = [];
+    geom.cells.forEach((cell) => {
+      const coords = cell.getCoordinates();
+      const feature: Feature = new Feature();
+      feature.setGeometry(new Point(coords));
+      feature.set('measureId', geom.id);
+      feature.setStyle(this.getStyle(geom.styleName));
+      features.push(feature);
+    });
+    this.vectorSource.addFeatures(features);
+    const extent = this.vectorSource.getExtent();
+    this.map.getView().fit(extent);
   }
 
   private enableGetGrid() {

@@ -1,0 +1,75 @@
+@import 'variables.scss';
+:host {
+  width: 100%;
+}
+
+.scenario-component {
+  .header {
+    padding: 0.5rem;
+  }
+}
+
+.measure {
+  background-color: white;
+}
+
+.download {
+  margin-left: auto;
+}
+
+.nav-header {
+  background-color: $menu-bar-background;
+}
+
+.pager {
+  display: flex;
+  flex-direction: row;
+  height: 43px;
+  width: 100%;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.btn.pager-number {
+  font-family: 'RO-Sans-Text';
+  font-size: 14px;
+  font-weight: bold;
+  color: map-get($theme-colors, "primary");
+  border-color: map-get($theme-colors, "primary");
+  &:not(:disabled):not(.disabled).active {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
+  }
+  &:hover {
+    color: white;
+    background-color: map-get($theme-colors, "primary");
+  }
+}
+
+.scenario-form {
+  background-color: $menu-bar-background;
+}
+
+.scenario-content {
+  padding: 0.5rem;
+}
+
+.measures {
+  padding-top: 0.5rem;
+}
+
+.save-cancel {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  .okay-button {
+    margin-left: auto;
+  }
+}
+
+.calculate {
+  margin-left: auto;
+}
+
+.row {
+  margin-right: 0;
+  margin-left: 0;
+}

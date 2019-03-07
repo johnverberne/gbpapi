@@ -6,7 +6,7 @@ export class MeasureModel {
   public measureId: number = -1;
   public measureName: string;
   public landuse: LandUseType;
-  public vegetation: VegetationModel;
+  public vegetation: VegetationModel = new VegetationModel();
   public inhabitants: number;
   public woz: number;
   public geom: FeatureModel;

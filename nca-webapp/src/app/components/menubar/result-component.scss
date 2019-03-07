@@ -20,10 +20,31 @@
   }
 
   .sub-header {
-    height: 43px;
+    height: 50px;
     width: 100%;
-    padding: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     background-color: $menu-bar-background;
+
+    .pager {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .btn.pager-number {
+      font-family: 'RO-Sans-Text';
+      font-size: 14px;
+      font-weight: bold;
+      color: map-get($theme-colors, "primary");
+      border-color: map-get($theme-colors, "primary");
+      &:not(:disabled):not(.disabled).active {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+      }
+      &:hover {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+      }
+    }
   }
 }
 
