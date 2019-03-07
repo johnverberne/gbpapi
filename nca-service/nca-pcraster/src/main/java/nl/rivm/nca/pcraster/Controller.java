@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.api.domain.DataType;
 import nl.rivm.nca.api.domain.LayerObject;
 
 public class Controller {
@@ -39,6 +40,8 @@ public class Controller {
 
   public static final String GEOTIFF_EXT = "tiff";
   public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
+  private static final String XYZ_EXT = "xyz";
+  private static final String XYZ_DOT_EXT = "." + XYZ_EXT;
   private static final String MAP_EXT = "map";
   private static final String MAP_DOT_EXT = '.' + MAP_EXT;
   private static final String JSON_EXT = "json";
@@ -66,6 +69,7 @@ public class Controller {
 
     final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
     final File first = copyInputRastersToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers());
+
     final Envelope2D extend = calculateExtend(first);
     cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
     final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(),
@@ -81,14 +85,48 @@ public class Controller {
   // copy input geotiff files to working map and convert to pcraster format
   private File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
       List<LayerObject> userLayers) {
-    final List<File> files = userLayers.stream().map(ul -> writeToFile(layerFiles, workingPath, ul))
+    final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul))
         .collect(Collectors.toList());
+
     files.forEach(this::convertOutput2GeoTiff);
     return files.isEmpty() ? null : files.get(0);
   }
 
+  private File writeToFileConvertToTiff(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+    File file = writeToFile(layerFiles, workingPath, layerObject);
+    if (layerObject.getDataType() == DataType.GEOTIFF) {
+      return file;
+    } else {
+      return convertXyzInput2GeoTiff(file);
+    }
+  }
+
+  private File convertXyzInput2GeoTiff(File xyzFile) {
+    final int indexOf = xyzFile.getName().indexOf(XYZ_DOT_EXT);
+
+    if (indexOf < 0) {
+      throw new RuntimeException("no xyz file");
+    }
+
+    final File geotiffFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + GEOTIFF_DOT_EXT);
+
+    try {
+      // convert input xyz to tiff
+      Xyz2Geotiff.xyz2geoTiff(xyzFile, geotiffFile);
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+    return geotiffFile;
+
+  }
+
   private File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-    final File targetFile = userGeotiffFile(layerFiles, workingPath, layerObject);
+    final File targetFile;
+    if (layerObject.getDataType() == DataType.GEOTIFF) {
+      targetFile = userGeotiffFile(layerFiles, workingPath, layerObject);
+    } else {
+      targetFile = userXyzFile(layerFiles, workingPath, layerObject);
+    }
     final File file = directFile(layerObject.getData());
 
     if (file == null || !file.exists()) {
@@ -104,6 +142,9 @@ public class Controller {
         e.printStackTrace();
       }
     }
+
+    // convert to xyz to tiff
+
     return targetFile;
   }
 
@@ -117,6 +158,10 @@ public class Controller {
 
   private File userGeotiffFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
     return new File(workingPath, layerFiles.get(layerObject.getClassType()) + GEOTIFF_DOT_EXT);
+  }
+
+  private File userXyzFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+    return new File(workingPath, layerFiles.get(layerObject.getClassType()) + XYZ_DOT_EXT);
   }
 
   private Envelope2D calculateExtend(File geoTiffFile) throws IOException {
@@ -159,11 +204,12 @@ public class Controller {
     if (indexOf < 0) {
       throw new RuntimeException("no geotiff file");
     }
+
     final File mapFile = new File(FilenameUtils.removeExtension(geotiffFile.getAbsolutePath()) + MAP_DOT_EXT);
 
     try {
       // convert input tiff to map
-      LOGGER.info("geotiff2pcraster {} -> {}", geotiffFile, mapFile);
+      LOGGER.info("Export geotiff2pcraster {} -> {}", geotiffFile, mapFile);
       Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile);
     } catch (final IOException e) {
       e.printStackTrace();
@@ -183,30 +229,30 @@ public class Controller {
           }
         });
   }
-  
+
   /**
    * load generated json files and put in the database
    * 
    * @param outputPath
    * @throws IOException
    */
-  private  List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath) throws IOException {
-	  List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
+  private List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath) throws IOException {
+    List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
     Files.list(outputPath.toPath())
         .filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
           try {
             LOGGER.info("read result file {}", f.getFileName());
             @SuppressWarnings("resource")
-            FileReader fr = new FileReader(f.toFile().getAbsolutePath()); 
-            int i; 
-            String body ="";
-            while ((i=fr.read()) != -1) 
+            FileReader fr = new FileReader(f.toFile().getAbsolutePath());
+            int i;
+            String body = "";
+            while ((i = fr.read()) != -1)
               body += (char) i;
-            
+
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
-			      returnList.add(result);
-            LOGGER.info("content of file for correlationId {} content {}", correlationId,  result.toString());
+            returnList.add(result);
+            LOGGER.info("content of file for correlationId {} content {}", correlationId, result.toString());
             // lets write to database with id
 
           } catch (final Exception e) {

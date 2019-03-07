@@ -30,6 +30,12 @@
 			<artifactId>nca-api</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- this version breaks tiff reader
+		<dependency>
   		    <groupId>org.geotools</groupId>
   			<artifactId>gt-geotiff</artifactId>
   			<version>${geotools.version}</version>
@@ -39,6 +45,7 @@
             <artifactId>gt-epsg-hsql</artifactId>
             <version>2.5.6</version>
         </dependency>
+        -->
 	</dependencies>
 	
 </project>

@@ -29,7 +29,6 @@
         <postgresql.version>9.4.1207.jre7</postgresql.version>
         <jogamp.version>2.3.1</jogamp.version>
 		<tomcat-servlet-api.version>8.5.28</tomcat-servlet-api.version>
-		<geotools.version>19.0</geotools.version>
 	</properties>
 
 	<repositories>
@@ -91,6 +90,11 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
 				<version>${log4j.version}</version>
+			</dependency>
+		    <dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.4</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>

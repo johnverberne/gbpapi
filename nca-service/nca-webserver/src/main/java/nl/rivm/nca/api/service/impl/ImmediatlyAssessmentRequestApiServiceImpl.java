@@ -79,7 +79,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     List<AssessmentResultResponse> results = new ArrayList<AssessmentResultResponse>();
     for(String model : models) {
     results.addAll(controller.run(uuid,
-        singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/")));
+        singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT)));
     }
     return results;
   }

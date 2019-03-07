@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServerPMF {
+public class ServerPMF implements PMF {
   String DATASOURCE_NAME = "jdbc/nca";
   static Logger LOGGER = LoggerFactory.getLogger(ServerPMF.class);
   
