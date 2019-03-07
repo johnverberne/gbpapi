@@ -129,7 +129,7 @@ export class OpenlayersComponent implements OnInit {
     const feature = event.feature as Feature;
     feature.setStyle(this.getStyle(geom.styleName));
     feature.set('measureId', geom.id);
-    geom.cells.push((feature.getGeometry() as Point));
+    geom.cells.push((feature.getGeometry() as Point).getCoordinates());
     this.mapService.featureDrawn();
   }
 
@@ -167,9 +167,8 @@ export class OpenlayersComponent implements OnInit {
   private showFeatures(geom: FeatureModel) {
     const features: Feature[] = [];
     geom.cells.forEach((cell) => {
-      const coords = cell.getCoordinates();
       const feature: Feature = new Feature();
-      feature.setGeometry(new Point(coords));
+      feature.setGeometry(new Point(cell));
       feature.set('measureId', geom.id);
       feature.setStyle(this.getStyle(geom.styleName));
       features.push(feature);

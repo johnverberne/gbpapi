@@ -7,6 +7,7 @@ import { AssessmentRequest } from '../../models/assessment-request-model';
 import { MeasureComponent } from './measure-component';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuEventService } from '../../services/menu-event-service';
+import { ProjectModel } from '../../models/project-model';
 
 @Component({
   selector: 'gbp-scenario',
@@ -77,6 +78,7 @@ export class ScenarioComponent implements OnChanges {
       this.scenarioModel.measures = this.gbpMeasures.saveMeasures();
       this.scenarioModel.valid = true;
     }
+    console.log(JSON.stringify(this.projectService.currentProject as ProjectModel));
   }
 
   public cancelClick() {
