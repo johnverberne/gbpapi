@@ -186,7 +186,7 @@ export class OpenlayersComponent implements OnInit {
   }
 
   private addOrRemoveFeature(feature: Feature, geom: FeatureModel) {
-    const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
+    const selected = this.selectedGridSource.getFeatureById(feature.getId());
     if (selected) {
       if (selected.get('measureId') === geom.id) {
         this.removeSelectedFeature(selected);
@@ -205,7 +205,7 @@ export class OpenlayersComponent implements OnInit {
     newFeature.setGeometry(feature.getGeometry());
     newFeature.setStyle(style);
     newFeature.set('measureId', geom.id);
-    newFeature.setId(feature.getProperties()['grid_id']);
+    newFeature.setId(feature.getId());
     geom.cells.push((newFeature.getGeometry() as Polygon).getFirstCoordinate());
     this.selectedGridSource.addFeature(newFeature);
     this.mapService.featureDrawn();
