@@ -161,22 +161,14 @@ export class OpenlayersComponent implements OnInit {
   }
 
   private enableGetGrid(geom: FeatureModel) {
-    const selectedFeatures: Feature[] = [];
-    const style = this.getStyle(geom.styleName);
     this.select = new Select({
       layers: [this.gridLayer10],
       multi: false
     });
     this.map.addInteraction(this.select);
     this.select.on('select', (e) => {
-      const feature: Feature = new Feature();
-      feature.setGeometry(e.selected[0].getGeometry());
-      feature.setStyle(style);
-      feature.set('measureId', geom.id);
-      geom.cells.push((feature.getGeometry() as Polygon).getFirstCoordinate());
-      selectedFeatures.push(feature);
-      this.selectedGridSource.addFeature(feature);
-      this.mapService.featureDrawn();
+      const feature: Feature = e.selected[0];
+      this.addOrRemoveFeature(feature, geom);
     });
 
     this.dragBox = new DragBox({
@@ -185,17 +177,42 @@ export class OpenlayersComponent implements OnInit {
     this.map.addInteraction(this.dragBox);
     this.dragBox.on('boxend', () => {
       const extent = this.dragBox.getGeometry().getExtent();
+      const selectedFeatures: Feature[] = [];
       this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
-        const newFeature: Feature = new Feature();
-        newFeature.setGeometry(feature.getGeometry());
-        newFeature.setStyle(style);
-        newFeature.set('measureId', geom.id);
-        geom.cells.push((newFeature.getGeometry() as Polygon).getFirstCoordinate());
-        selectedFeatures.push(newFeature);
-        this.selectedGridSource.addFeature(newFeature);
-        this.mapService.featureDrawn();
+        selectedFeatures.push(feature);
       });
+      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature, geom));
     });
+  }
+
+  private addOrRemoveFeature(feature: Feature, geom: FeatureModel) {
+    const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
+    if (selected) {
+      if (selected.get('measureId') === geom.id) {
+        this.removeSelectedFeature(selected);
+      } else {
+        this.removeSelectedFeature(selected);
+        this.addSelectedFeature(feature, geom);
+      }
+    } else {
+      this.addSelectedFeature(feature, geom);
+    }
+  }
+
+  private addSelectedFeature(feature: Feature, geom: FeatureModel) {
+    const style = this.getStyle(geom.styleName);
+    const newFeature: Feature = new Feature();
+    newFeature.setGeometry(feature.getGeometry());
+    newFeature.setStyle(style);
+    newFeature.set('measureId', geom.id);
+    newFeature.setId(feature.getProperties()['grid_id']);
+    geom.cells.push((newFeature.getGeometry() as Polygon).getFirstCoordinate());
+    this.selectedGridSource.addFeature(newFeature);
+    this.mapService.featureDrawn();
+  }
+
+  private removeSelectedFeature(feature: Feature) {
+    this.selectedGridSource.removeFeature(feature);
   }
 
   private disableSelectGrid() {
