@@ -196,9 +196,9 @@ export class OpenlayersComponent implements AfterViewInit {
     const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
     if (selected) {
       if (selected.get('measureId') === geom.id) {
-        this.removeSelectedFeature(selected);
+        this.removeSelectedFeature(selected, geom);
       } else {
-        this.removeSelectedFeature(selected);
+        this.removeSelectedFeature(selected, geom);
         this.addSelectedFeature(feature, geom);
       }
     } else {
@@ -221,8 +221,9 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.featureDrawn();
   }
 
-  private removeSelectedFeature(feature: Feature) {
+  private removeSelectedFeature(feature: Feature, geom: FeatureModel) {
     this.selectedGridSource.removeFeature(feature);
+    geom.cells = geom.cells.filter(element => element.gridId !== feature.getId());
   }
 
   private disableSelectGrid() {
