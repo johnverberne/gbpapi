@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
@@ -19,13 +19,14 @@ import { DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { LayerSwitcher } from 'ol-layerswitcher';
 import { Coordinate } from 'ol/coordinate';
+import { GridCellModel } from '../../../models/grid-cell-model';
 
 @Component({
   selector: 'gbp-openlayers',
   templateUrl: './openlayers.component.html',
   styleUrls: ['./openlayers.component.css']
 })
-export class OpenlayersComponent implements OnInit {
+export class OpenlayersComponent implements AfterViewInit {
   public map: OlMap;
   private osmLayer: TileLayer;
   private resultLayer: TileLayer;
@@ -49,23 +50,6 @@ export class OpenlayersComponent implements OnInit {
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
-  }
-
-  public ngOnInit() {
-    this.osmLayer = new TileLayer({
-      source: new OlXYZ({
-        url: 'http://tile.osm.org/{z}/{x}/{y}.png'
-      })
-    });
-
-    this.resultLayer = new TileLayer({
-      source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
-        params: { 'LAYERS': 'gbp:wms_grids10_view', 'TILED': true },
-        serverType: 'geoserver',
-        transition: 0
-      })
-    });
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
@@ -79,6 +63,21 @@ export class OpenlayersComponent implements OnInit {
     this.gridLayer10 = new VectorLayer({
       source: this.gridSource10,
       maxResolution: 2
+    });
+
+    this.osmLayer = new TileLayer({
+      source: new OlXYZ({
+        url: 'http://tile.osm.org/{z}/{x}/{y}.png'
+      })
+    });
+
+    this.resultLayer = new TileLayer({
+      source: new TileWMS({
+        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
+        params: { 'LAYERS': 'gbp:wms_grids10_view', 'TILED': true },
+        serverType: 'geoserver',
+        transition: 0
+      })
     });
 
     this.bagVector = new VectorSource({
@@ -106,6 +105,10 @@ export class OpenlayersComponent implements OnInit {
       source: this.selectedGridSource
     });
 
+  }
+
+
+  public ngAfterViewInit() {
     this.view = new OlView({
       center: fromLonLat([5.183735, 52.118362], this.projection),
       zoom: 18
@@ -143,6 +146,7 @@ export class OpenlayersComponent implements OnInit {
       feature.setGeometry(poly);
       feature.set('measureId', geom.id);
       feature.setStyle(this.getStyle(geom.styleName));
+      feature.setId(cell.gridId);
       features.push(feature);
     });
     this.selectedGridSource.addFeatures(features);
@@ -150,13 +154,13 @@ export class OpenlayersComponent implements OnInit {
     this.map.getView().fit(extent);
   }
 
-  private createMapCell(cell: number[]): Polygon {
+  private createMapCell(cell: GridCellModel): Polygon {
     const coords: Coordinate[] = [];
-    coords.push(cell);
-    coords.push([cell[0] + 16, cell[1]]);
-    coords.push([cell[0] + 16, cell[1] + 16]);
-    coords.push([cell[0], cell[1] + 16]);
-    coords.push(cell);
+    coords.push(cell.coords);
+    coords.push([cell.coords[0] + 16, cell.coords[1]]);
+    coords.push([cell.coords[0] + 16, cell.coords[1] + 16]);
+    coords.push([cell.coords[0], cell.coords[1] + 16]);
+    coords.push(cell.coords);
     return new Polygon([coords]);
   }
 
@@ -179,14 +183,17 @@ export class OpenlayersComponent implements OnInit {
       const extent = this.dragBox.getGeometry().getExtent();
       const selectedFeatures: Feature[] = [];
       this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
-        selectedFeatures.push(feature);
+        // Temporary fix to overcome double/triple selected identical cells
+        if (selectedFeatures.findIndex(element => feature.getId() === element.getId()) === -1) {
+          selectedFeatures.push(feature);
+        }
       });
       selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature, geom));
     });
   }
 
   private addOrRemoveFeature(feature: Feature, geom: FeatureModel) {
-    const selected = this.selectedGridSource.getFeatureById(feature.getId());
+    const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
     if (selected) {
       if (selected.get('measureId') === geom.id) {
         this.removeSelectedFeature(selected);
@@ -205,8 +212,11 @@ export class OpenlayersComponent implements OnInit {
     newFeature.setGeometry(feature.getGeometry());
     newFeature.setStyle(style);
     newFeature.set('measureId', geom.id);
-    newFeature.setId(feature.getId());
-    geom.cells.push((newFeature.getGeometry() as Polygon).getFirstCoordinate());
+    newFeature.setId(feature.getProperties()['grid_id']);
+    const cell = new GridCellModel();
+    cell.gridId = (newFeature.getId() as number);
+    cell.coords = (newFeature.getGeometry() as Polygon).getFirstCoordinate();
+    geom.cells.push(cell);
     this.selectedGridSource.addFeature(newFeature);
     this.mapService.featureDrawn();
   }
