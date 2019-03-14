@@ -11,8 +11,8 @@
       <svg-icon src="assets/img/main-menu-scenario.svg" [ngClass]="{'active': activeMenu === 'SCENARIO', 'disabled': !projectService.currentProject.reference}"></svg-icon>
       {{'BUTTON_SCENARIO' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onMenuClick('RESULT')" [disabled]="!projectService.currentProject.results">
-      <svg-icon src="assets/img/main-menu-result.svg" [ngClass]="{'active': activeMenu === 'RESULT', 'disabled': !projectService.currentProject.results}"></svg-icon>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'RESULT'}" (click)="onMenuClick('RESULT')" [disabled]="!projectService.hasResults()">
+      <svg-icon src="assets/img/main-menu-result.svg" [ngClass]="{'active': activeMenu === 'RESULT', 'disabled': !projectService.hasResults()}"></svg-icon>
       {{'BUTTON_RESULT' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onMenuClick('LAYERS')">

@@ -32,7 +32,7 @@
               </div>
               <div class="row col-sm-12 measure-row">
                 <div class="measure-label">
-                  <label class="sub-label" for="vegetation">{{'VEGETATION_LOW' | translate}}</label>
+                  <label class="sub-label" for="low">{{'VEGETATION_LOW' | translate}}</label>
                 </div>
                 <div class="input-group">
                   <input type="number" max="100" accuracy="2" min="0" formControlName="low" class="form-control">
@@ -43,7 +43,7 @@
               </div>
               <div class="row col-sm-12 measure-row">
                 <div class="measure-label">
-                  <label class="sub-label" for="vegetation">{{'VEGETATION_BUSH' | translate}}</label>
+                  <label class="sub-label" for="middle">{{'VEGETATION_BUSH' | translate}}</label>
                 </div>
                 <div class="input-group">
                   <input type="number" max="100" accuracy="2" min="0" formControlName="middle" class="form-control">
@@ -54,7 +54,7 @@
               </div>
               <div class="row col-sm-12 measure-row">
                 <div class="measure-label">
-                  <label class="sub-label" for="vegetation">{{'VEGETATION_TREE' | translate}}</label>
+                  <label class="sub-label" for="high">{{'VEGETATION_TREE' | translate}}</label>
                 </div>
                 <div class="input-group">
                   <input type="number" max="100" accuracy="2" min="0" formControlName="high" class="form-control">
@@ -88,7 +88,7 @@
     </div>
   </div>
   <div *ngIf="measures.length !== 0 && measures.length < MAX_MEASURES_THRESHOLD">
-    <button type="button" class="btn" (click)="onAddMeasureClick()">
+    <button type="button" class="btn add-measure" (click)="onAddMeasureClick()">
       <svg-icon [style.fill]="getAddMeasureColor()" src="assets/img/ui-map-plus.svg"></svg-icon>
     </button>
   </div>

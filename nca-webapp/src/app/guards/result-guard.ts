@@ -13,7 +13,7 @@ export class ResultGuard implements CanActivate {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.currentProjectService.currentProject.results) {
+    if (this.currentProjectService.hasResults()) {
       return Observable.create((canActivateObserver: Subscriber<boolean>) => {
         canActivateObserver.next(true);
         canActivateObserver.complete();

@@ -27,6 +27,7 @@ import java.util.UUID;
 import org.junit.Test;
 
 import nl.rivm.nca.db.TestPMF;
+import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.shared.domain.JobProgress;
 import nl.rivm.nca.shared.domain.ScenarioUser;
 
@@ -45,12 +46,12 @@ public class JobRepositoryTest {
 	}
 
 	@Test
-	public void testCreateUser() throws SQLException {
+	public void testCreateUser() throws SQLException, AeriusException {
 		String apiKey = UUID.randomUUID().toString();
 		ScenarioUser user = new ScenarioUser();
 		user.setApiKey(apiKey);
 		user.setEnabled(true);
-		user.setEmailAddress(apiKey + "-johnverberne@gmail.com");
+		user.setEmailAddress("johnverberne."+apiKey+"@gmail.com");
 		UserRepository.createUser(getConnection(), user);
 		ScenarioUser existingUser = UserRepository.getUserByApiKey(getConnection(), apiKey);
 		assertNotNull("user found ", existingUser);

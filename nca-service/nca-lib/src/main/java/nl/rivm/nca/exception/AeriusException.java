@@ -19,14 +19,16 @@ package nl.rivm.nca.exception;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * An exception thrown by a server side application and is caused by an error related to the specific input of the user or an unrecoverable error that
- * can not be handled. An AeriusException always contains a {@link Reason} and optional parameters with relevant context specific values. It should
- * not contain any language specific or message related data as argument. On the client or elsewhere the message is processed the language specific
- * message is obtained based on the reason code and additional data values are passed into the message.
+ * An exception thrown by a server side application and is caused by an error
+ * related to the specific input of the user or an unrecoverable error that can
+ * not be handled. An AeriusException always contains a {@link Reason} and
+ * optional parameters with relevant context specific values. It should not
+ * contain any language specific or message related data as argument. On the
+ * client or elsewhere the message is processed the language specific message is
+ * obtained based on the reason code and additional data values are passed into
+ * the message.
  */
 public class AeriusException extends Exception implements Serializable {
-
 	private static final long serialVersionUID = 4336548764880899435L;
 
 	/**
@@ -63,7 +65,7 @@ public class AeriusException extends Exception implements Serializable {
 		USER_INVALID_API_KEY(1003), 
 		USER_ACCOUNT_DISABLED(1004), 
 		CONNECT_NO_VALID_EMAIL_SUPPLIED(1005), 
-		CONNECT_USER_JOBKEY_DOES_NOT_EXIST(1006) 
+		CONNECT_USER_JOBKEY_DOES_NOT_EXIST(1006)
 		;
 
 		private final int errorCode;

@@ -22,7 +22,6 @@ import nl.rivm.nca.shared.domain.ScenarioUser;
 
 public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AssessmentRequestApiServiceImpl.class);
 
 	private final ApiServiceContext context;
@@ -43,6 +42,7 @@ public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 		} catch (final AeriusException e) {
 			return SwaggerUtil.handleException(context, e);
 		}
+
 	}
 
 	private ValidateResponse generateAPIKey(String email) throws AeriusException {

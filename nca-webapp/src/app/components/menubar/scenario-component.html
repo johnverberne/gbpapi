@@ -1,43 +1,24 @@
 <div class="scenario-component">
-  <div class="header">{{'SCENARIO' | translate}}</div>
-  <div class="nav-header">
-    <div class="pager">
-      <div *ngFor="let scenario of scenarios; let i = index">
-        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex, 'round-button-start': i===0,
-          'round-button-middle': i!==0 && i < MAX_SCENARIO_THRESHOLD - 1,
-          'round-button-end': i===MAX_SCENARIO_THRESHOLD - 1}"
-          (click)="onScenarioClick(scenario, i)">{{i + 1}}</button>
-      </div>
-      <button *ngIf="projectService.currentProject.scenarios.length < MAX_SCENARIO_THRESHOLD" type="button"
-        class="btn btn-secondary round-button-end pager-number" (click)="addScenario()">+</button>
-      <button type="button" class="btn download delete-download" disabled="true">
-        <svg-icon src="assets/img/ui-download.svg" [ngClass]="{'disabled': true}"></svg-icon>
-      </button>
-      <button type="button" class="btn delete-download" (click)="onDeleteClick()">
-        <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
-      </button>
-    </div>
-  </div>
   <form class="scenario-form" id="scenarioform" [formGroup]="scenarioForm">
     <div class="scenario-content">
       <div class="form-group row">
         <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
       </div>
       <div class="form-group row">
-        <input type="text" id="name"
-          formControlName="name" class="form-control col-sm-10">
+        <input type="text" id="name" formControlName="name" class="form-control col-sm-10">
       </div>
       <div class="header measure">{{'MEASURE' | translate}}</div>
       <div class="measures">
-        <gbp-measure id="measures" [measureForm]="scenarioForm.controls.measures" [(measureModels)]="measures" name="gbp-measure"></gbp-measure>
-        <div class="row save-cancel" *ngIf="true">
+        <gbp-measure id="measures" [measureForm]="scenarioForm.controls.measures" [(measureModels)]="measures"
+          name="gbp-measure"></gbp-measure>
+        <div class="row save-cancel" *ngIf="hasMeasures()">
           <button type="button" class="btn btn-secondary"
-            (click)="cancelClick(i)">{{ 'BUTTON_CANCEL' | translate }}</button>
-          <button type="button" class="btn btn-primary okay-button" (click)="saveClick(i)" autofocus>{{ 'BUTTON_SAVE'
+            (click)="cancelClick()">{{ 'BUTTON_CANCEL' | translate }}</button>
+          <button type="button" class="btn btn-primary okay-button" (click)="saveClick()" autofocus>{{ 'BUTTON_SAVE'
                   | translate }}</button>
         </div>
-        <div class="row save-cancel">
-          <button type="button" class="btn btn-secondary calculate" (click)="calculateClick(i)" autofocus>{{
+        <div class="row save-cancel" *ngIf="isValidScenario()">
+          <button type="button" class="btn btn-secondary calculate" (click)="calculateClick()" autofocus>{{
             'BUTTON_CALCULATE' | translate }}</button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home-component';
-import { ScenarioComponent } from './components/menubar/scenario-component';
+import { ScenarioListComponent } from './components/menubar/scenario-list-component';
 import { ReferenceComponent } from './components/menubar/reference-component';
 import { DummyComponent } from './components/menubar/dummy-component';
 import { ScenarioGuard } from './guards/scenario-guard';
@@ -22,7 +22,7 @@ const routes: Routes = [
         path: 'reference', component: ReferenceComponent
       },
       {
-        path: 'scenario', component: ScenarioComponent,
+        path: 'scenario', component: ScenarioListComponent,
         canActivate: [ScenarioGuard]
       },
       {

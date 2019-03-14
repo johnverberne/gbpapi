@@ -12,7 +12,9 @@ import { MessageEventService } from '../../services/message-event-service';
 })
 export class ResultComponent {
 
-  openMenu: boolean = true;
+  public MAX_SCENARIO_THRESHOLD: number = 4;
+  public openMenu: boolean = true;
+  public currentScenarioIndex: number = 0;
 
   constructor(public projectService: CurrentProjectService,
     public router: Router,
@@ -24,14 +26,20 @@ export class ResultComponent {
   }
 
   public get measures() {
-    if (this.projectService.currentProject.scenarios[0]) {
-      return this.projectService.currentProject.scenarios[0].measures;
+    if (this.projectService.currentProject.scenarios[this.currentScenarioIndex]) {
+      return this.projectService.currentProject.scenarios[this.currentScenarioIndex].measures;
     }
   }
 
   public get scenario() {
     if (this.projectService.currentProject.scenarios) {
-      return this.projectService.currentProject.scenarios[0];
+      return this.projectService.currentProject.scenarios[this.currentScenarioIndex];
+    }
+  }
+
+  public get scenarios() {
+    if (this.projectService.currentProject.scenarios) {
+      return this.projectService.currentProject.scenarios;
     }
   }
 
@@ -41,6 +49,10 @@ export class ResultComponent {
 
   public exportClick() {
     this.messageEventService.sendMessage('WIP');
+  }
+
+  public onScenarioClick(index: number) {
+    this.currentScenarioIndex = index;
   }
 
 }
