@@ -13,7 +13,7 @@ import { Polygon } from 'ol/geom';
 import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
-import { bbox } from 'ol/loadingstrategy';
+import { bbox, all } from 'ol/loadingstrategy';
 import { Select, DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { LayerSwitcher } from 'ol-layerswitcher';
@@ -66,10 +66,9 @@ export class OpenlayersComponent implements AfterViewInit {
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
         'version=1.0.0&request=GetFeature&typeName=gbp:wms_grids10_view&TRANSPARANT=TRUE&' +
-        'outputFormat=application/json&srsname=EPSG:3857&' +
-        'bbox=' + extent.join(',') + ',EPSG:3857',
+        'outputFormat=application/json&srsname=EPSG:3857',
       format: new GeoJSON(),
-      strategy: bbox,
+      strategy: all,
     });
 
     this.gridLayer10 = new VectorLayer({
