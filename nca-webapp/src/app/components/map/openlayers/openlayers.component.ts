@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
@@ -14,17 +14,17 @@ import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
 import { bbox } from 'ol/loadingstrategy';
-import { Select } from 'ol/interaction';
-import { DragBox } from 'ol/interaction';
+import { Select, DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { LayerSwitcher } from 'ol-layerswitcher';
 import { Coordinate } from 'ol/coordinate';
 import { GridCellModel } from '../../../models/grid-cell-model';
+import { Style, Stroke, Fill } from 'ol/style';
 
 @Component({
   selector: 'gbp-openlayers',
   templateUrl: './openlayers.component.html',
-  styleUrls: ['./openlayers.component.css']
+  styleUrls: ['./openlayers.component.scss']
 })
 export class OpenlayersComponent implements AfterViewInit {
   public map: OlMap;
@@ -44,7 +44,17 @@ export class OpenlayersComponent implements AfterViewInit {
     code: 'EPSG:3857'
   });
 
-  private readonly GRID_SIZE = 16;
+  private gridStyle = new Style({
+    stroke: new Stroke({
+      color: '#5F9600',
+      width: 0.5
+    }),
+    fill: new Fill({
+      color: 'rgba(255, 255, 255, 0.01)' // required to be able to select tiles (transparent features are not selectable)
+    })
+  });
+
+  private readonly GRID_SIZE = 16.2;
 
   constructor(private mapService: MapService) {
     this.mapService.onStartDrawing().subscribe((geom) => this.enableGetGrid(geom));
@@ -64,7 +74,8 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.gridLayer10 = new VectorLayer({
       source: this.gridSource10,
-      maxResolution: 2
+      maxResolution: 2,
+      style: this.gridStyle
     });
 
     this.osmLayer = new TileLayer({
