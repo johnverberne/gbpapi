@@ -44,6 +44,8 @@ export class OpenlayersComponent implements AfterViewInit {
     code: 'EPSG:3857'
   });
 
+  private readonly GRID_SIZE = 16;
+
   constructor(private mapService: MapService) {
     this.mapService.onStartDrawing().subscribe((geom) => this.enableGetGrid(geom));
     this.mapService.onStopDrawing().subscribe(() => this.disableSelectGrid());
@@ -111,7 +113,9 @@ export class OpenlayersComponent implements AfterViewInit {
   public ngAfterViewInit() {
     this.view = new OlView({
       center: fromLonLat([5.183735, 52.118362], this.projection),
-      zoom: 18
+      zoom: 18,
+      minZoom: 7,
+      maxZoom: 19
     });
 
     this.map = new OlMap({
@@ -157,9 +161,9 @@ export class OpenlayersComponent implements AfterViewInit {
   private createMapCell(cell: GridCellModel): Polygon {
     const coords: Coordinate[] = [];
     coords.push(cell.coords);
-    coords.push([cell.coords[0] + 16, cell.coords[1]]);
-    coords.push([cell.coords[0] + 16, cell.coords[1] + 16]);
-    coords.push([cell.coords[0], cell.coords[1] + 16]);
+    coords.push([cell.coords[0] + this.GRID_SIZE, cell.coords[1]]);
+    coords.push([cell.coords[0] + this.GRID_SIZE, cell.coords[1] + this.GRID_SIZE]);
+    coords.push([cell.coords[0], cell.coords[1] + this.GRID_SIZE]);
     coords.push(cell.coords);
     return new Polygon([coords]);
   }
