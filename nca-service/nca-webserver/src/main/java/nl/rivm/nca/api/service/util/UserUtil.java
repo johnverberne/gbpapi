@@ -1,0 +1,148 @@
+/*
+ * Copyright Dutch Ministry of Economic Affairs
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/.
+ */
+package nl.rivm.nca.api.service.util;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import nl.rivm.nca.db.user.UserRepository;
+import nl.rivm.nca.shared.domain.ScenarioUser;
+
+/**
+ * User util class to help with user specific stuff.
+ */
+public final class UserUtil {
+
+//  private static final EnumSet<JobState> ACTIVE_JOB_STATUSES = EnumSet.of(JobState.INITIALIZED, JobState.RUNNING);
+//
+//  private static final Predicate FILTER_ACTIVE_JOB_STATUSES = new Predicate() {
+//
+//    @Override
+//    public boolean evaluate(final Object obj) {
+//      return obj instanceof JobProgress && ACTIVE_JOB_STATUSES.contains(((JobProgress) obj).getState());
+//    }
+//  };
+//
+//  private UserUtil() {
+//    // util class
+//  }
+//
+  public static ScenarioUser generateAPIKey(final Connection con, final String email) throws SQLException {
+    
+    ScenarioUser user = null; //ScenarioUserRepository.getUserByEmailAddress(con, email);
+
+    if (user == null) {
+      user = createUser(con, email);
+    } else {
+      user = resetAPIKey(con, user);
+    }
+
+    return user;
+  }
+  
+//
+//  /**
+//   * Fetch the user with given API key. Will also validate the maximum concurrent jobs.
+//   * @param con The database connection.
+//   * @param apiKey The API key of the user.
+//   * @return The user with the matching API key
+//   * @throws SQLException On DB errors.
+//   * @throws AeriusException Thrown if user not found, account is disabled or the max concurrent jobs is reached.
+//   */
+//  public static ScenarioUser getUser(final Connection con, final String apiKey)
+//      throws SQLException, AeriusException {
+//    return getUser(con, apiKey, true);
+//  }
+//
+//  /**
+//   * Fetch the user with given API key.
+//   * @param con The database connection.
+//   * @param apiKey The API key of the user.
+//   * @param validateMaximumConcurrentJobs Whether to validate the maximum concurrent jobs.
+//   * @return The user with the matching API key
+//   * @throws SQLException On DB errors.
+//   * @throws AeriusException Thrown if user not found, account is disabled or if validateMaximumConcurrentJobs is true and the max is reached.
+//   */
+//  public static ScenarioUser getUser(final Connection con, final String apiKey, final boolean validateMaximumConcurrentJobs)
+//      throws SQLException {
+//    final ScenarioUser user = UserRepository.getUserByApiKey(con, apiKey);
+//
+//    if (user == null) {
+//      throw new AeriusException(Reason.USER_INVALID_API_KEY, apiKey);
+//    }
+//
+//    if (!user.isEnabled()) {
+//      throw new AeriusException(Reason.USER_ACCOUNT_DISABLED);
+//    }
+//
+//    if (validateMaximumConcurrentJobs) {
+//      final List<JobProgress> jobs = JobRepository.getProgressForUser(con, user);
+//      CollectionUtils.filter(jobs, FILTER_ACTIVE_JOB_STATUSES);
+//
+//      if (jobs.size() >= user.getMaxConcurrentJobs()) {
+//        throw new AeriusException(Reason.USER_MAX_CONCURRENT_JOB_LIMIT_REACHED, String.valueOf(user.getMaxConcurrentJobs()));
+//      }
+//    }
+//
+//    return user;
+//  }
+//
+  /**
+   * Create a new user.
+   *
+   * @param pmf The PMF.
+   * @param email The email address for the user.
+   * @return User created.
+   * @throws AeriusConnectException throws exception in case of validation errors.
+   * @throws SQLException database error.
+   */
+  private static ScenarioUser createUser(final Connection con, final String email) throws SQLException {
+    ScenarioUser user = null; //ScenarioUserRepository.getUserByEmailAddress(con, email);
+
+    if (user == null) {
+      final ScenarioUser createUser = new ScenarioUser();
+      createUser.setApiKey(generateAPIKeyString());
+      createUser.setEmailAddress(email);
+      createUser.setEnabled(true);
+
+      UserRepository.createUser(con, createUser);
+      user = UserRepository.getUserByEmailAddress(con, email);
+    }
+
+    return user;
+  }
+
+  /**
+   * Reset the API key of an existing user.
+   *
+   * @param con The database connection.
+   * @param user user object.
+   * @return
+   * @throws SQLException database error.
+   */
+  private static ScenarioUser resetAPIKey(final Connection con, final ScenarioUser user) throws SQLException {
+    user.setApiKey(generateAPIKeyString());
+    UserRepository.updateUser(con, user);
+
+    return UserRepository.getUserByEmailAddress(con, user.getEmailAddress());
+  }
+
+  private static String generateAPIKeyString() {
+    return nl.rivm.nca.util.UuidUtil.getStripped();
+  }
+
+}

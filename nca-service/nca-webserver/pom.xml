@@ -33,20 +33,34 @@
 			<artifactId>swagger-jersey2-jaxrs</artifactId>
 			<version>${swagger-jersey2-jaxrs.version}</version>
 		</dependency>
+		<!-- This dependency is already present in swagger-jersey2-jaxrs, but because we're using Java8 we need at least jersey 2.7.
+         Overriding works. We should upgrade to a newer version of Swagger when they decide to upgrade Jersey. -->
+	    <dependency>
+	      <groupId>org.glassfish.jersey.containers</groupId>
+	      <artifactId>jersey-container-servlet-core</artifactId>
+	      <version>2.7</version>
+	    </dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<scope>provided</scope>
 			<version>${javax-servlet-jsp-api.version}</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+	    <dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

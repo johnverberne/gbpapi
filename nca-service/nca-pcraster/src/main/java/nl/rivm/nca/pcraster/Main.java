@@ -44,9 +44,9 @@ public class Main {
 
     try {
       final ConnectionFactory factory = ConnectionHelper.createFactory();
-      final boolean singleRun = args.length == 3;
+      final boolean singleRun = args.length == 4;
 
-      LOGGER.info("lets start with model: {} {} {}", args[0], args[1], args[2]);
+      LOGGER.info("lets start with model: {} {} {} {}", args[0], args[1], args[2], args[3]);
 
       final Main main = new Main(singleRun);
       if (singleRun) {
@@ -64,6 +64,7 @@ public class Main {
    * <p>args[0]: user defined name
    * <p>args[1]: model to run, i.e: air_regulation
    * <p>args[2]: directory with geotiff files to use as input. Files must match the name as used by the model.
+   * <p>args[3]: input type tiff or xyz files.
    *
    * @param args
    * @throws IOException
@@ -71,7 +72,7 @@ public class Main {
   private void singleRun(final String[] args) throws IOException {
     final String uuid = UUID.randomUUID().toString();
     final SingleRun singleRun = new SingleRun();
-    runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2]));
+    runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2], args[3]));
   }
 
   /**

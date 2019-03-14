@@ -19,7 +19,6 @@ package nl.rivm.nca.exception;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
  * An exception thrown by a server side application and is caused by an error
  * related to the specific input of the user or an unrecoverable error that can
  * not be handled. An AeriusException always contains a {@link Reason} and
@@ -62,8 +61,11 @@ public class AeriusException extends Exception implements Serializable {
 		 */
 		USER_ALREADY_EXISTS(1000), 
 		USER_EMAIL_ADDRESS_ALREADY_EXISTS(1001), 
-		USER_API_KEY_ALREADY_EXISTS(1002)
-
+		USER_API_KEY_ALREADY_EXISTS(1002), 
+		USER_INVALID_API_KEY(1003), 
+		USER_ACCOUNT_DISABLED(1004), 
+		CONNECT_NO_VALID_EMAIL_SUPPLIED(1005), 
+		CONNECT_USER_JOBKEY_DOES_NOT_EXIST(1006)
 		;
 
 		private final int errorCode;

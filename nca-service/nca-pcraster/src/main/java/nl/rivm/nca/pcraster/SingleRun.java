@@ -18,8 +18,10 @@ import nl.rivm.nca.api.domain.LayerObject;
 public class SingleRun {
 
   public static final String GEOTIFF_EXT = "tiff";
+  public static final String XYZ_EXT = "xyz";
 
   /**
+   * build a ar object for a singel run
    *
    * @param name user defined name
    * @param ecoSystemService model to run
@@ -27,9 +29,8 @@ public class SingleRun {
    * @return
    * @throws IOException
    */
-  public AssessmentRequest singleRun(String name, String ecoSystemService, final String inputDirectory) throws IOException {
+  public AssessmentRequest singleRun(String name, String ecoSystemService, final String inputDirectory, String inputType) throws IOException {
     final Path inputFile = Paths.get(inputDirectory);
-
     verifyInput(inputFile);
     final AssessmentRequest ar = new AssessmentRequest();
 
@@ -37,17 +38,17 @@ public class SingleRun {
     ar.setEcoSystemService(ecoSystemService);
     Files.list(inputFile)
       .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-      .forEach(f -> append(ar, f));
+      .forEach(f -> append(ar, f, inputType.equals(GEOTIFF_EXT) ? DataType.GEOTIFF : DataType.XYZ));
 
     return ar;
   }
 
-  private void append(AssessmentRequest ar, Path file) {
+  private void append(AssessmentRequest ar, Path file, DataType dataType) {
     try {
       final LayerObject lo = new LayerObject();
 
       lo.setClassType(FilenameUtils.removeExtension(file.toFile().getName()));
-      lo.setDataType(DataType.GEOTIFF);
+      lo.setDataType(dataType);
       lo.setData(Files.readAllBytes(file));
       ar.addLayersItem(lo);
     } catch (final IOException e) {

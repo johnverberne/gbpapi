@@ -311,8 +311,11 @@ definitions:
       The data type of the layer data.
       Supported values are:
       ___GEOTIFF:___ ANK Classified GeoTIFF file.
+      ___XYZ:___ ANK Classified XYZ file.
+    default: XYZ
     enum:
       - GEOTIFF
+      - XYZ
   ErrorResponse:
     type: object
     required:
