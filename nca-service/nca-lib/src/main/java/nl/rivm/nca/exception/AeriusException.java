@@ -26,110 +26,130 @@ import java.util.Date;
  * message is obtained based on the reason code and additional data values are passed into the message.
  */
 public class AeriusException extends Exception implements Serializable {
-  private static final long serialVersionUID = 4336548764880899435L;
 
-  /**
-   * Enum with a list of errors that can be returned by the server via a {@link AeriusException}. Each reason should state in the JavaDoc the
-   * arguments to be passed. It is not enforced at compile time if this matches, therefore be careful and test it.
-   */
-  public enum Reason {
+	private static final long serialVersionUID = 4336548764880899435L;
 
-    // Internal errors codes < 1000, these will be interpreted as such. USE WISELY!
+	/**
+	 * Enum with a list of errors that can be returned by the server via a
+	 * {@link AeriusException}. Each reason should state in the JavaDoc the
+	 * arguments to be passed. It is not enforced at compile time if this
+	 * matches, therefore be careful and test it.
+	 */
+	public enum Reason {
 
-    /**
-     * Unspecified internal server error.
-     */
-    INTERNAL_ERROR(666),
-    /**
-     * Database error. Can be incorrect query or missing database connection.
-     */
-    SQL_ERROR(667),
-    /**
-     * Database content error. For worker to test required database constants.
-     */
-    SQL_ERROR_CONSTANTS_MISSING(668);
+		// Internal errors codes < 1000, these will be interpreted as such. USE
+		// WISELY!
 
-    private final int errorCode;
+		/**
+		 * Unspecified internal server error.
+		 */
+		INTERNAL_ERROR(666),
+		/**
+		 * Database error. Can be incorrect query or missing database
+		 * connection.
+		 */
+		SQL_ERROR(667),
+		/**
+		 * Database content error. For worker to test required database
+		 * constants.
+		 */
+		SQL_ERROR_CONSTANTS_MISSING(668),
+		/**
+		 * Database content error. The user does exist.
+		 */
+		USER_ALREADY_EXISTS(1000), 
+		USER_EMAIL_ADDRESS_ALREADY_EXISTS(1001), 
+		USER_API_KEY_ALREADY_EXISTS(1002), 
+		USER_INVALID_API_KEY(1003), 
+		USER_ACCOUNT_DISABLED(1004), 
+		CONNECT_NO_VALID_EMAIL_SUPPLIED(1005), 
+		CONNECT_USER_JOBKEY_DOES_NOT_EXIST(1006) 
+		;
 
-    Reason(final int errorCode) {
-      this.errorCode = errorCode;
-    }
+		private final int errorCode;
 
-    /**
-     * @param errorCode The error code to resolve.
-     * @return The reason object for the given error code, or null if the error code was unknown.
-     */
-    public static Reason fromErrorCode(final int errorCode) {
-      for (final Reason reason : Reason.values()) {
-        if (reason.getErrorCode() == errorCode) {
-          return reason;
-        }
-      }
+		Reason(final int errorCode) {
+			this.errorCode = errorCode;
+		}
 
-      return null;
-    }
+		/**
+		 * @param errorCode
+		 *            The error code to resolve.
+		 * @return The reason object for the given error code, or null if the
+		 *         error code was unknown.
+		 */
+		public static Reason fromErrorCode(final int errorCode) {
+			for (final Reason reason : Reason.values()) {
+				if (reason.getErrorCode() == errorCode) {
+					return reason;
+				}
+			}
 
-    public int getErrorCode() {
-      return errorCode;
-    }
+			return null;
+		}
 
-    public String getErrorCodeKey() {
-      return "e" + errorCode;
-    }
-  }
+		public int getErrorCode() {
+			return errorCode;
+		}
 
-  private static final int INTERNAL_ERROR_MAX_VALUE = 999;
+		public String getErrorCodeKey() {
+			return "e" + errorCode;
+		}
+	}
 
-  private Reason reason;
-  private long reference;
-  private String[] args;
+	private static final int INTERNAL_ERROR_MAX_VALUE = 999;
 
-  // Needed for GWT.
-  public AeriusException() {}
+	private Reason reason;
+	private long reference;
+	private String[] args;
 
-  public AeriusException(final Reason errorCode, final String... args) {
-    super();
-    this.reason = errorCode;
-    this.reference = new Date().getTime();
-    this.args = args;
-  }
+	// Needed for GWT.
+	public AeriusException() {
+	}
 
-  public boolean isInternalError() {
-    return reason.getErrorCode() <= INTERNAL_ERROR_MAX_VALUE;
-  }
+	public AeriusException(final Reason errorCode, final String... args) {
+		super();
+		this.reason = errorCode;
+		this.reference = new Date().getTime();
+		this.args = args;
+	}
 
-  public Reason getReason() {
-    return reason;
-  }
+	public boolean isInternalError() {
+		return reason.getErrorCode() <= INTERNAL_ERROR_MAX_VALUE;
+	}
 
-  public long getReference() {
-    return reference;
-  }
+	public Reason getReason() {
+		return reason;
+	}
 
-  public String[] getArgs() {
-    return args;
-  }
+	public long getReference() {
+		return reference;
+	}
 
-  @Override
-  public String getMessage() {
-    return toString();
-  }
+	public String[] getArgs() {
+		return args;
+	}
 
-  @Override
-  public String toString() {
-    final StringBuilder str = new StringBuilder(64);
+	@Override
+	public String getMessage() {
+		return toString();
+	}
 
-    str.append("[errorCode=").append(reason).append(",reference=").append(reference).append(",args=[");
-    if (args != null) {
-      for (int i = 0; i < args.length; ++i) {
-        if (i != 0) {
-          str.append(',');
-        }
-        str.append(args[i]);
-      }
-    }
-    str.append("]];");
-    return str.toString();
-  }
+	@Override
+	public String toString() {
+		final StringBuilder str = new StringBuilder(64);
+
+		str.append("[errorCode=").append(reason).append(",reference=").append(reference).append(",args=[");
+		if (args != null) {
+			for (int i = 0; i < args.length; ++i) {
+				if (i != 0) {
+					str.append(',');
+				}
+				str.append(args[i]);
+			}
+		}
+		str.append("]];");
+		return str.toString();
+	}
 
 }

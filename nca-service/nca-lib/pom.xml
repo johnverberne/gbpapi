@@ -29,10 +29,12 @@
 			<groupId>nl.rivm.nca</groupId>
 			<artifactId>nca-api</artifactId>
 		</dependency>
+		<!-- 
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
 		</dependency>
+		-->
 		<dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -46,8 +48,7 @@
        <dependency>
        		<groupId>net.postgis</groupId>
         	<artifactId>postgis-jdbc</artifactId>
-        	<version>${postgis-jdbc.version}</version>
-      	</dependency>
+       </dependency>
 		<!-- this version breaks tiff reader
 		<dependency>
   		    <groupId>org.geotools</groupId>
