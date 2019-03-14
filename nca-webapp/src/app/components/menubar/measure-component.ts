@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MessageEventService } from '../../services/message-event-service';
 import { MeasureStyles } from '../map/openlayers/measure-styles';
 import { RegularShape } from 'ol/style';
+import { GridCellModel } from '../../models/grid-cell-model';
 
 @Component({
   selector: 'gbp-measure',
@@ -44,6 +45,7 @@ export class MeasureComponent implements OnChanges {
     private messageService: MessageEventService) {
     this.landUseValues = Object.keys(LandUseType);
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
+    this.mapService.onRemoveCells().subscribe((geom) => this.removeGeoms(geom));
   }
 
   public static constructForm(fb: FormBuilder): FormGroup {
@@ -130,6 +132,9 @@ export class MeasureComponent implements OnChanges {
 
   public saveMeasures(): MeasureModel[] {
     this.validated = true;
+    if (!this.validateGeom()) {
+      console.log('ERROR: One or more measures don\'t have gridcells associated.');
+    }
     if (this.validateVegetation() && this.measureForm.valid) {
       this.openMeasure = -1;
       const measures: MeasureModel[] = [];
@@ -289,5 +294,15 @@ export class MeasureComponent implements OnChanges {
 
   private isUniqueName(name: string): boolean {
     return this.measures.value.findIndex((x) => x.name === name) === -1;
+  }
+
+  private removeGeoms(geom: FeatureModel) {
+    this.geomPerMeasure[geom.id].cells = this.geomPerMeasure[geom.id].cells.filter(cell => cell.gridId !== geom.cells[0].gridId);
+  }
+
+  private validateGeom(): boolean {
+    return this.geomPerMeasure.every(geom => {
+      return geom.cells.length > 0;
+    });
   }
 }

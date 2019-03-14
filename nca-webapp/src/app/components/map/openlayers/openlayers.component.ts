@@ -154,18 +154,20 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showFeatures(geom: FeatureModel) {
     const features: Feature[] = [];
-    geom.cells.forEach((cell) => {
-      const feature: Feature = new Feature();
-      const poly = this.createMapCell(cell);
-      feature.setGeometry(poly);
-      feature.set('measureId', geom.id);
-      feature.setStyle(this.getStyle(geom.styleName));
-      feature.setId(cell.gridId);
-      features.push(feature);
-    });
-    this.selectedGridSource.addFeatures(features);
-    const extent = this.selectedGridSource.getExtent();
-    this.map.getView().fit(extent);
+    if (geom.cells.length > 0) {
+      geom.cells.forEach((cell) => {
+        const feature: Feature = new Feature();
+        const poly = this.createMapCell(cell);
+        feature.setGeometry(poly);
+        feature.set('measureId', geom.id);
+        feature.setStyle(this.getStyle(geom.styleName));
+        feature.setId(cell.gridId);
+        features.push(feature);
+      });
+      this.selectedGridSource.addFeatures(features);
+      const extent = this.selectedGridSource.getExtent();
+      this.map.getView().fit(extent);
+    }
   }
 
   private createMapCell(cell: GridCellModel): Polygon {
@@ -237,7 +239,17 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private removeSelectedFeature(feature: Feature, geom: FeatureModel) {
     this.selectedGridSource.removeFeature(feature);
-    geom.cells = geom.cells.filter(element => element.gridId !== feature.getId());
+    const measureId = feature.get('measureId');
+    if (measureId === geom.id) {
+      geom.cells = geom.cells.filter(element => element.gridId !== feature.getId());
+    } else {
+      const cell = new FeatureModel();
+      cell.id = measureId;
+      const gridCell = new GridCellModel();
+      gridCell.gridId = (feature.getId() as number);
+      cell.cells = [gridCell];
+      this.mapService.removeCells(cell);
+    }
   }
 
   private disableSelectGrid() {
