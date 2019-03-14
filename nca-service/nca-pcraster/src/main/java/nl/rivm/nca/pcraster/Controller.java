@@ -34,7 +34,7 @@ import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.DataType;
 import nl.rivm.nca.api.domain.LayerObject;
 
-public class Controller {
+public class Controller implements ControllerInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
@@ -46,9 +46,9 @@ public class Controller {
 	private static final String MAP_DOT_EXT = '.' + MAP_EXT;
 	private static final String JSON_EXT = "json";
 	private static final String WORKSPACE_NAME = "nca";
-	private static final String OUTPUTS = "outputs";
+	protected static final String OUTPUTS = "outputs";
 
-	private final RasterLayers rasterLayers;
+	protected final RasterLayers rasterLayers;
 	private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
 	private final PublishGeotiff publishGeotiff;
 	private final boolean directFile;
@@ -66,16 +66,16 @@ public class Controller {
 			throws IOException, ConfigurationException, InterruptedException {
 		final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
 		final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
-
 		final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
 		final File first = copyInputRastersToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers());
-
 		final Envelope2D extend = calculateExtend(first);
 		cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
 		final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(),
 				outputPath.getAbsolutePath());
+		
+		LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
 		runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
-		convertOutput(outputPath);
+		//convertOutput(outputPath);
 		List<AssessmentResultResponse> assessmentResultlist = importOutputToDatabase(correlationId, outputPath);
 		publishFiles(correlationId, outputPath);
 		cleanUp(workingPath);
@@ -83,11 +83,10 @@ public class Controller {
 	}
 
 	// copy input geotiff files to working map and convert to pcraster format
-	private File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
+	protected File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
 			List<LayerObject> userLayers) {
 		final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul))
 				.collect(Collectors.toList());
-
 		files.forEach(this::convertOutput2GeoTiff);
 		return files.isEmpty() ? null : files.get(0);
 	}
@@ -162,7 +161,7 @@ public class Controller {
 		return new File(workingPath, layerFiles.get(layerObject.getClassType()) + XYZ_DOT_EXT);
 	}
 
-	private Envelope2D calculateExtend(File geoTiffFile) throws IOException {
+	protected Envelope2D calculateExtend(File geoTiffFile) throws IOException {
 		final GeoTiffFormat format = new GeoTiffFormat();
 		final Hints hint = new Hints();
 		// hint.put(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
@@ -185,7 +184,7 @@ public class Controller {
 		return ((d + 5) / FACTOR) * FACTOR;
 	}
 
-	private void cookieCutOtherLayersToWorkingPath(File workingPath, Map<String, String> layerFiles,
+	protected void cookieCutOtherLayersToWorkingPath(File workingPath, Map<String, String> layerFiles,
 			List<LayerObject> userLayers, Envelope2D extend) throws IOException {
 		final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
 		final Set<String> userDefinedClasses = userLayers.stream().map(ul -> ul.getClassType())
@@ -202,7 +201,7 @@ public class Controller {
 		});
 	}
 
-	private void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
+	protected void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
 			throws IOException, InterruptedException {
 		pcRasterRunner.runPcRaster(correlationId, ecoSystemService, projectFile);
 	}
@@ -245,7 +244,7 @@ public class Controller {
 	 * @param outputPath
 	 * @throws IOException
 	 */
-	private List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath)
+	protected List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath)
 			throws IOException {
 		List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
 		Files.list(outputPath.toPath()).filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
@@ -273,7 +272,7 @@ public class Controller {
 		return returnList;
 	}
 
-	private boolean publishFiles(final String correlationId, File outputPath) throws IOException {
+	protected boolean publishFiles(final String correlationId, File outputPath) throws IOException {
 		boolean successfull = true;
 		Files.list(outputPath.toPath())
 				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
@@ -293,7 +292,7 @@ public class Controller {
 		return successfull;
 	}
 
-	private void cleanUp(File workingPath) {
+	protected void cleanUp(File workingPath) {
 		// TODO Auto-generated method stub
 	}
 }

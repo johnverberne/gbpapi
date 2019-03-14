@@ -14,15 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
-import nl.rivm.nca.api.domain.ImmediatlyAssessmentRequestResponse;
-import nl.rivm.nca.api.domain.ValidateResponse;
-import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.api.domain.ImmediatlyAssessmentRequestResponse;
+import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.ImmediatlyAssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.pcraster.Controller;
+import nl.rivm.nca.pcraster.ImmediatlyController;
 import nl.rivm.nca.pcraster.SingleRun;
 
 public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessmentRequestApiService {
@@ -43,8 +43,8 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     response.setWarnings(warnings);
     response.setErrors(errors);
 
-    if (ar.getModel() != ModelEnum.AIR_REGULATION) {
-      warnings.add(WarningUtil.ValidationInfoMessage("EcoSystem not implemented yet."));
+    if (ar.getModel() != ModelEnum.NKMODEL) {
+      warnings.add(WarningUtil.ValidationInfoMessage("Only NKMODEL is allowed."));
 
     } else {
       final String uuid = UUID.randomUUID().toString();
@@ -69,7 +69,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
 
   private List<AssessmentResultResponse> assessmentRun(AssessmentRequest ar, ArrayList<ValidationMessage> warnings, final String uuid)
       throws IOException, ConfigurationException, InterruptedException {
-    final Controller controller = initController(true);
+    final ImmediatlyController controller = initController(true);
     final SingleRun singleRun = new SingleRun();
     List<String> models = new ArrayList<String>();
     models.add("air_regulation");
@@ -84,13 +84,13 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     return results;
   }
 
-  private Controller initController(boolean directFile) throws IOException, InterruptedException {
+  private ImmediatlyController initController(boolean directFile) throws IOException, InterruptedException {
     final String ncaModel = System.getenv("NCA_MODEL");
     if (ncaModel == null) {
       throw new IllegalArgumentException(
           "Environment variable 'NCA_MODEL' not set. This should point to the raster data");
     }
-    return new Controller(new File(ncaModel), directFile);
+    return new ImmediatlyController(new File(ncaModel), directFile);
   }
 
 }

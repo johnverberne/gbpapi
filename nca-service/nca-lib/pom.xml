@@ -49,7 +49,6 @@
        		<groupId>net.postgis</groupId>
         	<artifactId>postgis-jdbc</artifactId>
        </dependency>
-		<!-- this version breaks tiff reader
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
@@ -69,6 +68,7 @@
         	<artifactId>postgis-jdbc</artifactId>
         	<version>${postgis-jdbc.version}</version>
       	</dependency>
+      	
 		<!-- this version breaks tiff reader
 		<dependency>
   		    <groupId>org.geotools</groupId>

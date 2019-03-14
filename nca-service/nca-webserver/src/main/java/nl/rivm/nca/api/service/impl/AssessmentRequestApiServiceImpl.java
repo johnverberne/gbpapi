@@ -49,8 +49,8 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		result.setWarnings(warnings);
 		result.setErrors(errors);
 
-		if (ar.getModel() != ModelEnum.AIR_REGULATION) {
-			warnings.add(WarningUtil.ValidationInfoMessage("EcoSystem not implemented yet."));
+		if (ar.getModel() != ModelEnum.NKMODEL) {
+			warnings.add(WarningUtil.ValidationInfoMessage("Only NKMODEL is allowed."));
 
 		} else {
 			// build a request.

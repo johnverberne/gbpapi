@@ -18,7 +18,7 @@ package nl.rivm.nca.exception;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/*
  * An exception thrown by a server side application and is caused by an error
  * related to the specific input of the user or an unrecoverable error that can
  * not be handled. An AeriusException always contains a {@link Reason} and

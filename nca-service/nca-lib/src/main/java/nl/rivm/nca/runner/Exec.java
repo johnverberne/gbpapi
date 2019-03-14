@@ -36,6 +36,19 @@ public final class Exec {
     this.binDir = binDir;
     this.runAsWindows = OSUtils.isWindows();
   }
+  
+  /**
+   * Initializes.
+   *
+   * @param execParameters the exec parameters to use for this execution.
+   * @param binDir directory to the executable
+   * @param boolean to indicate to add .exe for windows envirorment
+   */
+  public Exec(final ExecParameters execParameters, final String binDir, final boolean runAsWindows) {
+	  this.executeParameters = execParameters;
+	  this.binDir = binDir;
+	  this.runAsWindows = runAsWindows;
+  }
 
   public String run(final File currentWorkingDirectory) throws IOException, InterruptedException {
     final String uuid = UUID.randomUUID().toString();
