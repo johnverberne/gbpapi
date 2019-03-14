@@ -13,8 +13,8 @@ import nl.rivm.nca.runner.OSUtils;
 class PcRasterRunner {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PcRasterRunner.class);
-
-    // TODO we want a version in the executed string 
+  
+  // TODO we want a version in the executed string parsed from the api
 	private static final String PYTHON = "python";
 	private static final String NCA = "/opt/nkmodel/nca.sh";
 	private static final String NCA_WIN = "/opt/nkmodel/nca.bat";

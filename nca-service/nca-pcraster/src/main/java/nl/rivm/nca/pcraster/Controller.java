@@ -31,214 +31,269 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.api.domain.DataType;
 import nl.rivm.nca.api.domain.LayerObject;
 
 public class Controller {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
-  public static final String GEOTIFF_EXT = "tiff";
-  public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
-  private static final String MAP_EXT = "map";
-  private static final String MAP_DOT_EXT = '.' + MAP_EXT;
-  private static final String JSON_EXT = "json";
-  private static final String WORKSPACE_NAME = "nca";
-  private static final String OUTPUTS = "outputs";
+	public static final String GEOTIFF_EXT = "tiff";
+	public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
+	private static final String XYZ_EXT = "xyz";
+	private static final String XYZ_DOT_EXT = "." + XYZ_EXT;
+	private static final String MAP_EXT = "map";
+	private static final String MAP_DOT_EXT = '.' + MAP_EXT;
+	private static final String JSON_EXT = "json";
+	private static final String WORKSPACE_NAME = "nca";
+	private static final String OUTPUTS = "outputs";
 
-  private final RasterLayers rasterLayers;
-  private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
-  private final PublishGeotiff publishGeotiff;
-  private final boolean directFile;
-  private final ObjectMapper mapper = new ObjectMapper();
+	private final RasterLayers rasterLayers;
+	private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
+	private final PublishGeotiff publishGeotiff;
+	private final boolean directFile;
+	private final ObjectMapper mapper = new ObjectMapper();
 
-  public Controller(File path, boolean directFile) throws IOException, InterruptedException {
-    rasterLayers = RasterLayers.loadRasterLayers(path);
-    this.directFile = directFile;
-    publishGeotiff = new PublishGeotiff(System.getenv("GEOSERVER_URL"), System.getenv("GEOSERVER_USER"),
-        System.getenv("GEOSERVER_PASSWORD"));
-    // python via docker dan geen test draaien pcRasterRunner.sanityCheck();
-  }
+	public Controller(File path, boolean directFile) throws IOException, InterruptedException {
+		rasterLayers = RasterLayers.loadRasterLayers(path);
+		this.directFile = directFile;
+		publishGeotiff = new PublishGeotiff(System.getenv("GEOSERVER_URL"), System.getenv("GEOSERVER_USER"),
+				System.getenv("GEOSERVER_PASSWORD"));
+		// python via docker dan geen test draaien pcRasterRunner.sanityCheck();
+	}
 
-  public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
-      throws IOException, ConfigurationException, InterruptedException {
-    final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
-    final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
+	public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
+			throws IOException, ConfigurationException, InterruptedException {
+		final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
+		final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
 
-    final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
-    final File first = copyInputRastersToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers());
-    final Envelope2D extend = calculateExtend(first);
-    cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
-    final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(),
-        outputPath.getAbsolutePath());
-    runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
-    convertOutput(outputPath);
-    List<AssessmentResultResponse> assessmentResultlist = importOutputToDatabase(correlationId, outputPath);
-    publishFiles(correlationId, outputPath);
-    cleanUp(workingPath);
-    return assessmentResultlist;
-  }
+		final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
+		final File first = copyInputRastersToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers());
 
-  // copy input geotiff files to working map and convert to pcraster format
-  private File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
-      List<LayerObject> userLayers) {
-    final List<File> files = userLayers.stream().map(ul -> writeToFile(layerFiles, workingPath, ul))
-        .collect(Collectors.toList());
-    files.forEach(this::convertOutput2GeoTiff);
-    return files.isEmpty() ? null : files.get(0);
-  }
+		final Envelope2D extend = calculateExtend(first);
+		cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
+		final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(),
+				outputPath.getAbsolutePath());
+		runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
+		convertOutput(outputPath);
+		List<AssessmentResultResponse> assessmentResultlist = importOutputToDatabase(correlationId, outputPath);
+		publishFiles(correlationId, outputPath);
+		cleanUp(workingPath);
+		return assessmentResultlist;
+	}
 
-  private File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-    final File targetFile = userGeotiffFile(layerFiles, workingPath, layerObject);
-    final File file = directFile(layerObject.getData());
+	// copy input geotiff files to working map and convert to pcraster format
+	private File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
+			List<LayerObject> userLayers) {
+		final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul))
+				.collect(Collectors.toList());
 
-    if (file == null || !file.exists()) {
-      try (InputStream is = new ByteArrayInputStream(layerObject.getData())) {
-        Files.copy(is, targetFile.toPath());
-      } catch (final IOException e) {
-        throw new RuntimeException(e);
-      }
-    } else {
-      try {
-        Files.copy(file.toPath(), targetFile.toPath());
-      } catch (final IOException e) {
-        e.printStackTrace();
-      }
-    }
-    return targetFile;
-  }
+		files.forEach(this::convertOutput2GeoTiff);
+		return files.isEmpty() ? null : files.get(0);
+	}
 
-  private File directFile(byte[] data) {
-    try {
-      return directFile ? new File(URI.create(new String(data, StandardCharsets.UTF_8.displayName()))) : null;
-    } catch (final IllegalArgumentException | UnsupportedEncodingException e) {
-      return null;
-    }
-  }
+	private File writeToFileConvertToTiff(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+		File file = writeToFile(layerFiles, workingPath, layerObject);
+		if (layerObject.getDataType() == DataType.GEOTIFF) {
+			return file;
+		} else {
+			return convertXyzInput2GeoTiff(file);
+		}
+	}
 
-  private File userGeotiffFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-    return new File(workingPath, layerFiles.get(layerObject.getClassType()) + GEOTIFF_DOT_EXT);
-  }
+	private File convertXyzInput2GeoTiff(File xyzFile) {
+		final int indexOf = xyzFile.getName().indexOf(XYZ_DOT_EXT);
 
-  private Envelope2D calculateExtend(File geoTiffFile) throws IOException {
-    final GeoTiffFormat format = new GeoTiffFormat();
-    final Hints hint = new Hints();
-    // hint.put(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
-    final GeoTiffReader tiffReader = format.getReader(geoTiffFile, hint);
-    final GridCoverage2D coverage = tiffReader.read(null);
+		if (indexOf < 0) {
+			throw new RuntimeException("no xyz file");
+		}
 
-    // final CoordinateReferenceSystem crs =
-    // coverage.getCoordinateReferenceSystem();
-    // check crs == RDNew?
-    return coverage.getEnvelope2D();
-  }
+		final File geotiffFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + GEOTIFF_DOT_EXT);
 
-  private void cookieCutOtherLayersToWorkingPath(File workingPath, Map<String, String> layerFiles,
-      List<LayerObject> userLayers, Envelope2D extend) throws IOException {
-    final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
-    final Set<String> userDefinedClasses = userLayers.stream().map(ul -> ul.getClassType()).collect(Collectors.toSet());
-    layerFiles.entrySet().stream().filter(e -> !userDefinedClasses.contains(e.getKey())).forEach(e -> {
-      try {
-        final String sourceFile = e.getValue();
+		try {
+			// convert input xyz to tiff
+			Xyz2Geotiff.xyz2geoTiff(xyzFile, geotiffFile);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		return geotiffFile;
 
-        cc.run(rasterLayers.mapOriginalFilePath(sourceFile), rasterLayers.mapFilePath(workingPath, sourceFile), extend);
-      } catch (IOException | InterruptedException e1) {
-        e1.printStackTrace();
-      }
-    });
-  }
+	}
 
-  private void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
-      throws IOException, InterruptedException {
-    pcRasterRunner.runPcRaster(correlationId, ecoSystemService, projectFile);
-  }
+	private File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+		final File targetFile;
+		if (layerObject.getDataType() == DataType.GEOTIFF) {
+			targetFile = userGeotiffFile(layerFiles, workingPath, layerObject);
+		} else {
+			targetFile = userXyzFile(layerFiles, workingPath, layerObject);
+		}
+		final File file = directFile(layerObject.getData());
 
-  private File convertOutput2GeoTiff(File geotiffFile) {
-    // convert pcraster output files and return a list of geotiff images.
-    final int indexOf = geotiffFile.getName().indexOf(GEOTIFF_EXT);
+		if (file == null || !file.exists()) {
+			try (InputStream is = new ByteArrayInputStream(layerObject.getData())) {
+				Files.copy(is, targetFile.toPath());
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			try {
+				Files.copy(file.toPath(), targetFile.toPath());
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-    if (indexOf < 0) {
-      throw new RuntimeException("no geotiff file");
-    }
-    final File mapFile = new File(FilenameUtils.removeExtension(geotiffFile.getAbsolutePath()) + MAP_DOT_EXT);
+		return targetFile;
+	}
 
-    try {
-      // convert input tiff to map
-      LOGGER.info("geotiff2pcraster {} -> {}", geotiffFile, mapFile);
-      Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile);
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-    return mapFile;
-  }
+	private File directFile(byte[] data) {
+		try {
+			return directFile ? new File(URI.create(new String(data, StandardCharsets.UTF_8.displayName()))) : null;
+		} catch (final IllegalArgumentException | UnsupportedEncodingException e) {
+			return null;
+		}
+	}
 
-  private void convertOutput(File outputPath) throws IOException {
-    Files.list(outputPath.toPath())
-        .filter(f -> MAP_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-        .forEach(f -> {
-          try {
-            Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(),
-                new File(FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
-          } catch (final IOException e) {
-            throw new RuntimeException(e);
-          }
-        });
-  }
-  
-  /**
-   * load generated json files and put in the database
-   * 
-   * @param outputPath
-   * @throws IOException
-   */
-  private  List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath) throws IOException {
-	  List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
-    Files.list(outputPath.toPath())
-        .filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-        .forEach(f -> {
-          try {
-            LOGGER.info("read result file {}", f.getFileName());
-            @SuppressWarnings("resource")
-            FileReader fr = new FileReader(f.toFile().getAbsolutePath()); 
-            int i; 
-            String body ="";
-            while ((i=fr.read()) != -1) 
-              body += (char) i;
-            
-            AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
-			      returnList.add(result);
-            LOGGER.info("content of file for correlationId {} content {}", correlationId,  result.toString());
-            // lets write to database with id
+	private File userGeotiffFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+		return new File(workingPath, layerFiles.get(layerObject.getClassType()) + GEOTIFF_DOT_EXT);
+	}
 
-          } catch (final Exception e) {
-            LOGGER.warn("Reading and parsing of json failed {}", e);
-            throw new RuntimeException(e);
-          }
-        });
-    return returnList;
-  }
+	private File userXyzFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+		return new File(workingPath, layerFiles.get(layerObject.getClassType()) + XYZ_DOT_EXT);
+	}
 
-  private boolean publishFiles(final String correlationId, File outputPath) throws IOException {
-    boolean successfull = true;
-    Files.list(outputPath.toPath())
-        .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-        .forEach(f -> LOGGER.info(f.toFile().getName()));
+	private Envelope2D calculateExtend(File geoTiffFile) throws IOException {
+		final GeoTiffFormat format = new GeoTiffFormat();
+		final Hints hint = new Hints();
+		// hint.put(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
+		final GeoTiffReader tiffReader = format.getReader(geoTiffFile, hint);
+		final GridCoverage2D coverage = tiffReader.read(null);
 
-    Files.list(outputPath.toPath())
-        .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-        .forEach(f -> {
-          try {
-            publishGeotiff.publish(WORKSPACE_NAME, correlationId, f.toFile(),
-                FilenameUtils.removeExtension(f.toFile().getName()));
-          } catch (final IOException e) {
-            // rewrite to throw an warning and eat error
-            LOGGER.warn("Geoserver publication failed {}", e);
-            //throw new RuntimeException(e);
-          }
-        });
-    return successfull;
-  }
+		// final CoordinateReferenceSystem crs =
+		// coverage.getCoordinateReferenceSystem();
+		// check crs == RDNew?
 
-  private void cleanUp(File workingPath) {
-    // TODO Auto-generated method stub
-  }
+		// expand but not apply
+		Envelope2D envelope = coverage.getEnvelope2D();
+		envelope.include(roundEnvelope(envelope.x - 10), roundEnvelope(envelope.y - 10));
+		envelope.include(roundEnvelope(envelope.getMaxX() + 10), roundEnvelope(envelope.getMaxY() + 10));
+		return coverage.getEnvelope2D();
+	}
+
+	private double roundEnvelope(double d) {
+		int FACTOR = 10;
+		return ((d + 5) / FACTOR) * FACTOR;
+	}
+
+	private void cookieCutOtherLayersToWorkingPath(File workingPath, Map<String, String> layerFiles,
+			List<LayerObject> userLayers, Envelope2D extend) throws IOException {
+		final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
+		final Set<String> userDefinedClasses = userLayers.stream().map(ul -> ul.getClassType())
+				.collect(Collectors.toSet());
+		layerFiles.entrySet().stream().filter(e -> !userDefinedClasses.contains(e.getKey())).forEach(e -> {
+			try {
+				final String sourceFile = e.getValue();
+
+				cc.run(rasterLayers.mapOriginalFilePath(sourceFile), rasterLayers.mapFilePath(workingPath, sourceFile),
+						extend);
+			} catch (IOException | InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		});
+	}
+
+	private void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
+			throws IOException, InterruptedException {
+		pcRasterRunner.runPcRaster(correlationId, ecoSystemService, projectFile);
+	}
+
+	private File convertOutput2GeoTiff(File geotiffFile) {
+		// convert pcraster output files and return a list of geotiff images.
+		final int indexOf = geotiffFile.getName().indexOf(GEOTIFF_EXT);
+
+		if (indexOf < 0) {
+			throw new RuntimeException("no geotiff file");
+		}
+
+		final File mapFile = new File(FilenameUtils.removeExtension(geotiffFile.getAbsolutePath()) + MAP_DOT_EXT);
+
+		try {
+			// convert input tiff to map
+			LOGGER.info("Export geotiff2pcraster {} -> {}", geotiffFile, mapFile);
+			Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		return mapFile;
+	}
+
+	private void convertOutput(File outputPath) throws IOException {
+		Files.list(outputPath.toPath()).filter(f -> MAP_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
+				.forEach(f -> {
+					try {
+						Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(), new File(
+								FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
+					} catch (final IOException e) {
+						throw new RuntimeException(e);
+					}
+				});
+	}
+
+	/**
+	 * load generated json files and put in the database
+	 * 
+	 * @param outputPath
+	 * @throws IOException
+	 */
+	private List<AssessmentResultResponse> importOutputToDatabase(String correlationId, File outputPath)
+			throws IOException {
+		List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
+		Files.list(outputPath.toPath()).filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
+				.forEach(f -> {
+					try {
+						LOGGER.info("read result file {}", f.getFileName());
+						@SuppressWarnings("resource")
+						FileReader fr = new FileReader(f.toFile().getAbsolutePath());
+						int i;
+						String body = "";
+						while ((i = fr.read()) != -1)
+							body += (char) i;
+
+						AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
+						returnList.add(result);
+						LOGGER.info("content of file for correlationId {} content {}", correlationId,
+								result.toString());
+						// lets write to database with id
+
+					} catch (final Exception e) {
+						LOGGER.warn("Reading and parsing of json failed {}", e);
+						throw new RuntimeException(e);
+					}
+				});
+		return returnList;
+	}
+
+	private boolean publishFiles(final String correlationId, File outputPath) throws IOException {
+		boolean successfull = true;
+		Files.list(outputPath.toPath())
+				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
+				.forEach(f -> LOGGER.info(f.toFile().getName()));
+
+		Files.list(outputPath.toPath())
+				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName()))).forEach(f -> {
+					try {
+						publishGeotiff.publish(WORKSPACE_NAME, correlationId, f.toFile(),
+								FilenameUtils.removeExtension(f.toFile().getName()));
+					} catch (final IOException e) {
+						// rewrite to throw an warning and eat error
+						LOGGER.warn("Geoserver publication failed {}", e);
+						// throw new RuntimeException(e);
+					}
+				});
+		return successfull;
+	}
+
+	private void cleanUp(File workingPath) {
+		// TODO Auto-generated method stub
+	}
 }
