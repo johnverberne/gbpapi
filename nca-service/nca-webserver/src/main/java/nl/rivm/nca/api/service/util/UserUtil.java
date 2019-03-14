@@ -18,8 +18,11 @@ package nl.rivm.nca.api.service.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import nl.rivm.nca.db.user.UserRepository;
+import nl.rivm.nca.exception.AeriusException;
+import nl.rivm.nca.exception.AeriusException.Reason;
 import nl.rivm.nca.shared.domain.ScenarioUser;
 
 /**
@@ -27,21 +30,7 @@ import nl.rivm.nca.shared.domain.ScenarioUser;
  */
 public final class UserUtil {
 
-//  private static final EnumSet<JobState> ACTIVE_JOB_STATUSES = EnumSet.of(JobState.INITIALIZED, JobState.RUNNING);
-//
-//  private static final Predicate FILTER_ACTIVE_JOB_STATUSES = new Predicate() {
-//
-//    @Override
-//    public boolean evaluate(final Object obj) {
-//      return obj instanceof JobProgress && ACTIVE_JOB_STATUSES.contains(((JobProgress) obj).getState());
-//    }
-//  };
-//
-//  private UserUtil() {
-//    // util class
-//  }
-//
-  public static ScenarioUser generateAPIKey(final Connection con, final String email) throws SQLException {
+  public static ScenarioUser generateAPIKey(final Connection con, final String email) throws SQLException, AeriusException {
     
     ScenarioUser user = null; //ScenarioUserRepository.getUserByEmailAddress(con, email);
 
@@ -54,41 +43,40 @@ public final class UserUtil {
     return user;
   }
   
-//
-//  /**
-//   * Fetch the user with given API key. Will also validate the maximum concurrent jobs.
-//   * @param con The database connection.
-//   * @param apiKey The API key of the user.
-//   * @return The user with the matching API key
-//   * @throws SQLException On DB errors.
-//   * @throws AeriusException Thrown if user not found, account is disabled or the max concurrent jobs is reached.
-//   */
-//  public static ScenarioUser getUser(final Connection con, final String apiKey)
-//      throws SQLException, AeriusException {
-//    return getUser(con, apiKey, true);
-//  }
-//
-//  /**
-//   * Fetch the user with given API key.
-//   * @param con The database connection.
-//   * @param apiKey The API key of the user.
-//   * @param validateMaximumConcurrentJobs Whether to validate the maximum concurrent jobs.
-//   * @return The user with the matching API key
-//   * @throws SQLException On DB errors.
-//   * @throws AeriusException Thrown if user not found, account is disabled or if validateMaximumConcurrentJobs is true and the max is reached.
-//   */
-//  public static ScenarioUser getUser(final Connection con, final String apiKey, final boolean validateMaximumConcurrentJobs)
-//      throws SQLException {
-//    final ScenarioUser user = UserRepository.getUserByApiKey(con, apiKey);
-//
-//    if (user == null) {
-//      throw new AeriusException(Reason.USER_INVALID_API_KEY, apiKey);
-//    }
-//
-//    if (!user.isEnabled()) {
-//      throw new AeriusException(Reason.USER_ACCOUNT_DISABLED);
-//    }
-//
+  /**
+   * Fetch the user with given API key. Will also validate the maximum concurrent jobs.
+   * @param con The database connection.
+   * @param apiKey The API key of the user.
+   * @return The user with the matching API key
+   * @throws SQLException On DB errors.
+   * @throws AeriusException Thrown if user not found, account is disabled or the max concurrent jobs is reached.
+   */
+  public static ScenarioUser getUser(final Connection con, final String apiKey)
+      throws SQLException, AeriusException {
+    return getUser(con, apiKey, true);
+  }
+
+  /**
+   * Fetch the user with given API key.
+   * @param con The database connection.
+   * @param apiKey The API key of the user.
+   * @param validateMaximumConcurrentJobs Whether to validate the maximum concurrent jobs.
+   * @return The user with the matching API key
+   * @throws SQLException On DB errors.
+   * @throws AeriusException Thrown if user not found, account is disabled or if validateMaximumConcurrentJobs is true and the max is reached.
+   */
+  public static ScenarioUser getUser(final Connection con, final String apiKey, final boolean validateMaximumConcurrentJobs)
+      throws SQLException, AeriusException {
+    final ScenarioUser user = UserRepository.getUserByApiKey(con, apiKey);
+
+    if (user == null) {
+      throw new AeriusException(Reason.USER_INVALID_API_KEY, apiKey);
+    }
+
+    if (!user.isEnabled()) {
+      throw new AeriusException(Reason.USER_ACCOUNT_DISABLED);
+    }
+
 //    if (validateMaximumConcurrentJobs) {
 //      final List<JobProgress> jobs = JobRepository.getProgressForUser(con, user);
 //      CollectionUtils.filter(jobs, FILTER_ACTIVE_JOB_STATUSES);
@@ -97,10 +85,10 @@ public final class UserUtil {
 //        throw new AeriusException(Reason.USER_MAX_CONCURRENT_JOB_LIMIT_REACHED, String.valueOf(user.getMaxConcurrentJobs()));
 //      }
 //    }
-//
-//    return user;
-//  }
-//
+
+    return user;
+  }
+
   /**
    * Create a new user.
    *
@@ -109,8 +97,9 @@ public final class UserUtil {
    * @return User created.
    * @throws AeriusConnectException throws exception in case of validation errors.
    * @throws SQLException database error.
+ * @throws AeriusException 
    */
-  private static ScenarioUser createUser(final Connection con, final String email) throws SQLException {
+  private static ScenarioUser createUser(final Connection con, final String email) throws SQLException, AeriusException {
     ScenarioUser user = null; //ScenarioUserRepository.getUserByEmailAddress(con, email);
 
     if (user == null) {

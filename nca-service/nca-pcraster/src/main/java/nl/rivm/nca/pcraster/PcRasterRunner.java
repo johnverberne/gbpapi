@@ -22,16 +22,17 @@ class PcRasterRunner {
 	public void sanityCheck() throws IOException, InterruptedException {
 		final String[] args = { "-c", "\"import pcraster\"" };
 		final ExecParameters execParams = new ExecParameters(PYTHON, args);
-		final Exec exec = new Exec(execParams, "");
+		final Exec exec = new Exec(execParams, "", false); // run as batch file
 		exec.run(new File(""));
 	}
 
 	public void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
 			throws IOException, InterruptedException {
 		final String RUNNER = OSUtils.isWindows() ? NCA_WIN : NCA;
-		final String[] args = { ecoSystemService, projectFile.getAbsolutePath() };
+		String absolutePathOnly = projectFile.getAbsolutePath().replace("project.ini", "outputs\\");
+		final String[] args = { ecoSystemService, projectFile.getAbsolutePath(), absolutePathOnly };
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
-		final Exec exec = new Exec(execParams, "");
+		final Exec exec = new Exec(execParams, "", false); // run as batch file
 
 		LOGGER.debug("Execute: ({}) with parameters: {}", RUNNER, args);
 		exec.run(correlationId, new File(projectFile.getParent()));
