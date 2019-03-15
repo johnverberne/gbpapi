@@ -6,14 +6,14 @@
     <svg-icon src="assets/img/ui-panel-open.svg"></svg-icon>
   </button>
   <div class="result-buttons">
-    <button type="button" class="btn">
-      <svg-icon src="assets/img/ui-result-map.svg"></svg-icon>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'MAP'}" (click)="onMenuClick('MAP')">
+      <svg-icon src="assets/img/ui-result-map.svg" [ngClass]="{'active': activeMenu === 'MAP'}"></svg-icon>
     </button>
-    <button type="button" class="btn">
-      <svg-icon src="assets/img/ui-result-table.svg"></svg-icon>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'TABLE'}" (click)="onMenuClick('TABLE')">
+      <svg-icon src="assets/img/ui-result-table.svg" [ngClass]="{'active': activeMenu === 'TABLE'}"></svg-icon>
     </button>
-    <button type="button" class="btn">
-      <svg-icon src="assets/img/ui-result-diagram.svg"></svg-icon>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'GRAPH'}" (click)="onMenuClick('GRAPH')">
+      <svg-icon src="assets/img/ui-result-diagram.svg" [ngClass]="{'active': activeMenu === 'GRAPH'}"></svg-icon>
     </button>
   </div>
 </div>

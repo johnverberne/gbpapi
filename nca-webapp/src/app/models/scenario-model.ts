@@ -5,5 +5,5 @@ export class ScenarioModel {
   public scenarioName: string;
   public valid: boolean = false;
   public measures: MeasureModel[] = [];
-  public results: any;
+  public results: any = [];
 }

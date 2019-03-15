@@ -38,6 +38,21 @@
   }
 }
 
+.main {
+  position: fixed;
+  left: calc(#{$nav-bar-width} + #{$menu-bar-width});
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1050;
+  &.result {
+    left: calc(#{$nav-bar-width} + #{$result-bar-width});
+    &.open-menu {
+      left: calc(#{$nav-bar-width} + #{$menu-bar-width} + #{$result-bar-width});
+    }
+  }
+}
+
 .row {
   display: flex;
   flex-direction: row;

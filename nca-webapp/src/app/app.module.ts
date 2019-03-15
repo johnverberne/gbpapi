@@ -32,6 +32,7 @@ import { ResultBarComponent } from './components/menubar/resultbar/resultbar-com
 import { MenuEventService } from './services/menu-event-service';
 import { MapService } from './services/map-service';
 import { ScenarioComponent } from './components/menubar/scenario-component';
+import { MainComponent } from './components/main/main-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -54,7 +55,8 @@ export function createTranslateLoader(http: HttpClient) {
     DummyComponent,
     MeasureComponent,
     ResultComponent,
-    ResultBarComponent
+    ResultBarComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,

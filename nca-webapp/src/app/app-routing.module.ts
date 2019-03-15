@@ -7,16 +7,20 @@ import { DummyComponent } from './components/menubar/dummy-component';
 import { ScenarioGuard } from './guards/scenario-guard';
 import { ResultComponent } from './components/menubar/result-component';
 import { ResultGuard } from './guards/result-guard';
+import { MapComponent } from './components/map/map-component';
 
 const routes: Routes = [
   {
-    path: '', component: HomeComponent,
-    canActivate: [],
+    path: '', redirectTo: 'home', pathMatch: 'full'
+  },
+  {
+    path: 'home', component: HomeComponent,
     children: [
       {
-        path: '',
-        redirectTo: 'reference',
-        pathMatch: 'full'
+        path: '', redirectTo: 'reference', pathMatch: 'prefix'
+      },
+      {
+        path: '', component: MapComponent, outlet: 'main'
       },
       {
         path: 'reference', component: ReferenceComponent
@@ -27,12 +31,19 @@ const routes: Routes = [
       },
       {
         path: 'result', component: ResultComponent,
-        canActivate: [ResultGuard]
+        canActivate: [ResultGuard],
+        children: [
+          {
+            path: 'table', component: DummyComponent, outlet: 'main'
+          },
+          {
+            path: 'graph', component: DummyComponent, outlet: 'main'
+          },
+        ]
       },
       {
         path: 'dummy', component: DummyComponent
       }
-
     ]
   }
 ];
@@ -41,7 +52,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       useHash: Boolean(history.pushState) === false,
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
+      enableTracing: true
     }),
   ],
   exports: [RouterModule]

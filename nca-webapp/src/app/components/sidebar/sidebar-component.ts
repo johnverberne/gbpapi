@@ -29,9 +29,9 @@ export class SidebarComponent {
       this.activeMenu = event;
       if (event === 'LAYERS' || event === 'SETTINGS') {
         this.messageService.sendMessage('WIP');
-        this.router.navigate(['dummy']);
+        this.router.navigate(['home/dummy']);
       } else {
-        this.router.navigate([event.toLowerCase()]);
+        this.router.navigate(['home', event.toLowerCase()]);
       }
     }
   }
