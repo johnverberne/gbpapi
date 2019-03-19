@@ -19,7 +19,7 @@ export class ScenarioGuard implements CanActivate {
         canActivateObserver.complete();
       });
     } else {
-      this.router.navigate(['reference']);
+      this.router.navigate([{ outlets: { primary: ['reference'], main: ['map']}}]);
       return false;
     }
   }
