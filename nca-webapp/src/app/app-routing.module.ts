@@ -12,7 +12,7 @@ import { ResultTableComponent } from './components/results/result-table-componen
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/reference', pathMatch: 'full'
+    path: '', redirectTo: '/reference(main:map)', pathMatch: 'full'
   },
   {
     path: '', component: HomeComponent,
@@ -34,7 +34,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: '', outlet: 'main' , component: MapComponent
+    path: 'map', outlet: 'main' , component: MapComponent
   },
   {
     path: 'table', outlet: 'main', component: ResultTableComponent
