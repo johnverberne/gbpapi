@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { MenuEventService } from '../../../services/menu-event-service';
-import { MessageEventService } from '../../../services/message-event-service';
+import { MenuEventService } from '../../services/menu-event-service';
+import { MessageEventService } from '../../services/message-event-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,9 +29,9 @@ export class ResultBarComponent {
       this.activeMenu = event;
       if (event === 'GRAPH') {
         this.messageService.sendMessage('WIP');
-        this.router.navigate(['dummy']);
+        this.router.navigate(['result', { outlets: { main: ['dummy']}}]);
       } else {
-        this.router.navigate([{ outlets: { main: [event.toLowerCase()]}}]);
+        this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
       }
     }
   }

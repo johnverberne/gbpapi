@@ -8,7 +8,6 @@ import { CollapseModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
 import { OpenlayersComponent } from './components/map/openlayers/openlayers.component';
-import { LeafletComponent } from './components/map/leaflet/leaflet.component';
 import { SidebarComponent } from './components/sidebar/sidebar-component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -28,11 +27,12 @@ import { DummyComponent } from './components/menubar/dummy-component';
 import { MeasureComponent } from './components/menubar/measure-component';
 import { CalculationService } from './services/calculation-service';
 import { ResultComponent } from './components/menubar/result-component';
-import { ResultBarComponent } from './components/menubar/resultbar/resultbar-component';
+import { ResultBarComponent } from './components/results/resultbar-component';
 import { MenuEventService } from './services/menu-event-service';
 import { MapService } from './services/map-service';
 import { ScenarioComponent } from './components/menubar/scenario-component';
 import { MainComponent } from './components/main/main-component';
+import { ResultTableComponent } from './components/results/result-table-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -43,7 +43,6 @@ export function createTranslateLoader(http: HttpClient) {
     DialogHostDirective,
     AppComponent,
     OpenlayersComponent,
-    LeafletComponent,
     SidebarComponent,
     MapComponent,
     ConfirmDialogComponent,
@@ -56,7 +55,8 @@ export function createTranslateLoader(http: HttpClient) {
     MeasureComponent,
     ResultComponent,
     ResultBarComponent,
-    MainComponent
+    MainComponent,
+    ResultTableComponent
   ],
   imports: [
     BrowserModule,

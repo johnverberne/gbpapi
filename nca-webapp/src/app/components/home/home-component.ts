@@ -15,8 +15,6 @@ export class HomeComponent {
 
   @ViewChild(DialogHostDirective) public gbpDialogHost: DialogHostDirective;
 
-  public openMenu: boolean = true;
-
   constructor(
     private router: Router,
     private translateService: TranslateService,
@@ -29,9 +27,6 @@ export class HomeComponent {
         } else {
           dialog.message = messages.map((message) => this.translateService.instant(message)).join('; ');
         }
-      });
-      this.menuEventService.onMenuCollapse().subscribe((collapse) => {
-        this.openMenu = collapse;
       });
   }
 }

@@ -8,20 +8,15 @@ import { ScenarioGuard } from './guards/scenario-guard';
 import { ResultComponent } from './components/menubar/result-component';
 import { ResultGuard } from './guards/result-guard';
 import { MapComponent } from './components/map/map-component';
+import { ResultTableComponent } from './components/results/result-table-component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: 'home', pathMatch: 'full'
+    path: '', redirectTo: '/reference', pathMatch: 'full'
   },
   {
-    path: 'home', component: HomeComponent,
+    path: '', component: HomeComponent,
     children: [
-      {
-        path: '', redirectTo: 'reference', pathMatch: 'prefix'
-      },
-      {
-        path: '', component: MapComponent, outlet: 'main'
-      },
       {
         path: 'reference', component: ReferenceComponent
       },
@@ -32,19 +27,20 @@ const routes: Routes = [
       {
         path: 'result', component: ResultComponent,
         canActivate: [ResultGuard],
-        children: [
-          {
-            path: 'table', component: DummyComponent, outlet: 'main'
-          },
-          {
-            path: 'graph', component: DummyComponent, outlet: 'main'
-          },
-        ]
       },
       {
         path: 'dummy', component: DummyComponent
       }
     ]
+  },
+  {
+    path: '', outlet: 'main' , component: MapComponent
+  },
+  {
+    path: 'table', outlet: 'main', component: ResultTableComponent
+  },
+  {
+    path: 'graph', outlet: 'main', component: DummyComponent
   }
 ];
 
