@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CollapseModule } from 'ngx-bootstrap';
+import localeNl from '@angular/common/locales/nl';
 
 import { AppComponent } from './app.component';
 import { OpenlayersComponent } from './components/map/openlayers/openlayers.component';
@@ -33,10 +34,13 @@ import { MapService } from './services/map-service';
 import { ScenarioComponent } from './components/menubar/scenario-component';
 import { MainComponent } from './components/main/main-component';
 import { ResultTableComponent } from './components/results/result-table-component';
+import { registerLocaleData } from '@angular/common';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+registerLocaleData(localeNl, 'nl');
 
 @NgModule({
   declarations: [

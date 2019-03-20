@@ -5,7 +5,7 @@ import { Subject, Observable } from 'rxjs';
 export class MenuEventService {
 
   private menuBarCollapseSubject: Subject<boolean> = new Subject();
-  private scenarioChangeSubject: Subject<void> = new Subject();
+  private scenarioChangeSubject: Subject<number> = new Subject();
   private mainMenuChangeSubject: Subject<void> = new Subject();
 
   public onMenuCollapse(): Observable<boolean> {
@@ -16,12 +16,12 @@ export class MenuEventService {
     this.menuBarCollapseSubject.next(collapse);
   }
 
-  public onScenarioChange(): Observable<void> {
+  public onScenarioChange(): Observable<number> {
     return this.scenarioChangeSubject.asObservable();
   }
 
-  public scenarioChange() {
-    this.scenarioChangeSubject.next();
+  public scenarioChange(index: number) {
+    this.scenarioChangeSubject.next(index);
   }
 
   public onMainMenuChange(): Observable<void> {

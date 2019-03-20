@@ -1,4 +1,13 @@
-<div>
-  Resultaten
+<div class="table-component">
+  <div class="header">{{'BENEFITS' | translate}}</div>
+
+  <table mdbTable striped="true"> 
+    <tbody>
+      <tr *ngFor="let result of results">
+        <th scope="row">{{result.name | translate}}</th>
+        <td>{{result.sum | number:'1.0-0':'nl'}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 

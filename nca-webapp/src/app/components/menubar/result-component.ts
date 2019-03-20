@@ -53,6 +53,7 @@ export class ResultComponent {
 
   public onScenarioClick(index: number) {
     this.currentScenarioIndex = index;
+    this.menuEventService.scenarioChange(index);
   }
 
 }
