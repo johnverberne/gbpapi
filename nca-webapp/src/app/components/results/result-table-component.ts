@@ -15,6 +15,7 @@ export class ResultTableComponent {
 
   constructor(private menuEventService: MenuEventService, public projectService: CurrentProjectService) {
     this.menuEventService.onScenarioChange().subscribe((index) => this.scenarioIndex = index);
+    this.menuEventService.onResultTypeChange().subscribe((type) => this.resultType = type);
   }
 
   get results() {

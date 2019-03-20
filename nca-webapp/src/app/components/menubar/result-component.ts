@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MenuEventService } from '../../services/menu-event-service';
 import { MeasureModel } from '../../models/measure-model';
 import { MessageEventService } from '../../services/message-event-service';
+import { ResultType } from '../../models/enums/result-type';
 
 @Component({
   selector: 'gbp-result',
@@ -15,6 +16,7 @@ export class ResultComponent {
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public openMenu: boolean = true;
   public currentScenarioIndex: number = 0;
+  public resultType: ResultType = ResultType.PHYSICAL;
 
   constructor(public projectService: CurrentProjectService,
     public router: Router,
@@ -54,6 +56,11 @@ export class ResultComponent {
   public onScenarioClick(index: number) {
     this.currentScenarioIndex = index;
     this.menuEventService.scenarioChange(index);
+  }
+
+  public onResultTypeClick(resultType: ResultType) {
+    this.resultType = resultType;
+    this.menuEventService.resultTypeChange(resultType);
   }
 
 }

@@ -5,7 +5,7 @@
     <tbody>
       <tr *ngFor="let result of results">
         <th scope="row">{{result.name | translate}}</th>
-        <td>{{result.sum | number:'1.0-0':'nl'}}</td>
+        <td>{{result.sum | number:'1.0-0':'nl'}} ({{result.units | translate}})</td>
       </tr>
     </tbody>
   </table>
