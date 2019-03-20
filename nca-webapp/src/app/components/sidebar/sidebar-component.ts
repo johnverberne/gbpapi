@@ -32,7 +32,7 @@ export class SidebarComponent {
         this.messageService.sendMessage('WIP');
         this.router.navigate(['dummy']);
       } else {
-        this.router.navigate([event.toLowerCase()]);
+        this.router.navigate([{ outlets: { primary: event.toLowerCase(), main: 'map' }}]);
       }
     }
   }
