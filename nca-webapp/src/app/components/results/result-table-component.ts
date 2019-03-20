@@ -22,4 +22,23 @@ export class ResultTableComponent {
     return this.projectService.currentProject.scenarios[this.scenarioIndex].
       results.filter((result) => result.class.toUpperCase() === this.resultType);
   }
+
+  get headers() {
+    return this.projectService.currentProject.scenarios.
+      filter((scenario) => scenario.results.length > 0).map((scenario) => scenario.scenarioName);
+  }
+
+  public scenarioResults(code: number) {
+    const validScenarios = this.projectService.currentProject.scenarios.
+      filter((scenario) => scenario.results.length > 0);
+    const results = [];
+    validScenarios.forEach(scenario => {
+      scenario.results.forEach((result) => {
+        if (result.code === code) {
+          results.push(result);
+        }
+      });
+    });
+    return results;
+  }
 }

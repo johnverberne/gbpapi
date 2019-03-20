@@ -13,6 +13,7 @@
   "BUTTON_SAVE": "Bewaar",
   "BUTTON_CANCEL": "Annuleer",
   "DEFAULT_REFERENCE": "Huidige situatie",
+  "DOMAIN": "Domein",
   "UPDATED_REFERENCE": "Aangepaste referentie",
   "REFERENCE": "Referentie",
   "REFERENCE_DESCIPTION": "Start een berekening met het vastleggen hierboven van de referentiesituatie waartegen u wilt rekenen. Open het kaartlagenpaneel als u de huidige situatie wilt raadplegen.",
