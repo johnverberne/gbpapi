@@ -16,7 +16,20 @@
   }
 
   .header {
+    display: flex;
     padding: 0.5rem;
+
+    .btn-secondary {
+      &:not(:disabled):not(.disabled).active {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+        border-color: map-get($theme-colors, "primary");
+      }
+    }
+    
+    .result-type {
+      margin-left: auto;
+    }
   }
 
   .sub-header {

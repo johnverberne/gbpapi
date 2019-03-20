@@ -187,6 +187,8 @@ export class MeasureComponent implements OnChanges {
     }
     this.mapService.startDrawing(measureGeom);
     this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureGeom));
+    // TODO remove mock drawing because of missing geoserver
+    this.mapService.featureDrawn();
   }
 
   private disableDrawForMeasure() {
