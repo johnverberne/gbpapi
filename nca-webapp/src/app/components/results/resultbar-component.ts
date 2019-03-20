@@ -29,10 +29,8 @@ export class ResultBarComponent {
       this.activeMenu = event;
       if (event === 'GRAPH') {
         this.messageService.sendMessage('WIP');
-        this.router.navigate(['result', { outlets: { main: ['dummy']}}]);
-      } else {
-        this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
       }
+      this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
     }
   }
 }

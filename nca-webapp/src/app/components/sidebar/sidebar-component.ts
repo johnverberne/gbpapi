@@ -4,7 +4,6 @@ import { MessageEventService } from '../../services/message-event-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CurrentProjectService } from '../../services/current-project-service';
 import { MenuEventService } from '../../services/menu-event-service';
-import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'gbp-sidebar',

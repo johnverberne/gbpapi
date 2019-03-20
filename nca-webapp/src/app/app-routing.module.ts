@@ -49,7 +49,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       useHash: Boolean(history.pushState) === false,
       preloadingStrategy: PreloadAllModules,
-      enableTracing: true
+      enableTracing: false
     }),
   ],
   exports: [RouterModule]

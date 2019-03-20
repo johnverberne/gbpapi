@@ -19,7 +19,7 @@ export class ResultGuard implements CanActivate {
         canActivateObserver.complete();
       });
     } else {
-      this.router.navigate(['scenario']);
+      this.router.navigate([{ outlets: { primary: ['scenario'], main: ['map']}}]);
       return false;
     }
   }

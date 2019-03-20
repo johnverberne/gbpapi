@@ -6,7 +6,7 @@ import { MenuEventService } from './services/menu-event-service';
 @Component({
   selector: 'gbp-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   public title = 'gbp';
@@ -14,17 +14,20 @@ export class AppComponent {
 
   constructor(
     private translate: TranslateService,
-    private router: Router,
+    public router: Router,
     private menuEventService: MenuEventService
   ) {
     // this language will be used as a fallback when a
     // translation isn't found in the current language
     translate.setDefaultLang('nl');
-
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use('nl');
     this.menuEventService.onMenuCollapse().subscribe((collapse) => {
       this.openMenu = collapse;
     });
+  }
+
+  public isResultPage() {
+    return this.router.url.split('(')[0] === '/result';
   }
 }
