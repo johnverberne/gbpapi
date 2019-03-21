@@ -5,6 +5,7 @@ import { MenuEventService } from '../../services/menu-event-service';
 import { MeasureModel } from '../../models/measure-model';
 import { MessageEventService } from '../../services/message-event-service';
 import { ResultType } from '../../models/enums/result-type';
+import { MapService } from '../../services/map-service';
 
 @Component({
   selector: 'gbp-result',
@@ -21,7 +22,8 @@ export class ResultComponent {
   constructor(public projectService: CurrentProjectService,
     public router: Router,
     private menuEventService: MenuEventService,
-    private messageEventService: MessageEventService) {
+    private messageEventService: MessageEventService,
+    private mapService: MapService) {
     this.menuEventService.onMenuCollapse().subscribe((collapse) => {
       this.openMenu = collapse;
     });
@@ -56,11 +58,17 @@ export class ResultComponent {
   public onScenarioClick(index: number) {
     this.currentScenarioIndex = index;
     this.menuEventService.scenarioChange(index);
+    this.drawMeasures();
   }
 
   public onResultTypeClick(resultType: ResultType) {
     this.resultType = resultType;
     this.menuEventService.resultTypeChange(resultType);
+  }
+
+  private drawMeasures() {
+    this.mapService.clearMap();
+    this.measures.forEach((measure) => this.mapService.showFeatures(measure.geom));
   }
 
 }
