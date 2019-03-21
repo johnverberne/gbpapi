@@ -46,12 +46,12 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private gridStyle = new Style({
     stroke: new Stroke({
-      color: '#5F9600',
+      color: 'grey',
       width: 0.5
     }),
     fill: new Fill({
       color: 'rgba(255, 255, 255, 0.01)' // required to be able to select tiles (transparent features are not selectable)
-    })
+    }),
   });
 
   private readonly GRID_SIZE = 16.2;

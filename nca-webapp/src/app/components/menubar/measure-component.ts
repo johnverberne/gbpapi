@@ -187,8 +187,6 @@ export class MeasureComponent implements OnChanges {
     }
     this.mapService.startDrawing(measureGeom);
     this.featureSubsciption = this.mapService.onFeatureDrawn().subscribe(() => this.addFeatures(measureGeom));
-    // TODO remove mock drawing because of missing geoserver
-    this.mapService.featureDrawn();
   }
 
   private disableDrawForMeasure() {
@@ -257,12 +255,12 @@ export class MeasureComponent implements OnChanges {
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
     // Mock data
-    newModel.inhabitants = 125;
-    newModel.landuse = LandUseType.RESIDENTIAL;
-    newModel.woz = 200000;
-    newModel.vegetation.low = 10;
-    newModel.vegetation.middle = 50;
-    newModel.vegetation.high = 40;
+    // newModel.inhabitants = 125;
+    // newModel.landuse = LandUseType.RESIDENTIAL;
+    // newModel.woz = 200000;
+    // newModel.vegetation.low = 10;
+    // newModel.vegetation.middle = 50;
+    // newModel.vegetation.high = 40;
     // End mock data
     newModel.measureName = this.generateUniqueMeasureName();
     if (geom) {
