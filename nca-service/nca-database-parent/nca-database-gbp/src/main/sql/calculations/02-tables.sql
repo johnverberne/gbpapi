@@ -25,7 +25,7 @@ CREATE TABLE calculation_results
 	calculation_id integer NOT NULL,
 	model text,
 	geolayer text,
-	data jsonb
+	data json
 );
 
 

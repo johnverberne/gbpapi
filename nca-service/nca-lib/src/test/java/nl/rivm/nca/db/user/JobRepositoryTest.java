@@ -19,50 +19,57 @@ package nl.rivm.nca.db.user;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.junit.Test;
 
-import nl.rivm.nca.db.TestPMF;
-import nl.rivm.nca.exception.AeriusException;
+import nl.rivm.nca.db.BaseDBTest;
+import nl.rivm.nca.db.calculation.CalculationRepository;
 import nl.rivm.nca.shared.domain.JobProgress;
-import nl.rivm.nca.shared.domain.ScenarioUser;
+import nl.rivm.nca.shared.domain.JobType;
+import nl.rivm.nca.shared.domain.calculation.Calculation;
+import nl.rivm.nca.shared.domain.calculation.JobState;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
 
-public class JobRepositoryTest {
+public class JobRepositoryTest extends BaseDBTest {
 
 	private static final String TEST_API_KEY = "0000-0000-0000-0000";
 
 	@Test
-	public void testGetCalculationsProgressForUser() throws SQLException {
-		List<JobProgress> progresses;
-		ScenarioUser user = UserRepository.getUserByApiKey(getConnection(), TEST_API_KEY);
-		assertNotNull("user found ", user);
+	public void testCreateJob() throws SQLException {
+		JobProgress progress = null;
+		String correlationId = UUID.randomUUID().toString();
+		ScenarioUser user = UserRepository.getUserByApiKey(getGbpConnection(), TEST_API_KEY);
+		JobRepository.createJob(getGbpConnection(), user, JobType.CALCULATION, correlationId);
 
-		progresses = JobRepository.getProgressForUser(getConnection(), user);
-		assertEquals("Jobs count ", 1, progresses.size());
+		progress = JobRepository.getProgress(getGbpConnection(), correlationId);
+		assertEquals("Job must be initialized ", JobState.INITIALIZED, progress.getState());
+
+		Calculation calcuation = CalculationRepository.insertCalculation(getGbpConnection(), new Calculation(), null);
+
+		List<Integer> calculationIds = new ArrayList<Integer>();
+		calculationIds.add(calcuation.getCalculationId());
+		JobRepository.attachCalculations(getGbpConnection(), correlationId, calculationIds);
+
+		JobRepository.updateJobStatus(getGbpConnection(), correlationId, JobState.RUNNING);
+		progress = JobRepository.getProgress(getGbpConnection(), correlationId);
+		assertEquals("Job must be running ", JobState.RUNNING, progress.getState());
+
+		JobRepository.updateJobStatus(getGbpConnection(), correlationId, JobState.COMPLETED);
+		progress = JobRepository.getProgress(getGbpConnection(), correlationId);
+		assertEquals("Job must be completed ", JobState.COMPLETED, progress.getState());
 	}
 
 	@Test
-	public void testCreateUser() throws SQLException, AeriusException {
-		String apiKey = UUID.randomUUID().toString();
-		ScenarioUser user = new ScenarioUser();
-		user.setApiKey(apiKey);
-		user.setEnabled(true);
-		user.setEmailAddress("johnverberne."+apiKey+"@gmail.com");
-		UserRepository.createUser(getConnection(), user);
-		ScenarioUser existingUser = UserRepository.getUserByApiKey(getConnection(), apiKey);
-		assertNotNull("user found ", existingUser);
-	}
+	public void testGetCalculationsProgressForUser() throws SQLException {
+		List<JobProgress> progresses;
+		ScenarioUser user = UserRepository.getUserByApiKey(getGbpConnection(), TEST_API_KEY);
+		assertNotNull("user found ", user);
 
-	protected Connection getConnection() throws SQLException {
-		TestPMF pmf = new TestPMF(true);
-		pmf.setJdbcURL("jdbc:postgresql://localhost/unittest_NCA-gbp");
-		pmf.setDbUsername("aerius");
-		pmf.setDbPassword("hallo2dirk337");
-		return pmf.getConnection();
+		progresses = JobRepository.getProgressForUser(getGbpConnection(), user);
+		assertEquals("Jobs count ", Boolean.TRUE , progresses.size()> 0);
 	}
-
 }

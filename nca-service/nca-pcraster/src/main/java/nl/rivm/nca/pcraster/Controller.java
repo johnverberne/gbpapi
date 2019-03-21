@@ -75,7 +75,7 @@ public class Controller implements ControllerInterface {
 		
 		LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
 		runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile);
-		//convertOutput(outputPath);
+		convertOutput(outputPath);
 		List<AssessmentResultResponse> assessmentResultlist = importOutputToDatabase(correlationId, outputPath);
 		publishFiles(correlationId, outputPath);
 		cleanUp(workingPath);
@@ -83,8 +83,7 @@ public class Controller implements ControllerInterface {
 	}
 
 	// copy input geotiff files to working map and convert to pcraster format
-	protected File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath,
-			List<LayerObject> userLayers) {
+	protected File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath, List<LayerObject> userLayers) {
 		final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul))
 				.collect(Collectors.toList());
 		files.forEach(this::convertOutput2GeoTiff);
@@ -108,10 +107,14 @@ public class Controller implements ControllerInterface {
 		}
 
 		final File geotiffFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + GEOTIFF_DOT_EXT);
+		final File mapFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + MAP_DOT_EXT);
 
 		try {
 			// convert input xyz to tiff
 			Xyz2Geotiff.xyz2geoTiff(xyzFile, geotiffFile);
+			// convert input xyz to map file
+			Xyz2Geotiff.xyz2gmap(xyzFile, mapFile);
+			
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

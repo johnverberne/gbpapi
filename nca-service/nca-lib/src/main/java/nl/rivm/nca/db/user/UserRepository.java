@@ -36,7 +36,7 @@ import nl.rivm.nca.db.util.QueryBuilder;
 import nl.rivm.nca.db.util.QueryUtil;
 import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.exception.AeriusException.Reason;
-import nl.rivm.nca.shared.domain.ScenarioUser;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
 
 public final class UserRepository {
 
@@ -141,7 +141,7 @@ public final class UserRepository {
 	 * lookup. Returns null when the user is not found.
 	 */
 	public static ScenarioUser getUserByEmailAddress(final Connection con, final String email) throws SQLException {
-		nl.rivm.nca.shared.domain.ScenarioUser user = null;
+		nl.rivm.nca.shared.domain.user.ScenarioUser user = null;
 		try (final PreparedStatement stmt = con.prepareStatement(QUERY_GET_USER_BY_EMAIL_ADDRESS.get())) {
 			QUERY_GET_USER_BY_EMAIL_ADDRESS.setParameter(stmt, RepositoryAttribute.EMAIL_ADDRESS, email.toLowerCase());
 			final ResultSet rs = stmt.executeQuery();
@@ -154,16 +154,15 @@ public final class UserRepository {
 	}
 
 	
-	 private static void validateUserNotExists(final Connection con, final
-	 ScenarioUser user) throws AeriusException, SQLException {
-	 if (getUserByEmailAddress(con, user.getEmailAddress()) != null) {
-	 throw new AeriusException(Reason.USER_EMAIL_ADDRESS_ALREADY_EXISTS,
-	 user.getEmailAddress());
-	 }
-	 if (getUserByApiKey(con, user.getApiKey()) != null) {
-	 throw new AeriusException(Reason.USER_API_KEY_ALREADY_EXISTS);
-	 }
-	 }
+	private static void validateUserNotExists(final Connection con, final ScenarioUser user)
+			throws AeriusException, SQLException {
+		if (getUserByEmailAddress(con, user.getEmailAddress()) != null) {
+			throw new AeriusException(Reason.USER_EMAIL_ADDRESS_ALREADY_EXISTS, user.getEmailAddress());
+		}
+		if (getUserByApiKey(con, user.getApiKey()) != null) {
+			throw new AeriusException(Reason.USER_API_KEY_ALREADY_EXISTS);
+		}
+	}
 	
 
 	private static void fillUser(final ScenarioUser user, final ResultSet rs) throws SQLException {

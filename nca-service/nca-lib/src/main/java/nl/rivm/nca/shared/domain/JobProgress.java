@@ -19,12 +19,10 @@ package  nl.rivm.nca.shared.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import nl.rivm.nca.shared.domain.calculation.JobState;
+
 public class JobProgress implements Serializable {
 
-  public enum JobState {
-    RUNNING, DONE
-  }
-  
   private static final long serialVersionUID = 2439541939254337039L;
 
   private JobType type;

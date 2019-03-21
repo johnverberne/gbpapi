@@ -21,7 +21,6 @@ import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.ImmediatlyAssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.pcraster.Controller;
 import nl.rivm.nca.pcraster.ImmediatlyController;
 import nl.rivm.nca.pcraster.SingleRun;
 
@@ -77,10 +76,11 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     //models.add("energy_savings_by_shelter_trees");
     
     List<AssessmentResultResponse> results = new ArrayList<AssessmentResultResponse>();
-    for(String model : models) {
-    results.addAll(controller.run(uuid,
-        singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT)));
-    }
+		for (String model : models) {
+			
+			results.addAll(controller.run(uuid, singleRun.singleRun(ar.getName(), model,
+					"/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT)));
+		}
     return results;
   }
 

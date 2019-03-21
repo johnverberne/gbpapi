@@ -18,12 +18,12 @@ package nl.rivm.nca.api.service.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import nl.rivm.nca.db.user.UserRepository;
 import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.exception.AeriusException.Reason;
-import nl.rivm.nca.shared.domain.ScenarioUser;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.util.UuidUtil;
 
 /**
  * User util class to help with user specific stuff.
@@ -131,7 +131,7 @@ public final class UserUtil {
   }
 
   private static String generateAPIKeyString() {
-    return nl.rivm.nca.util.UuidUtil.getStripped();
+    return UuidUtil.getStripped();
   }
 
 }

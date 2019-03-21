@@ -1,0 +1,890 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for nl.rivm.nca:nca-api:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ nl.rivm.nca:nca-api:[unknown-version], D:\gitRepos\GroeneBatenPlanner\nca-service\nca-api\pom.xml, line 40, column 12
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for nl.rivm.nca:nca-webserver:war:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ nl.rivm.nca:nca-webserver:[unknown-version], D:\gitRepos\GroeneBatenPlanner\nca-service\nca-webserver\pom.xml, line 77, column 13
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] NCA Parent
+[INFO] NCA Api
+[INFO] NCA Lib
+[INFO] NCA PCRaster
+[INFO] NCA webserver
+[INFO] nca geoserver base
+[INFO] nca GeoServer
+[INFO] database gbp
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building NCA Parent 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-parent ---
+[INFO] nl.rivm.nca:nca-parent:pom:1.0-SNAPSHOT
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building NCA Api 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-api ---
+[INFO] nl.rivm.nca:nca-api:jar:1.0-SNAPSHOT
+[INFO] +- io.swagger:swagger-jersey2-jaxrs:jar:1.5.18:compile
+[INFO] |  +- io.swagger:swagger-jaxrs:jar:1.5.18:compile
+[INFO] |  |  +- io.swagger:swagger-core:jar:1.5.18:compile
+[INFO] |  |  |  +- org.apache.commons:commons-lang3:jar:3.4:compile
+[INFO] |  |  |  +- org.slf4j:slf4j-api:jar:1.7.22:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.9.3:compile
+[INFO] |  |  |  |  \- org.yaml:snakeyaml:jar:1.18:compile
+[INFO] |  |  |  +- io.swagger:swagger-models:jar:1.5.18:compile
+[INFO] |  |  |  |  \- io.swagger:swagger-annotations:jar:1.5.18:compile
+[INFO] |  |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile
+[INFO] |  |  +- org.reflections:reflections:jar:0.9.11:compile
+[INFO] |  |  |  \- org.javassist:javassist:jar:3.21.0-GA:compile
+[INFO] |  |  \- com.google.guava:guava:jar:20.0:compile
+[INFO] |  +- org.glassfish.jersey.containers:jersey-container-servlet-core:jar:2.25.1:compile
+[INFO] |  |  +- org.glassfish.hk2.external:javax.inject:jar:2.5.0-b32:compile
+[INFO] |  |  +- org.glassfish.jersey.core:jersey-common:jar:2.25.1:compile
+[INFO] |  |  |  +- javax.annotation:javax.annotation-api:jar:1.2:compile
+[INFO] |  |  |  +- org.glassfish.jersey.bundles.repackaged:jersey-guava:jar:2.25.1:compile
+[INFO] |  |  |  +- org.glassfish.hk2:hk2-api:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  +- org.glassfish.hk2:hk2-utils:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  \- org.glassfish.hk2.external:aopalliance-repackaged:jar:2.5.0-b32:compile
+[INFO] |  |  |  +- org.glassfish.hk2:hk2-locator:jar:2.5.0-b32:compile
+[INFO] |  |  |  \- org.glassfish.hk2:osgi-resource-locator:jar:1.0.1:compile
+[INFO] |  |  +- org.glassfish.jersey.core:jersey-server:jar:2.25.1:compile
+[INFO] |  |  |  +- org.glassfish.jersey.core:jersey-client:jar:2.25.1:compile
+[INFO] |  |  |  \- org.glassfish.jersey.media:jersey-media-jaxb:jar:2.25.1:compile
+[INFO] |  |  \- javax.ws.rs:javax.ws.rs-api:jar:2.0.1:compile
+[INFO] |  \- org.glassfish.jersey.media:jersey-media-multipart:jar:2.25.1:compile
+[INFO] |     \- org.jvnet.mimepull:mimepull:jar:1.9.6:compile
+[INFO] +- org.apache.tomcat:tomcat-servlet-api:jar:8.5.28:provided
+[INFO] +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.5:compile
+[INFO] |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.5:compile
+[INFO] |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.5:compile
+[INFO] \- com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.9.5:compile
+[INFO]    +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
+[INFO]    +- com.fasterxml.jackson.core:jackson-core:jar:2.9.5:compile
+[INFO]    +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.5:compile
+[INFO]    \- joda-time:joda-time:jar:2.7:compile
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building NCA Lib 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-lib ---
+[INFO] nl.rivm.nca:nca-lib:jar:1.0-SNAPSHOT
+[INFO] +- com.rabbitmq:amqp-client:jar:5.1.2:compile
+[INFO] |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
+[INFO] +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.10.0:compile
+[INFO] |  +- org.apache.logging.log4j:log4j-api:jar:2.10.0:compile
+[INFO] |  \- org.apache.logging.log4j:log4j-core:jar:2.10.0:runtime
+[INFO] +- nl.rivm.nca:nca-api:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- io.swagger:swagger-jersey2-jaxrs:jar:1.5.18:compile
+[INFO] |  |  +- io.swagger:swagger-jaxrs:jar:1.5.18:compile
+[INFO] |  |  |  +- io.swagger:swagger-core:jar:1.5.18:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.9.3:compile
+[INFO] |  |  |  |  |  \- org.yaml:snakeyaml:jar:1.18:compile
+[INFO] |  |  |  |  +- io.swagger:swagger-models:jar:1.5.18:compile
+[INFO] |  |  |  |  |  \- io.swagger:swagger-annotations:jar:1.5.18:compile
+[INFO] |  |  |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile
+[INFO] |  |  |  +- org.reflections:reflections:jar:0.9.11:compile
+[INFO] |  |  |  |  \- org.javassist:javassist:jar:3.21.0-GA:compile
+[INFO] |  |  |  \- com.google.guava:guava:jar:20.0:compile
+[INFO] |  |  +- org.glassfish.jersey.containers:jersey-container-servlet-core:jar:2.25.1:compile
+[INFO] |  |  |  +- org.glassfish.hk2.external:javax.inject:jar:2.5.0-b32:compile
+[INFO] |  |  |  +- org.glassfish.jersey.core:jersey-common:jar:2.25.1:compile
+[INFO] |  |  |  |  +- javax.annotation:javax.annotation-api:jar:1.2:compile
+[INFO] |  |  |  |  +- org.glassfish.jersey.bundles.repackaged:jersey-guava:jar:2.25.1:compile
+[INFO] |  |  |  |  +- org.glassfish.hk2:hk2-api:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  |  +- org.glassfish.hk2:hk2-utils:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  |  \- org.glassfish.hk2.external:aopalliance-repackaged:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  +- org.glassfish.hk2:hk2-locator:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  \- org.glassfish.hk2:osgi-resource-locator:jar:1.0.1:compile
+[INFO] |  |  |  +- org.glassfish.jersey.core:jersey-server:jar:2.25.1:compile
+[INFO] |  |  |  |  +- org.glassfish.jersey.core:jersey-client:jar:2.25.1:compile
+[INFO] |  |  |  |  \- org.glassfish.jersey.media:jersey-media-jaxb:jar:2.25.1:compile
+[INFO] |  |  |  \- javax.ws.rs:javax.ws.rs-api:jar:2.0.1:compile
+[INFO] |  |  \- org.glassfish.jersey.media:jersey-media-multipart:jar:2.25.1:compile
+[INFO] |  |     \- org.jvnet.mimepull:mimepull:jar:1.9.6:compile
+[INFO] |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.5:compile
+[INFO] |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.5:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.5:compile
+[INFO] |  \- com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-core:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.5:compile
+[INFO] |     \- joda-time:joda-time:jar:2.7:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.4:compile
+[INFO] +- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  \- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] \- net.postgis:postgis-jdbc:jar:2.2.0:compile
+[INFO]    +- postgresql:postgresql:jar:9.1-901-1.jdbc4:compile (version selected from constraint [9.1-901.jdbc3,))
+[INFO]    +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO]    \- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building NCA PCRaster 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-pcraster ---
+[INFO] nl.rivm.nca:nca-pcraster:jar:1.0-SNAPSHOT
+[INFO] +- nl.rivm.nca:nca-api:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- io.swagger:swagger-jersey2-jaxrs:jar:1.5.18:compile
+[INFO] |  |  +- io.swagger:swagger-jaxrs:jar:1.5.18:compile
+[INFO] |  |  |  +- io.swagger:swagger-core:jar:1.5.18:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.9.3:compile
+[INFO] |  |  |  |  |  \- org.yaml:snakeyaml:jar:1.18:compile
+[INFO] |  |  |  |  +- io.swagger:swagger-models:jar:1.5.18:compile
+[INFO] |  |  |  |  |  \- io.swagger:swagger-annotations:jar:1.5.18:compile
+[INFO] |  |  |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile
+[INFO] |  |  |  +- org.reflections:reflections:jar:0.9.11:compile
+[INFO] |  |  |  |  \- org.javassist:javassist:jar:3.21.0-GA:compile
+[INFO] |  |  |  \- com.google.guava:guava:jar:20.0:compile
+[INFO] |  |  +- org.glassfish.jersey.containers:jersey-container-servlet-core:jar:2.25.1:compile
+[INFO] |  |  |  +- org.glassfish.hk2.external:javax.inject:jar:2.5.0-b32:compile
+[INFO] |  |  |  +- org.glassfish.jersey.core:jersey-common:jar:2.25.1:compile
+[INFO] |  |  |  |  +- javax.annotation:javax.annotation-api:jar:1.2:compile
+[INFO] |  |  |  |  +- org.glassfish.jersey.bundles.repackaged:jersey-guava:jar:2.25.1:compile
+[INFO] |  |  |  |  +- org.glassfish.hk2:hk2-api:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  |  +- org.glassfish.hk2:hk2-utils:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  |  \- org.glassfish.hk2.external:aopalliance-repackaged:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  +- org.glassfish.hk2:hk2-locator:jar:2.5.0-b32:compile
+[INFO] |  |  |  |  \- org.glassfish.hk2:osgi-resource-locator:jar:1.0.1:compile
+[INFO] |  |  |  +- org.glassfish.jersey.core:jersey-server:jar:2.25.1:compile
+[INFO] |  |  |  |  +- org.glassfish.jersey.core:jersey-client:jar:2.25.1:compile
+[INFO] |  |  |  |  \- org.glassfish.jersey.media:jersey-media-jaxb:jar:2.25.1:compile
+[INFO] |  |  |  \- javax.ws.rs:javax.ws.rs-api:jar:2.0.1:compile
+[INFO] |  |  \- org.glassfish.jersey.media:jersey-media-multipart:jar:2.25.1:compile
+[INFO] |  |     \- org.jvnet.mimepull:mimepull:jar:1.9.6:compile
+[INFO] |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.5:compile
+[INFO] |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.5:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.5:compile
+[INFO] |  \- com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-core:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.5:compile
+[INFO] |     \- joda-time:joda-time:jar:2.7:compile
+[INFO] +- nl.rivm.nca:nca-lib:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.rabbitmq:amqp-client:jar:5.1.2:compile
+[INFO] |  |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
+[INFO] |  +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.10.0:compile
+[INFO] |  |  +- org.apache.logging.log4j:log4j-api:jar:2.10.0:compile
+[INFO] |  |  \- org.apache.logging.log4j:log4j-core:jar:2.10.0:runtime
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.4:compile
+[INFO] |  +- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  |  \- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] |  \- net.postgis:postgis-jdbc:jar:2.2.0:compile
+[INFO] |     +- postgresql:postgresql:jar:9.1-901-1.jdbc4:compile (version selected from constraint [9.1-901.jdbc3,))
+[INFO] |     +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO] |     \- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] +- org.geotools:gt-image:jar:19.0:compile
+[INFO] |  +- org.geotools:gt-main:jar:19.0:compile
+[INFO] |  |  +- org.geotools:gt-api:jar:19.0:compile
+[INFO] |  |  +- com.vividsolutions:jts-core:jar:1.14.0:compile
+[INFO] |  |  \- org.jdom:jdom2:jar:2.0.6:compile
+[INFO] |  +- org.geotools:gt-coverage:jar:19.0:compile
+[INFO] |  |  +- com.vividsolutions:jts-example:jar:1.14.0:compile
+[INFO] |  |  |  \- com.vividsolutions:jts-io:jar:1.14.0:compile
+[INFO] |  |  |     \- com.googlecode.json-simple:json-simple:jar:1.1:compile
+[INFO] |  |  +- org.jaitools:jt-zonalstats:jar:1.4.0:compile
+[INFO] |  |  +- org.jaitools:jt-utils:jar:1.4.0:compile
+[INFO] |  |  +- it.geosolutions.jaiext.affine:jt-affine:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.algebra:jt-algebra:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandmerge:jt-bandmerge:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandselect:jt-bandselect:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandcombine:jt-bandcombine:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.border:jt-border:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.buffer:jt-buffer:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.crop:jt-crop:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.iterators:jt-iterators:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.lookup:jt-lookup:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.mosaic:jt-mosaic:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.nullop:jt-nullop:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rescale:jt-rescale:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.scale:jt-scale:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.stats:jt-stats:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.translate:jt-translate:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.utilities:jt-utilities:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.warp:jt-warp:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.zonal:jt-zonal:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.binarize:jt-binarize:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.format:jt-format:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorconvert:jt-colorconvert:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.errordiffusion:jt-errordiffusion:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.orderdither:jt-orderdither:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorindexer:jt-colorindexer:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.imagefunction:jt-imagefunction:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.piecewise:jt-piecewise:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.classifier:jt-classifier:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rlookup:jt-rlookup:jar:1.0.20:compile
+[INFO] |  |  +- it.geosolutions.jaiext.vectorbin:jt-vectorbin:jar:1.0.20:compile
+[INFO] |  |  \- commons-io:commons-io:jar:2.1:compile
+[INFO] |  \- javax.media:jai_core:jar:1.1.3:compile
+[INFO] +- org.geotools:gt-geotiff:jar:19.0:compile
+[INFO] |  +- org.geotools:gt-referencing:jar:19.0:compile
+[INFO] |  |  +- org.ejml:ejml-ddense:jar:0.32:compile
+[INFO] |  |  |  \- org.ejml:ejml-core:jar:0.32:compile
+[INFO] |  |  +- org.geotools:gt-metadata:jar:19.0:compile
+[INFO] |  |  |  \- org.geotools:gt-opengis:jar:19.0:compile
+[INFO] |  |  |     \- net.java.dev.jsr-275:jsr-275:jar:1.0-beta-2:compile
+[INFO] |  |  +- jgridshift:jgridshift:jar:1.0:compile
+[INFO] |  |  \- net.sf.geographiclib:GeographicLib-Java:jar:1.44:compile
+[INFO] |  +- javax.media:jai_imageio:jar:1.1:compile
+[INFO] |  \- it.geosolutions.imageio-ext:imageio-ext-tiff:jar:1.1.20:compile
+[INFO] |     +- it.geosolutions.imageio-ext:imageio-ext-utilities:jar:1.1.20:compile
+[INFO] |     +- it.geosolutions.imageio-ext:imageio-ext-geocore:jar:1.1.20:compile
+[INFO] |     |  \- it.geosolutions.imageio-ext:imageio-ext-streams:jar:1.1.20:compile
+[INFO] |     \- javax.media:jai_codec:jar:1.1.3:compile
+[INFO] +- org.geotools:gt-epsg-hsql:jar:19.0:compile
+[INFO] |  \- org.hsqldb:hsqldb:jar:2.3.0:compile
+[INFO] +- org.apache.commons:commons-configuration2:jar:2.2:compile
+[INFO] |  \- commons-logging:commons-logging:jar:1.2:compile
+[INFO] \- junit:junit:jar:4.11:test
+[INFO]    \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building NCA webserver 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-webserver ---
+[INFO] nl.rivm.nca:nca-webserver:war:1.0-SNAPSHOT
+[INFO] +- nl.rivm.nca:nca-api:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.5:compile
+[INFO] |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.5:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.5:compile
+[INFO] |  \- com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-core:jar:2.9.5:compile
+[INFO] |     +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.5:compile
+[INFO] |     \- joda-time:joda-time:jar:2.7:compile
+[INFO] +- nl.rivm.nca:nca-lib:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- com.rabbitmq:amqp-client:jar:5.1.2:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.4:compile
+[INFO] |  +- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  |  \- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] |  \- net.postgis:postgis-jdbc:jar:2.2.0:compile
+[INFO] |     +- postgresql:postgresql:jar:9.1-901-1.jdbc4:compile (version selected from constraint [9.1-901.jdbc3,))
+[INFO] |     +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO] |     \- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] +- nl.rivm.nca:nca-pcraster:jar:1.0-SNAPSHOT:compile
+[INFO] |  +- org.geotools:gt-image:jar:19.0:compile
+[INFO] |  |  +- org.geotools:gt-main:jar:19.0:compile
+[INFO] |  |  |  +- org.geotools:gt-api:jar:19.0:compile
+[INFO] |  |  |  +- com.vividsolutions:jts-core:jar:1.14.0:compile
+[INFO] |  |  |  \- org.jdom:jdom2:jar:2.0.6:compile
+[INFO] |  |  +- org.geotools:gt-coverage:jar:19.0:compile
+[INFO] |  |  |  +- com.vividsolutions:jts-example:jar:1.14.0:compile
+[INFO] |  |  |  |  \- com.vividsolutions:jts-io:jar:1.14.0:compile
+[INFO] |  |  |  |     \- com.googlecode.json-simple:json-simple:jar:1.1:compile
+[INFO] |  |  |  +- org.jaitools:jt-zonalstats:jar:1.4.0:compile
+[INFO] |  |  |  +- org.jaitools:jt-utils:jar:1.4.0:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.affine:jt-affine:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.algebra:jt-algebra:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.bandmerge:jt-bandmerge:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.bandselect:jt-bandselect:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.bandcombine:jt-bandcombine:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.border:jt-border:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.buffer:jt-buffer:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.crop:jt-crop:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.iterators:jt-iterators:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.lookup:jt-lookup:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.mosaic:jt-mosaic:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.nullop:jt-nullop:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.rescale:jt-rescale:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.scale:jt-scale:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.stats:jt-stats:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.translate:jt-translate:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.utilities:jt-utilities:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.warp:jt-warp:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.zonal:jt-zonal:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.binarize:jt-binarize:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.format:jt-format:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.colorconvert:jt-colorconvert:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.errordiffusion:jt-errordiffusion:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.orderdither:jt-orderdither:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.colorindexer:jt-colorindexer:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.imagefunction:jt-imagefunction:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.piecewise:jt-piecewise:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.classifier:jt-classifier:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.rlookup:jt-rlookup:jar:1.0.20:compile
+[INFO] |  |  |  +- it.geosolutions.jaiext.vectorbin:jt-vectorbin:jar:1.0.20:compile
+[INFO] |  |  |  \- commons-io:commons-io:jar:2.1:compile
+[INFO] |  |  \- javax.media:jai_core:jar:1.1.3:compile
+[INFO] |  +- org.geotools:gt-geotiff:jar:19.0:compile
+[INFO] |  |  +- org.geotools:gt-referencing:jar:19.0:compile
+[INFO] |  |  |  +- org.ejml:ejml-ddense:jar:0.32:compile
+[INFO] |  |  |  |  \- org.ejml:ejml-core:jar:0.32:compile
+[INFO] |  |  |  +- org.geotools:gt-metadata:jar:19.0:compile
+[INFO] |  |  |  |  \- org.geotools:gt-opengis:jar:19.0:compile
+[INFO] |  |  |  |     \- net.java.dev.jsr-275:jsr-275:jar:1.0-beta-2:compile
+[INFO] |  |  |  +- jgridshift:jgridshift:jar:1.0:compile
+[INFO] |  |  |  \- net.sf.geographiclib:GeographicLib-Java:jar:1.44:compile
+[INFO] |  |  +- javax.media:jai_imageio:jar:1.1:compile
+[INFO] |  |  \- it.geosolutions.imageio-ext:imageio-ext-tiff:jar:1.1.20:compile
+[INFO] |  |     +- it.geosolutions.imageio-ext:imageio-ext-utilities:jar:1.1.20:compile
+[INFO] |  |     +- it.geosolutions.imageio-ext:imageio-ext-geocore:jar:1.1.20:compile
+[INFO] |  |     |  \- it.geosolutions.imageio-ext:imageio-ext-streams:jar:1.1.20:compile
+[INFO] |  |     \- javax.media:jai_codec:jar:1.1.3:compile
+[INFO] |  +- org.geotools:gt-epsg-hsql:jar:19.0:compile
+[INFO] |  |  \- org.hsqldb:hsqldb:jar:2.3.0:compile
+[INFO] |  \- org.apache.commons:commons-configuration2:jar:2.2:compile
+[INFO] |     \- commons-logging:commons-logging:jar:1.2:compile
+[INFO] +- io.swagger:swagger-jersey2-jaxrs:jar:1.5.18:compile
+[INFO] |  +- io.swagger:swagger-jaxrs:jar:1.5.18:compile
+[INFO] |  |  +- io.swagger:swagger-core:jar:1.5.18:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.9.3:compile
+[INFO] |  |  |  |  \- org.yaml:snakeyaml:jar:1.18:compile
+[INFO] |  |  |  \- io.swagger:swagger-models:jar:1.5.18:compile
+[INFO] |  |  |     \- io.swagger:swagger-annotations:jar:1.5.18:compile
+[INFO] |  |  +- org.reflections:reflections:jar:0.9.11:compile
+[INFO] |  |  |  \- org.javassist:javassist:jar:3.21.0-GA:compile
+[INFO] |  |  \- com.google.guava:guava:jar:20.0:compile
+[INFO] |  \- org.glassfish.jersey.media:jersey-media-multipart:jar:2.25.1:compile
+[INFO] |     \- org.jvnet.mimepull:mimepull:jar:1.9.6:compile
+[INFO] +- org.glassfish.jersey.containers:jersey-container-servlet-core:jar:2.7:compile
+[INFO] |  +- org.glassfish.hk2.external:javax.inject:jar:2.2.0:compile
+[INFO] |  +- org.glassfish.jersey.core:jersey-server:jar:2.7:compile
+[INFO] |  |  +- org.glassfish.jersey.core:jersey-client:jar:2.7:compile
+[INFO] |  |  +- javax.annotation:javax.annotation-api:jar:1.2:compile
+[INFO] |  |  +- org.glassfish.hk2:hk2-api:jar:2.2.0:compile
+[INFO] |  |  |  +- org.glassfish.hk2:hk2-utils:jar:2.2.0:compile
+[INFO] |  |  |  \- org.glassfish.hk2.external:aopalliance-repackaged:jar:2.2.0:compile
+[INFO] |  |  +- org.glassfish.hk2:hk2-locator:jar:2.2.0:compile
+[INFO] |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile
+[INFO] |  +- org.glassfish.jersey.core:jersey-common:jar:2.7:compile
+[INFO] |  |  +- org.glassfish.jersey.bundles.repackaged:jersey-guava:jar:2.7:compile
+[INFO] |  |  \- org.glassfish.hk2:osgi-resource-locator:jar:1.0.1:compile
+[INFO] |  \- javax.ws.rs:javax.ws.rs-api:jar:2.0:compile
+[INFO] +- org.apache.tomcat:tomcat-servlet-api:jar:8.5.28:provided
+[INFO] +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.10.0:compile
+[INFO] |  +- org.slf4j:slf4j-api:jar:1.8.0-alpha2:compile
+[INFO] |  +- org.apache.logging.log4j:log4j-api:jar:2.10.0:compile
+[INFO] |  \- org.apache.logging.log4j:log4j-core:jar:2.10.0:runtime
+[INFO] +- commons-codec:commons-codec:jar:1.9:compile
+[INFO] \- junit:junit:jar:4.11:test
+[INFO]    \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nca geoserver base 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-geoserver-base ---
+[INFO] nl.rivm.nca:nca-geoserver-base:war:1.0-SNAPSHOT
+[INFO] +- org.geoserver.web:gs-web-app:jar:2.8.5:compile
+[INFO] |  +- org.geoserver.web:gs-web-rest:jar:2.8.5:compile
+[INFO] |  +- org.geotools:gt-wfs-ng:jar:14.5:compile
+[INFO] |  |  +- org.geotools:gt-complex:jar:14.5:compile
+[INFO] |  |  |  \- org.geotools:gt-app-schema-resolver:jar:14.5:compile
+[INFO] |  |  \- xmlunit:xmlunit:jar:1.3:compile
+[INFO] |  +- org.springframework:spring-beans:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-core:jar:3.1.4.RELEASE:compile
+[INFO] |  |  +- org.springframework:spring-asm:jar:3.1.4.RELEASE:compile
+[INFO] |  |  \- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] |  +- org.springframework:spring-context:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-webmvc:jar:3.1.4.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-context-support:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.geotools:gt-api:jar:14.5:compile
+[INFO] |  \- org.geotools:gt-main:jar:14.5:compile
+[INFO] |     \- org.jdom:jdom:jar:1.1.3:compile
+[INFO] +- net.postgis:postgis-jdbc:jar:2.2.0:compile
+[INFO] |  +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO] |  +- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] |  \- org.slf4j:slf4j-api:jar:1.7.13:compile
+[INFO] +- org.postgresql:postgresql:jar:9.4.1207.jre7:compile
+[INFO] +- org.springframework:spring-expression:jar:3.1.4.RELEASE:compile
+[INFO] +- org.springframework:spring-tx:jar:3.1.4.RELEASE:compile
+[INFO] |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  \- org.springframework:spring-aop:jar:3.1.4.RELEASE:compile
+[INFO] +- org.springframework:spring-web:jar:3.1.4.RELEASE:compile
+[INFO] +- org.geoserver.web:gs-web-core:jar:2.8.5:compile
+[INFO] |  +- org.apache.wicket:wicket:jar:1.4.12:compile
+[INFO] |  +- org.apache.wicket:wicket-extensions:jar:1.4.12:compile
+[INFO] |  +- org.apache.wicket:wicket-spring:jar:1.4.12:compile
+[INFO] |  |  \- org.apache.wicket:wicket-ioc:jar:1.4.12:compile
+[INFO] |  +- org.wicketstuff:htmlvalidator:jar:1.2:compile
+[INFO] |  +- log4j:log4j:jar:1.2.14:compile
+[INFO] |  +- org.geotools:gt-coverage:jar:14.5:compile
+[INFO] |  |  +- org.jaitools:jt-zonalstats:jar:1.4.0:compile
+[INFO] |  |  +- it.geosolutions.jaiext.affine:jt-affine:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.algebra:jt-algebra:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandmerge:jt-bandmerge:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandselect:jt-bandselect:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandcombine:jt-bandcombine:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.border:jt-border:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.buffer:jt-buffer:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.crop:jt-crop:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.iterators:jt-iterators:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.lookup:jt-lookup:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.mosaic:jt-mosaic:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.nullop:jt-nullop:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rescale:jt-rescale:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.scale:jt-scale:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.stats:jt-stats:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.translate:jt-translate:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.utilities:jt-utilities:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.warp:jt-warp:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.zonal:jt-zonal:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.binarize:jt-binarize:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.format:jt-format:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorconvert:jt-colorconvert:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.errordiffusion:jt-errordiffusion:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.orderdither:jt-orderdither:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorindexer:jt-colorindexer:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.imagefunction:jt-imagefunction:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.piecewise:jt-piecewise:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.classifier:jt-classifier:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rlookup:jt-rlookup:jar:1.0.9:compile
+[INFO] |  |  \- it.geosolutions.jaiext.vectorbin:jt-vectorbin:jar:1.0.9:compile
+[INFO] |  +- org.geotools:gt-data:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-shapefile:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-jdbc:jar:14.5:compile
+[INFO] |  |  \- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  +- org.geotools:gt-metadata:jar:14.5:compile
+[INFO] |  |  \- org.geotools:gt-opengis:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-gtopo30:jar:14.5:compile
+[INFO] |  +- org.springframework.security:spring-security-web:jar:3.1.0.RELEASE:compile
+[INFO] |  \- org.bouncycastle:bcprov-jdk14:jar:1.46:compile
+[INFO] +- org.geoserver.web:gs-web-wms:jar:2.8.5:compile
+[INFO] |  \- org.geotools.xsd:gt-xsd-sld:jar:14.5:compile
+[INFO] |     \- org.geotools.xsd:gt-xsd-core:jar:14.5:compile
+[INFO] |        +- org.geotools:gt-graph:jar:14.5:compile
+[INFO] |        +- picocontainer:picocontainer:jar:1.2:compile
+[INFO] |        +- commons-jxpath:commons-jxpath:jar:1.3:compile
+[INFO] |        \- org.eclipse.xsd:xsd:jar:2.6.0:compile
+[INFO] +- org.geoserver.web:gs-web-gwc:jar:2.8.5:compile
+[INFO] |  \- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] +- org.geoserver.web:gs-web-wfs:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-wcs:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-demo:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-sec-jdbc:jar:2.8.5:compile
+[INFO] |  \- org.geoserver.web:gs-web-sec-core:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-sec-ldap:jar:2.8.5:compile
+[INFO] |  \- org.springframework.security:spring-security-ldap:jar:3.1.0.RELEASE:compile
+[INFO] |     \- org.springframework.ldap:spring-ldap-core:jar:1.3.1.RELEASE:compile
+[INFO] +- org.geoserver:gs-platform:jar:2.8.5:compile
+[INFO] |  +- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  +- commons-io:commons-io:jar:2.1:compile
+[INFO] |  +- commons-codec:commons-codec:jar:1.9:compile
+[INFO] |  +- javax.servlet:servlet-api:jar:2.5:compile
+[INFO] |  +- javax.media:jai_core:jar:1.1.3:compile
+[INFO] |  +- javax.media:jai_codec:jar:1.1.3:compile
+[INFO] |  \- javax.media:jai_imageio:jar:1.1:compile
+[INFO] +- org.geoserver:gs-main:jar:2.8.5:compile
+[INFO] |  +- org.geoserver:gs-ows:jar:2.8.5:compile
+[INFO] |  |  +- org.geotools.ogc:net.opengis.ows:jar:14.5:compile
+[INFO] |  |  \- xpp3:xpp3:jar:1.1.3.4.O:compile
+[INFO] |  +- net.sf.json-lib:json-lib:jar:jdk15:2.2.3:compile
+[INFO] |  |  \- net.sf.ezmorph:ezmorph:jar:1.0.6:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:noclassprop:1.9.2:compile
+[INFO] |  +- commons-fileupload:commons-fileupload:jar:1.2.1:compile
+[INFO] |  +- commons-httpclient:commons-httpclient:jar:3.1:compile
+[INFO] |  +- org.freemarker:freemarker:jar:2.3.18:compile
+[INFO] |  +- org.geotools:gt-cql:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-property:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-epsg-hsql:jar:14.5:compile
+[INFO] |  |  \- org.hsqldb:hsqldb:jar:2.3.0:compile
+[INFO] |  +- org.geotools:gt-wms:jar:14.5:compile
+[INFO] |  +- org.springframework:spring-jdbc:jar:3.1.4.RELEASE:compile
+[INFO] |  +- com.thoughtworks.xstream:xstream:jar:1.4.7:compile
+[INFO] |  |  \- xmlpull:xmlpull:jar:1.1.3.1:compile
+[INFO] |  +- com.google.guava:guava:jar:17.0:compile
+[INFO] |  +- com.google.code.findbugs:jsr305:jar:2.0.3:compile
+[INFO] |  +- it.geosolutions.jaiext.concurrent-tile-cache:jt-concurrent-tile-cache:jar:1.0.9:compile
+[INFO] |  +- org.springframework.security:spring-security-core:jar:3.1.0.RELEASE:compile
+[INFO] |  |  \- org.springframework.security:spring-security-crypto:jar:3.1.0.RELEASE:compile
+[INFO] |  +- org.springframework.security:spring-security-config:jar:3.1.0.RELEASE:compile
+[INFO] |  \- org.jasypt:jasypt:jar:1.8:compile
+[INFO] +- org.geoserver:gs-wcs:jar:2.8.5:compile
+[INFO] |  \- org.geotools:gt-referencing:jar:14.5:compile
+[INFO] |     +- com.googlecode.efficient-java-matrix-library:core:jar:0.26:compile
+[INFO] |     +- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] |     +- jgridshift:jgridshift:jar:1.0:compile
+[INFO] |     \- net.sf.geographiclib:GeographicLib-Java:jar:1.44:compile
+[INFO] +- org.geoserver:gs-wcs1_0:jar:2.8.5:compile
+[INFO] |  +- org.geotools.ogc:net.opengis.wcs:jar:14.5:compile
+[INFO] |  |  +- org.eclipse.emf:common:jar:2.6.0:compile
+[INFO] |  |  \- org.eclipse.emf:ecore:jar:2.6.1:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-gml3:jar:14.5:compile
+[INFO] |  |  \- org.geotools.xsd:gt-xsd-gml2:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-filter:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-ows:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-wcs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.ogc:org.w3.xlink:jar:14.5:compile
+[INFO] |  +- javax.mail:mail:jar:1.4:compile
+[INFO] |  \- javax.activation:activation:jar:1.1:compile
+[INFO] +- org.geoserver:gs-wcs1_1:jar:2.8.5:compile
+[INFO] +- org.geoserver:gs-wcs2_0:jar:2.8.5:compile
+[INFO] +- org.geoserver:gs-wfs:jar:2.8.5:compile
+[INFO] |  +- org.geotools.ogc:net.opengis.wfs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.ogc:net.opengis.fes:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-wfs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.xsd:gt-xsd-fes:jar:14.5:compile
+[INFO] |  \- cglib:cglib-nodep:jar:2.2:compile
+[INFO] +- org.geoserver:gs-wms:jar:2.8.5:compile
+[INFO] |  +- org.geotools:gt-render:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-svg:jar:14.5:compile
+[INFO] |  |  \- org.apache.xmlgraphics:batik-transcoder:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-awt-util:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-bridge:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-anim:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-css:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-ext:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-parser:jar:1.7:compile
+[INFO] |  |     |  \- org.apache.xmlgraphics:batik-script:jar:1.7:compile
+[INFO] |  |     |     \- org.apache.xmlgraphics:batik-js:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-dom:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-gvt:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-svg-dom:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-svggen:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-util:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-xml:jar:1.7:compile
+[INFO] |  |     +- xml-apis:xml-apis:jar:1.3.04:compile
+[INFO] |  |     \- xml-apis:xml-apis-ext:jar:1.3.04:compile
+[INFO] |  +- org.geotools:gt-process:jar:14.5:compile
+[INFO] |  +- com.lowagie:itext:jar:2.1.5:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-png:jar:1.1.13:compile
+[INFO] |  +- com.h2database:h2:jar:1.1.119:compile
+[INFO] |  +- ar.com.hjg:pngj:jar:2.0.1:compile
+[INFO] |  +- org.geotools:gt-process-raster:jar:14.5:compile
+[INFO] |  |  +- org.jaitools:jt-rangelookup:jar:1.4.0:compile
+[INFO] |  |  +- org.jaitools:jt-contour:jar:1.4.0:compile
+[INFO] |  |  |  \- org.jaitools:jt-attributeop:jar:1.4.0:compile
+[INFO] |  |  \- org.jaitools:jt-vectorize:jar:1.4.0:compile
+[INFO] |  \- org.geotools:gt-process-feature:jar:14.5:compile
+[INFO] |     \- org.geotools:gt-grid:jar:14.5:compile
+[INFO] +- org.geoserver:gs-kml:jar:2.8.5:compile
+[INFO] |  \- de.micromata.jak:JavaAPIforKml:jar:2.2.0:compile
+[INFO] +- org.geoserver:gs-gwc:jar:2.8.5:compile
+[INFO] |  +- org.geowebcache:gwc-core:jar:1.8.3:compile
+[INFO] |  |  \- org.owasp.encoder:encoder:jar:1.1:compile
+[INFO] |  +- org.geowebcache:gwc-georss:jar:1.8.3:compile
+[INFO] |  |  +- stax:stax-api:jar:1.0.1:compile
+[INFO] |  |  \- stax:stax:jar:1.2.0:compile
+[INFO] |  +- org.geowebcache:gwc-gmaps:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-kml:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-rest:jar:1.8.3:compile
+[INFO] |  |  +- com.noelios.restlet:com.noelios.restlet:jar:1.0.8:compile
+[INFO] |  |  +- com.noelios.restlet:com.noelios.restlet.ext.simple:jar:1.0.8:compile
+[INFO] |  |  |  \- org.simpleframework:org.simpleframework:jar:3.1.3:compile
+[INFO] |  |  \- org.restlet:org.restlet.ext.json:jar:1.0.8:compile
+[INFO] |  |     \- org.json:org.json:jar:2.0:compile
+[INFO] |  +- org.geowebcache:gwc-tms:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-ve:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-wms:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-wmts:jar:1.8.3:compile
+[INFO] |  \- org.geowebcache:gwc-diskquota-jdbc:jar:1.8.3:compile
+[INFO] |     \- org.geowebcache:gwc-diskquota-core:jar:1.8.3:compile
+[INFO] +- org.geoserver:gs-rest:jar:2.8.5:compile
+[INFO] |  +- org.restlet:org.restlet:jar:noobjrep:1.0.8:compile
+[INFO] |  +- org.restlet:org.restlet.ext.freemarker:jar:1.0.8:compile
+[INFO] |  |  \- org.restlet:org.restlet:jar:1.0.8:compile
+[INFO] |  +- org.restlet:org.restlet.ext.spring:jar:1.0.8:compile
+[INFO] |  +- com.noelios.restlet:com.noelios.restlet.ext.servlet:jar:1.0.8:compile
+[INFO] |  \- org.codehaus.jettison:jettison:jar:1.0.1:compile
+[INFO] +- org.geoserver:gs-restconfig:jar:2.8.5:compile
+[INFO] |  \- org.geotools:gt-geojson:jar:14.5:compile
+[INFO] |     \- com.googlecode.json-simple:json-simple:jar:1.1:compile
+[INFO] +- org.geoserver.security:gs-sec-jdbc:jar:2.8.5:compile
+[INFO] +- org.geoserver.security:gs-sec-ldap:jar:2.8.5:compile
+[INFO] +- org.geotools.jdbc:gt-jdbc-postgis:jar:14.5:compile
+[INFO] +- org.geotools:gt-wfs:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-xml:jar:14.5:compile
+[INFO] |  |  \- org.apache.xml:xml-commons-resolver:jar:1.2:compile
+[INFO] |  \- xpp3:xpp3_min:jar:1.1.4c:compile
+[INFO] +- org.geotools:gt-geotiff:jar:14.5:compile
+[INFO] |  \- it.geosolutions.imageio-ext:imageio-ext-tiff:jar:1.1.13:compile
+[INFO] |     \- it.geosolutions.imageio-ext:imageio-ext-utilities:jar:1.1.13:compile
+[INFO] +- org.geotools:gt-arcgrid:jar:14.5:compile
+[INFO] |  \- it.geosolutions.imageio-ext:imageio-ext-arcgrid:jar:1.1.13:compile
+[INFO] +- org.geotools:gt-imagemosaic:jar:14.5:compile
+[INFO] |  +- com.vividsolutions:jts:jar:1.13:compile
+[INFO] |  +- net.java.dev.jsr-275:jsr-275:jar:1.0-beta-2:compile
+[INFO] |  +- org.geotools:gt-transform:jar:14.5:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-streams:jar:1.1.13:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-geocore:jar:1.1.13:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:1.7.0:compile
+[INFO] |  +- org.jaitools:jt-utils:jar:1.4.0:compile
+[INFO] |  +- org.jaitools:jt-vectorbinarize:jar:1.4.0:compile
+[INFO] |  \- net.sf.ehcache:ehcache:jar:1.6.2:compile
+[INFO] +- org.geotools:gt-image:jar:14.5:compile
+[INFO] +- org.apache.logging.log4j:log4j-core:jar:2.8.1:compile
+[INFO] |  \- org.apache.logging.log4j:log4j-api:jar:2.8.1:compile
+[INFO] \- org.slf4j:slf4j-log4j12:jar:1.7.24:compile
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nca GeoServer 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-geoserver-gbp ---
+[INFO] nl.rivm.nca:nca-geoserver-gbp:war:1.0-SNAPSHOT
+[INFO] +- nl.rivm.nca:nca-geoserver-base:war:1.0-SNAPSHOT:compile
+[INFO] +- net.postgis:postgis-jdbc:jar:2.2.0:compile
+[INFO] |  +- ch.qos.logback:logback-classic:jar:1.1.3:compile
+[INFO] |  +- ch.qos.logback:logback-core:jar:1.1.3:compile
+[INFO] |  \- org.slf4j:slf4j-api:jar:1.7.13:compile
+[INFO] +- org.postgresql:postgresql:jar:9.4.1207.jre7:compile
+[INFO] +- org.springframework:spring-expression:jar:3.1.4.RELEASE:compile
+[INFO] |  \- org.springframework:spring-core:jar:3.1.4.RELEASE:compile
+[INFO] |     +- org.springframework:spring-asm:jar:3.1.4.RELEASE:compile
+[INFO] |     \- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] +- org.springframework:spring-tx:jar:3.1.4.RELEASE:compile
+[INFO] |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  +- org.springframework:spring-aop:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:3.1.4.RELEASE:compile
+[INFO] |  \- org.springframework:spring-context:jar:3.1.4.RELEASE:compile
+[INFO] +- org.springframework:spring-web:jar:3.1.4.RELEASE:compile
+[INFO] +- org.geoserver.web:gs-web-core:jar:2.8.5:compile
+[INFO] |  +- org.apache.wicket:wicket:jar:1.4.12:compile
+[INFO] |  +- org.apache.wicket:wicket-extensions:jar:1.4.12:compile
+[INFO] |  +- org.apache.wicket:wicket-spring:jar:1.4.12:compile
+[INFO] |  |  \- org.apache.wicket:wicket-ioc:jar:1.4.12:compile
+[INFO] |  +- org.wicketstuff:htmlvalidator:jar:1.2:compile
+[INFO] |  +- log4j:log4j:jar:1.2.14:compile
+[INFO] |  +- org.geotools:gt-coverage:jar:14.5:compile
+[INFO] |  |  +- org.jaitools:jt-zonalstats:jar:1.4.0:compile
+[INFO] |  |  +- it.geosolutions.jaiext.affine:jt-affine:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.algebra:jt-algebra:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandmerge:jt-bandmerge:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandselect:jt-bandselect:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.bandcombine:jt-bandcombine:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.border:jt-border:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.buffer:jt-buffer:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.crop:jt-crop:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.iterators:jt-iterators:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.lookup:jt-lookup:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.mosaic:jt-mosaic:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.nullop:jt-nullop:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rescale:jt-rescale:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.scale:jt-scale:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.stats:jt-stats:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.translate:jt-translate:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.utilities:jt-utilities:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.warp:jt-warp:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.zonal:jt-zonal:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.binarize:jt-binarize:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.format:jt-format:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorconvert:jt-colorconvert:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.errordiffusion:jt-errordiffusion:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.orderdither:jt-orderdither:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.colorindexer:jt-colorindexer:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.imagefunction:jt-imagefunction:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.piecewise:jt-piecewise:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.classifier:jt-classifier:jar:1.0.9:compile
+[INFO] |  |  +- it.geosolutions.jaiext.rlookup:jt-rlookup:jar:1.0.9:compile
+[INFO] |  |  \- it.geosolutions.jaiext.vectorbin:jt-vectorbin:jar:1.0.9:compile
+[INFO] |  +- org.geotools:gt-data:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-shapefile:jar:14.5:compile
+[INFO] |  |  \- org.jdom:jdom:jar:1.1.3:compile
+[INFO] |  +- org.geotools:gt-wfs-ng:jar:14.5:compile
+[INFO] |  |  +- org.geotools:gt-complex:jar:14.5:compile
+[INFO] |  |  |  \- org.geotools:gt-app-schema-resolver:jar:14.5:compile
+[INFO] |  |  \- xmlunit:xmlunit:jar:1.3:compile
+[INFO] |  +- org.geotools:gt-jdbc:jar:14.5:compile
+[INFO] |  |  \- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  +- org.geotools:gt-metadata:jar:14.5:compile
+[INFO] |  |  \- org.geotools:gt-opengis:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-gtopo30:jar:14.5:compile
+[INFO] |  +- org.springframework.security:spring-security-web:jar:3.1.0.RELEASE:compile
+[INFO] |  +- org.bouncycastle:bcprov-jdk14:jar:1.46:compile
+[INFO] |  +- org.springframework:spring-webmvc:jar:3.1.4.RELEASE:compile
+[INFO] |  |  \- org.springframework:spring-context-support:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.geotools:gt-api:jar:14.5:compile
+[INFO] |  \- org.geotools:gt-main:jar:14.5:compile
+[INFO] +- org.geoserver.web:gs-web-wms:jar:2.8.5:compile
+[INFO] |  \- org.geotools.xsd:gt-xsd-sld:jar:14.5:compile
+[INFO] |     \- org.geotools.xsd:gt-xsd-core:jar:14.5:compile
+[INFO] |        +- org.geotools:gt-graph:jar:14.5:compile
+[INFO] |        +- picocontainer:picocontainer:jar:1.2:compile
+[INFO] |        +- commons-jxpath:commons-jxpath:jar:1.3:compile
+[INFO] |        \- org.eclipse.xsd:xsd:jar:2.6.0:compile
+[INFO] +- org.geoserver.web:gs-web-gwc:jar:2.8.5:compile
+[INFO] |  \- commons-collections:commons-collections:jar:3.2.2:compile
+[INFO] +- org.geoserver.web:gs-web-wfs:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-wcs:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-demo:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-sec-jdbc:jar:2.8.5:compile
+[INFO] |  \- org.geoserver.web:gs-web-sec-core:jar:2.8.5:compile
+[INFO] +- org.geoserver.web:gs-web-sec-ldap:jar:2.8.5:compile
+[INFO] |  \- org.springframework.security:spring-security-ldap:jar:3.1.0.RELEASE:compile
+[INFO] |     \- org.springframework.ldap:spring-ldap-core:jar:1.3.1.RELEASE:compile
+[INFO] +- org.geoserver:gs-platform:jar:2.8.5:compile
+[INFO] |  +- commons-lang:commons-lang:jar:2.6:compile
+[INFO] |  +- commons-io:commons-io:jar:2.1:compile
+[INFO] |  +- commons-codec:commons-codec:jar:1.9:compile
+[INFO] |  +- javax.servlet:servlet-api:jar:2.5:compile
+[INFO] |  +- javax.media:jai_core:jar:1.1.3:compile
+[INFO] |  +- javax.media:jai_codec:jar:1.1.3:compile
+[INFO] |  \- javax.media:jai_imageio:jar:1.1:compile
+[INFO] +- org.geoserver:gs-main:jar:2.8.5:compile
+[INFO] |  +- org.geoserver:gs-ows:jar:2.8.5:compile
+[INFO] |  |  +- org.geotools.ogc:net.opengis.ows:jar:14.5:compile
+[INFO] |  |  \- xpp3:xpp3:jar:1.1.3.4.O:compile
+[INFO] |  +- net.sf.json-lib:json-lib:jar:jdk15:2.2.3:compile
+[INFO] |  |  \- net.sf.ezmorph:ezmorph:jar:1.0.6:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:noclassprop:1.9.2:compile
+[INFO] |  +- commons-fileupload:commons-fileupload:jar:1.2.1:compile
+[INFO] |  +- commons-httpclient:commons-httpclient:jar:3.1:compile
+[INFO] |  +- org.freemarker:freemarker:jar:2.3.18:compile
+[INFO] |  +- org.geotools:gt-cql:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-property:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-epsg-hsql:jar:14.5:compile
+[INFO] |  |  \- org.hsqldb:hsqldb:jar:2.3.0:compile
+[INFO] |  +- org.geotools:gt-wms:jar:14.5:compile
+[INFO] |  +- org.springframework:spring-jdbc:jar:3.1.4.RELEASE:compile
+[INFO] |  +- com.thoughtworks.xstream:xstream:jar:1.4.7:compile
+[INFO] |  |  \- xmlpull:xmlpull:jar:1.1.3.1:compile
+[INFO] |  +- com.google.guava:guava:jar:17.0:compile
+[INFO] |  +- com.google.code.findbugs:jsr305:jar:2.0.3:compile
+[INFO] |  +- it.geosolutions.jaiext.concurrent-tile-cache:jt-concurrent-tile-cache:jar:1.0.9:compile
+[INFO] |  +- org.springframework.security:spring-security-core:jar:3.1.0.RELEASE:compile
+[INFO] |  |  \- org.springframework.security:spring-security-crypto:jar:3.1.0.RELEASE:compile
+[INFO] |  +- org.springframework.security:spring-security-config:jar:3.1.0.RELEASE:compile
+[INFO] |  \- org.jasypt:jasypt:jar:1.8:compile
+[INFO] +- org.geoserver:gs-wcs:jar:2.8.5:compile
+[INFO] |  \- org.geotools:gt-referencing:jar:14.5:compile
+[INFO] |     +- com.googlecode.efficient-java-matrix-library:core:jar:0.26:compile
+[INFO] |     +- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] |     +- jgridshift:jgridshift:jar:1.0:compile
+[INFO] |     \- net.sf.geographiclib:GeographicLib-Java:jar:1.44:compile
+[INFO] +- org.geoserver:gs-wcs1_0:jar:2.8.5:compile
+[INFO] |  +- org.geotools.ogc:net.opengis.wcs:jar:14.5:compile
+[INFO] |  |  +- org.eclipse.emf:common:jar:2.6.0:compile
+[INFO] |  |  \- org.eclipse.emf:ecore:jar:2.6.1:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-gml3:jar:14.5:compile
+[INFO] |  |  \- org.geotools.xsd:gt-xsd-gml2:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-filter:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-ows:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-wcs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.ogc:org.w3.xlink:jar:14.5:compile
+[INFO] |  +- javax.mail:mail:jar:1.4:compile
+[INFO] |  \- javax.activation:activation:jar:1.1:compile
+[INFO] +- org.geoserver:gs-wcs1_1:jar:2.8.5:compile
+[INFO] +- org.geoserver:gs-wcs2_0:jar:2.8.5:compile
+[INFO] +- org.geoserver:gs-wfs:jar:2.8.5:compile
+[INFO] |  +- org.geotools.ogc:net.opengis.wfs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.ogc:net.opengis.fes:jar:14.5:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-wfs:jar:14.5:compile
+[INFO] |  |  \- org.geotools.xsd:gt-xsd-fes:jar:14.5:compile
+[INFO] |  \- cglib:cglib-nodep:jar:2.2:compile
+[INFO] +- org.geoserver:gs-wms:jar:2.8.5:compile
+[INFO] |  +- org.geotools:gt-render:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-svg:jar:14.5:compile
+[INFO] |  |  \- org.apache.xmlgraphics:batik-transcoder:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-awt-util:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-bridge:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-anim:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-css:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-ext:jar:1.7:compile
+[INFO] |  |     |  +- org.apache.xmlgraphics:batik-parser:jar:1.7:compile
+[INFO] |  |     |  \- org.apache.xmlgraphics:batik-script:jar:1.7:compile
+[INFO] |  |     |     \- org.apache.xmlgraphics:batik-js:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-dom:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-gvt:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-svg-dom:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-svggen:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-util:jar:1.7:compile
+[INFO] |  |     +- org.apache.xmlgraphics:batik-xml:jar:1.7:compile
+[INFO] |  |     +- xml-apis:xml-apis:jar:1.3.04:compile
+[INFO] |  |     \- xml-apis:xml-apis-ext:jar:1.3.04:compile
+[INFO] |  +- org.geotools:gt-process:jar:14.5:compile
+[INFO] |  +- com.lowagie:itext:jar:2.1.5:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-png:jar:1.1.13:compile
+[INFO] |  +- com.h2database:h2:jar:1.1.119:compile
+[INFO] |  +- ar.com.hjg:pngj:jar:2.0.1:compile
+[INFO] |  +- org.geotools:gt-process-raster:jar:14.5:compile
+[INFO] |  |  +- org.jaitools:jt-rangelookup:jar:1.4.0:compile
+[INFO] |  |  +- org.jaitools:jt-contour:jar:1.4.0:compile
+[INFO] |  |  |  \- org.jaitools:jt-attributeop:jar:1.4.0:compile
+[INFO] |  |  \- org.jaitools:jt-vectorize:jar:1.4.0:compile
+[INFO] |  \- org.geotools:gt-process-feature:jar:14.5:compile
+[INFO] |     \- org.geotools:gt-grid:jar:14.5:compile
+[INFO] +- org.geoserver:gs-kml:jar:2.8.5:compile
+[INFO] |  \- de.micromata.jak:JavaAPIforKml:jar:2.2.0:compile
+[INFO] +- org.geoserver:gs-gwc:jar:2.8.5:compile
+[INFO] |  +- org.geowebcache:gwc-core:jar:1.8.3:compile
+[INFO] |  |  \- org.owasp.encoder:encoder:jar:1.1:compile
+[INFO] |  +- org.geowebcache:gwc-georss:jar:1.8.3:compile
+[INFO] |  |  +- stax:stax-api:jar:1.0.1:compile
+[INFO] |  |  \- stax:stax:jar:1.2.0:compile
+[INFO] |  +- org.geowebcache:gwc-gmaps:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-kml:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-rest:jar:1.8.3:compile
+[INFO] |  |  +- com.noelios.restlet:com.noelios.restlet:jar:1.0.8:compile
+[INFO] |  |  +- com.noelios.restlet:com.noelios.restlet.ext.simple:jar:1.0.8:compile
+[INFO] |  |  |  \- org.simpleframework:org.simpleframework:jar:3.1.3:compile
+[INFO] |  |  \- org.restlet:org.restlet.ext.json:jar:1.0.8:compile
+[INFO] |  |     \- org.json:org.json:jar:2.0:compile
+[INFO] |  +- org.geowebcache:gwc-tms:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-ve:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-wms:jar:1.8.3:compile
+[INFO] |  +- org.geowebcache:gwc-wmts:jar:1.8.3:compile
+[INFO] |  \- org.geowebcache:gwc-diskquota-jdbc:jar:1.8.3:compile
+[INFO] |     \- org.geowebcache:gwc-diskquota-core:jar:1.8.3:compile
+[INFO] +- org.geoserver:gs-rest:jar:2.8.5:compile
+[INFO] |  +- org.restlet:org.restlet:jar:noobjrep:1.0.8:compile
+[INFO] |  +- org.restlet:org.restlet.ext.freemarker:jar:1.0.8:compile
+[INFO] |  |  \- org.restlet:org.restlet:jar:1.0.8:compile
+[INFO] |  +- org.restlet:org.restlet.ext.spring:jar:1.0.8:compile
+[INFO] |  +- com.noelios.restlet:com.noelios.restlet.ext.servlet:jar:1.0.8:compile
+[INFO] |  \- org.codehaus.jettison:jettison:jar:1.0.1:compile
+[INFO] +- org.geoserver:gs-restconfig:jar:2.8.5:compile
+[INFO] |  \- org.geotools:gt-geojson:jar:14.5:compile
+[INFO] |     \- com.googlecode.json-simple:json-simple:jar:1.1:compile
+[INFO] +- org.geoserver.security:gs-sec-jdbc:jar:2.8.5:compile
+[INFO] +- org.geoserver.security:gs-sec-ldap:jar:2.8.5:compile
+[INFO] +- org.geotools.jdbc:gt-jdbc-postgis:jar:14.5:compile
+[INFO] +- org.geotools:gt-wfs:jar:14.5:compile
+[INFO] |  +- org.geotools:gt-xml:jar:14.5:compile
+[INFO] |  |  \- org.apache.xml:xml-commons-resolver:jar:1.2:compile
+[INFO] |  \- xpp3:xpp3_min:jar:1.1.4c:compile
+[INFO] +- org.geotools:gt-geotiff:jar:14.5:compile
+[INFO] |  \- it.geosolutions.imageio-ext:imageio-ext-tiff:jar:1.1.13:compile
+[INFO] |     \- it.geosolutions.imageio-ext:imageio-ext-utilities:jar:1.1.13:compile
+[INFO] +- org.geotools:gt-arcgrid:jar:14.5:compile
+[INFO] |  \- it.geosolutions.imageio-ext:imageio-ext-arcgrid:jar:1.1.13:compile
+[INFO] +- org.geotools:gt-imagemosaic:jar:14.5:compile
+[INFO] |  +- com.vividsolutions:jts:jar:1.13:compile
+[INFO] |  +- net.java.dev.jsr-275:jsr-275:jar:1.0-beta-2:compile
+[INFO] |  +- org.geotools:gt-transform:jar:14.5:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-streams:jar:1.1.13:compile
+[INFO] |  +- it.geosolutions.imageio-ext:imageio-ext-geocore:jar:1.1.13:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:1.7.0:compile
+[INFO] |  +- org.jaitools:jt-utils:jar:1.4.0:compile
+[INFO] |  +- org.jaitools:jt-vectorbinarize:jar:1.4.0:compile
+[INFO] |  \- net.sf.ehcache:ehcache:jar:1.6.2:compile
+[INFO] +- org.geotools:gt-image:jar:14.5:compile
+[INFO] +- org.apache.logging.log4j:log4j-core:jar:2.8.1:compile
+[INFO] |  \- org.apache.logging.log4j:log4j-api:jar:2.8.1:compile
+[INFO] \- org.slf4j:slf4j-log4j12:jar:1.7.24:compile
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building database gbp 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ nca-database-gbp ---
+[INFO] nl.rivm.nca:nca-database-gbp:pom:1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] NCA Parent ......................................... SUCCESS [  0.703 s]
+[INFO] NCA Api ............................................ SUCCESS [  0.280 s]
+[INFO] NCA Lib ............................................ SUCCESS [  0.104 s]
+[INFO] NCA PCRaster ....................................... SUCCESS [  0.277 s]
+[INFO] NCA webserver ...................................... SUCCESS [  0.151 s]
+[INFO] nca geoserver base ................................. SUCCESS [  0.883 s]
+[INFO] nca GeoServer ...................................... SUCCESS [  0.310 s]
+[INFO] database gbp ....................................... SUCCESS [  0.009 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 2.998 s
+[INFO] Finished at: 2019-03-14T14:52:38+01:00
+[INFO] Final Memory: 28M/614M
+[INFO] ------------------------------------------------------------------------
