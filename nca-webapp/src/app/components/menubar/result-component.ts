@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { Router } from '@angular/router';
 import { MenuEventService } from '../../services/menu-event-service';
@@ -12,7 +12,7 @@ import { MapService } from '../../services/map-service';
   templateUrl: './result-component.html',
   styleUrls: ['./menubar-component.scss', './result-component.scss']
 })
-export class ResultComponent {
+export class ResultComponent implements OnInit {
 
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public openMenu: boolean = true;
@@ -27,6 +27,11 @@ export class ResultComponent {
     this.menuEventService.onMenuCollapse().subscribe((collapse) => {
       this.openMenu = collapse;
     });
+    this.menuEventService.onShowResultMap().subscribe(() => this.drawMeasures());
+  }
+
+  public ngOnInit() {
+    this.drawMeasures();
   }
 
   public get measures() {

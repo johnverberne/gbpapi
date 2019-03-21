@@ -27,10 +27,15 @@ export class ResultBarComponent {
   public onMenuClick(event: string) {
     if (this.activeMenu !== event) {
       this.activeMenu = event;
+      this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
       if (event === 'GRAPH') {
         this.messageService.sendMessage('WIP');
       }
-      this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
+      if (event === 'MAP') {
+        setTimeout(() => {
+          this.menuEventService.showResultMap();
+        }, 500);
+      }
     }
   }
 }

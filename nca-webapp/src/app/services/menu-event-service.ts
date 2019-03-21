@@ -9,6 +9,7 @@ export class MenuEventService {
   private scenarioChangeSubject: Subject<number> = new Subject();
   private mainMenuChangeSubject: Subject<void> = new Subject();
   private resultTypeChangeSubject: Subject<ResultType> = new Subject();
+  private showResultMapSubject: Subject<void> = new Subject();
 
   public onMenuCollapse(): Observable<boolean> {
     return this.menuBarCollapseSubject.asObservable();
@@ -40,5 +41,13 @@ export class MenuEventService {
 
   public onResultTypeChange(): Observable<ResultType> {
     return this.resultTypeChangeSubject.asObservable();
+  }
+
+  public showResultMap() {
+    this.showResultMapSubject.next();
+  }
+
+  public onShowResultMap(): Observable<void> {
+    return this.showResultMapSubject.asObservable();
   }
 }
