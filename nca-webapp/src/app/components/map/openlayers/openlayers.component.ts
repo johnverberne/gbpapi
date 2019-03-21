@@ -29,7 +29,6 @@ import { Style, Stroke, Fill } from 'ol/style';
 export class OpenlayersComponent implements AfterViewInit {
   public map: OlMap;
   private osmLayer: TileLayer;
-  private resultLayer: TileLayer;
   private view: OlView;
   private dragBox: DragBox;
   private select: Select;
@@ -39,6 +38,7 @@ export class OpenlayersComponent implements AfterViewInit {
   private selectedGridLayer: VectorLayer;
   private gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
+  private lceuLayer: TileLayer;
 
   private projection = new Projection({
     code: 'EPSG:3857'
@@ -80,16 +80,8 @@ export class OpenlayersComponent implements AfterViewInit {
     this.osmLayer = new TileLayer({
       source: new OlXYZ({
         url: 'http://tile.osm.org/{z}/{x}/{y}.png'
-      })
-    });
-
-    this.resultLayer = new TileLayer({
-      source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
-        params: { 'LAYERS': 'gbp:wms_grids10_view', 'TILED': true },
-        serverType: 'geoserver',
-        transition: 0
-      })
+      }),
+      opacity: 0.5
     });
 
     this.bagVector = new VectorSource({
@@ -103,6 +95,16 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.bagLayer = new VectorLayer({
       source: this.bagVector
+    });
+
+    this.lceuLayer = new TileLayer({
+      source: new TileWMS({
+        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
+        params: { 'LAYERS': 'LCEU_ini', 'TILED': true, 'STYLES': 'geotiff' },
+        serverType: 'geoserver',
+        transition: 0
+      }),
+      opacity: 0.2
     });
 
     this.selectedGridSource = new VectorSource({
@@ -130,7 +132,10 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.bagLayer, this.gridLayer10, this.selectedGridLayer],
+      // this.bagLayer,
+      // this.osmLayer,
+      // this.lceuLayer
+      layers: [this.osmLayer, this.lceuLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
     // this.map.addControl(new LayerSwitcher());
