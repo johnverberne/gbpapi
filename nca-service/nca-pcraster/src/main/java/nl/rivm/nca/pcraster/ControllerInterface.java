@@ -12,4 +12,5 @@ public interface ControllerInterface {
 
 	public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest) throws IOException, ConfigurationException, InterruptedException;
 	
+	
 }

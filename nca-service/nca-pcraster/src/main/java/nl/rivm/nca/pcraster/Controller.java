@@ -40,10 +40,9 @@ public class Controller implements ControllerInterface {
 
 	public static final String GEOTIFF_EXT = "tiff";
 	public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
-	private static final String XYZ_EXT = "xyz";
-	private static final String XYZ_DOT_EXT = "." + XYZ_EXT;
+
 	private static final String MAP_EXT = "map";
-	private static final String MAP_DOT_EXT = '.' + MAP_EXT;
+	protected static final String MAP_DOT_EXT = '.' + MAP_EXT;
 	private static final String JSON_EXT = "json";
 	private static final String WORKSPACE_NAME = "nca";
 	protected static final String OUTPUTS = "outputs";
@@ -57,11 +56,11 @@ public class Controller implements ControllerInterface {
 	public Controller(File path, boolean directFile) throws IOException, InterruptedException {
 		rasterLayers = RasterLayers.loadRasterLayers(path);
 		this.directFile = directFile;
-		publishGeotiff = new PublishGeotiff(System.getenv("GEOSERVER_URL"), System.getenv("GEOSERVER_USER"),
-				System.getenv("GEOSERVER_PASSWORD"));
+		publishGeotiff = new PublishGeotiff(System.getenv("GEOSERVER_URL"), System.getenv("GEOSERVER_USER"), System.getenv("GEOSERVER_PASSWORD"));
 		// python via docker dan geen test draaien pcRasterRunner.sanityCheck();
 	}
 
+	@Override
 	public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
 			throws IOException, ConfigurationException, InterruptedException {
 		final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
@@ -81,54 +80,18 @@ public class Controller implements ControllerInterface {
 		cleanUp(workingPath);
 		return assessmentResultlist;
 	}
-
+	
 	// copy input geotiff files to working map and convert to pcraster format
 	protected File copyInputRastersToWorkingMap(Map<String, String> layerFiles, File workingPath, List<LayerObject> userLayers) {
-		final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul))
+		final List<File> files = userLayers.stream().map(ul -> writeToFile(layerFiles, workingPath, ul))
 				.collect(Collectors.toList());
 		files.forEach(this::convertOutput2GeoTiff);
 		return files.isEmpty() ? null : files.get(0);
 	}
 
-	private File writeToFileConvertToTiff(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-		File file = writeToFile(layerFiles, workingPath, layerObject);
-		if (layerObject.getDataType() == DataType.GEOTIFF) {
-			return file;
-		} else {
-			return convertXyzInput2GeoTiff(file);
-		}
-	}
 
-	private File convertXyzInput2GeoTiff(File xyzFile) {
-		final int indexOf = xyzFile.getName().indexOf(XYZ_DOT_EXT);
-
-		if (indexOf < 0) {
-			throw new RuntimeException("no xyz file");
-		}
-
-		final File geotiffFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + GEOTIFF_DOT_EXT);
-		final File mapFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + MAP_DOT_EXT);
-
-		try {
-			// convert input xyz to tiff
-			Xyz2Geotiff.xyz2geoTiff(xyzFile, geotiffFile);
-			// convert input xyz to map file
-			Xyz2Geotiff.xyz2gmap(xyzFile, mapFile);
-			
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-		return geotiffFile;
-
-	}
-
-	private File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-		final File targetFile;
-		if (layerObject.getDataType() == DataType.GEOTIFF) {
-			targetFile = userGeotiffFile(layerFiles, workingPath, layerObject);
-		} else {
-			targetFile = userXyzFile(layerFiles, workingPath, layerObject);
-		}
+	protected File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
+		final File targetFile = new File(workingPath, layerFiles.get(layerObject.getClassType()) + GEOTIFF_DOT_EXT);
 		final File file = directFile(layerObject.getData());
 
 		if (file == null || !file.exists()) {
@@ -154,14 +117,6 @@ public class Controller implements ControllerInterface {
 		} catch (final IllegalArgumentException | UnsupportedEncodingException e) {
 			return null;
 		}
-	}
-
-	private File userGeotiffFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-		return new File(workingPath, layerFiles.get(layerObject.getClassType()) + GEOTIFF_DOT_EXT);
-	}
-
-	private File userXyzFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject) {
-		return new File(workingPath, layerFiles.get(layerObject.getClassType()) + XYZ_DOT_EXT);
 	}
 
 	protected Envelope2D calculateExtend(File geoTiffFile) throws IOException {
@@ -212,13 +167,10 @@ public class Controller implements ControllerInterface {
 	private File convertOutput2GeoTiff(File geotiffFile) {
 		// convert pcraster output files and return a list of geotiff images.
 		final int indexOf = geotiffFile.getName().indexOf(GEOTIFF_EXT);
-
 		if (indexOf < 0) {
 			throw new RuntimeException("no geotiff file");
 		}
-
 		final File mapFile = new File(FilenameUtils.removeExtension(geotiffFile.getAbsolutePath()) + MAP_DOT_EXT);
-
 		try {
 			// convert input tiff to map
 			LOGGER.info("Export geotiff2pcraster {} -> {}", geotiffFile, mapFile);
@@ -229,7 +181,7 @@ public class Controller implements ControllerInterface {
 		return mapFile;
 	}
 
-	private void convertOutput(File outputPath) throws IOException {
+	protected void convertOutput(File outputPath) throws IOException {
 		Files.list(outputPath.toPath()).filter(f -> MAP_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
 				.forEach(f -> {
 					try {
@@ -298,4 +250,6 @@ public class Controller implements ControllerInterface {
 	protected void cleanUp(File workingPath) {
 		// TODO Auto-generated method stub
 	}
+
+
 }

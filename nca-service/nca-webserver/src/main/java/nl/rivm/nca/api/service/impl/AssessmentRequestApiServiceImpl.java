@@ -1,14 +1,8 @@
 package nl.rivm.nca.api.service.impl;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -16,21 +10,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
-import nl.rivm.nca.api.domain.LayerObject;
 import nl.rivm.nca.api.domain.ValidateResponse;
 import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.AssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.pcraster.Controller;
-import nl.rivm.nca.pcraster.SingleRun;
-import nl.rivm.nca.pcraster.Xyz2Geotiff;
+import nl.rivm.nca.pcraster.ControllerInterface;
+import nl.rivm.nca.pcraster.NKModel2Controller;
 
 public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService {
 
@@ -75,29 +67,35 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 
 	private void assessmentRun(AssessmentRequest ar, String outputDirectory, ArrayList<ValidationMessage> warnings,
 			final String uuid) throws IOException, ConfigurationException, InterruptedException {
-		final Controller controller = initController(true);
+		final ControllerInterface controller = initModelController(ar.getModel(), true);
+		/* run hardcoded
 		final SingleRun singleRun = new SingleRun();
-		// hardcode run
-		// controller.run(uuid, singleRun.singleRun(ar.getName(),
-		// "air_regulation", "/opt/nkmodel/nkmodel_scenario_trees",
-		// SingleRun.GEOTIFF_EXT));
+		AssessmentRequest customAr = singleRun.singleRun(ar.getName(),"air_regulation", "/opt/nkmodel/nkmodel_scenario_trees", SingleRun.GEOTIFF_EXT);
+		controller.run(uuid, customAr);
+		*/
 		LOGGER.info("API requestname '{}' exceute model '{}' request.", ar.getName(), ar.getEcoSystemService());
 		controller.run(uuid, ar);
 		warnings.add(WarningUtil.ValidationInfoMessage("Task executed uuid:" + uuid));
 	}
 
-	private Controller initController(boolean directFile) throws IOException, InterruptedException {
-		final String ncaModel = System.getenv("NCA_MODEL");
+	private ControllerInterface initModelController(ModelEnum modelEnum, boolean directFile) throws IOException, InterruptedException {
+		// get the environment for the supplied model.
+		ControllerInterface controller; 
+		final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
+		} else {
+			if (modelEnum == ModelEnum.NKMODEL) {
+			controller = new Controller(new File(ncaModel), directFile);
+			} else {
+				controller = new NKModel2Controller(new File(ncaModel), directFile);
+			}
 		}
-		return new Controller(new File(ncaModel), directFile);
+		return controller;
 	}
 
-	/*
-	 * Create temp directory to write supplied data
-	 */
+/*
 	private String extractImportFile(AssessmentRequest ar, ArrayList<ValidationMessage> warnings, String uuid)
 			throws IOException {
 		final File inputWorkingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
@@ -138,5 +136,6 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		}
 		return inputWorkingPath.getPath();
 	}
+	*/
 
 }

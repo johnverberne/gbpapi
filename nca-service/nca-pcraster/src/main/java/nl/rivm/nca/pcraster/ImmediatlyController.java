@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 
-public class ImmediatlyController extends Controller {
+public class ImmediatlyController extends Controller implements ControllerInterface {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImmediatlyController.class);
 
 	public ImmediatlyController(File path, boolean directFile) throws IOException, InterruptedException {
 		super(path, directFile);
