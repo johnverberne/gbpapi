@@ -8,11 +8,8 @@ info:
     ## TDB
   contact:
     name: RIVM
-    email: TDB
-    url: TDB
   license:
     name: TDB
-    url: TDB
 basePath: /api/1
 consumes:
   - application/json
@@ -32,6 +29,41 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AssessmentRequest'
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/AssessmentRequestResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+        - apiKey: []
+  /assessmentScenarioRequest:
+    post:
+      operationId: postAssessmentScenarioRequest
+      tags:
+        - assessmentScenarioRequest
+      description: |
+        TBD
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AssessmentScenarioRequest'
       responses:
         '200':
           description: |
@@ -222,7 +254,7 @@ definitions:
         format: double
       avg:
         type: number 
-        fromat: double
+        format: double
       units:
         type: string
       class:
@@ -284,6 +316,81 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/LayerObject'
+  AssessmentScenarioRequest:
+    type: object
+    required:
+      - measures
+    properties:
+      measures:
+        type: array
+        minItems: 1
+        description: An array of measures that determine the scenario
+        items: 
+          $ref: '#/definitions/Measure'
+  Measure:
+    type: object
+    required:
+      - name
+      - model
+      - landuse
+      - vegetation
+      - inhabitants
+      - woz
+      - layer
+    properties:
+      name:
+        type: string
+        description: The name of the given measure.
+      model:
+        type: string
+        description: |
+          A description given to this assessment request.
+          supported values are: 
+          ___NKMODEL:___ Excecute nkmodel.
+        enum:
+          - NKMODEL
+      landuse:
+        type: string
+        enum:
+          - RESIDENTIAL
+          - LAKES_AND_PONDS
+      vegetation:
+        $ref: '#/definitions/Vegetation'
+      layer:
+        type: array
+        minItems: 1
+        items:
+          $ref: '#/definitions/GridCell'
+  Vegetation:
+    type: object
+    description: Fraction of low, middle & high vegetation
+    required:
+      - low
+      - middle
+      - high
+    properties:
+      low:
+        type: number
+        format: double
+      middle:
+        type: number
+        format: double
+      high:
+        type: number
+        format: double
+  GridCell:
+    type: object
+    description: spatial grid information 
+    required:
+      - xy
+    properties:
+      xy:
+        type: array
+        minItems: 2
+        maxItems: 2
+        items:
+          type: number
+          format: long
   AssessmentRequestResponse:
     allOf:
       - $ref: '#/definitions/ValidateResponse'

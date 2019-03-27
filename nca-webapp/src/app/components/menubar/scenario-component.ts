@@ -3,10 +3,11 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { CalculationService } from '../../services/calculation-service';
-import { AssessmentRequest } from '../../models/assessment-request-model';
+import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { MeasureComponent } from './measure-component';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuEventService } from '../../services/menu-event-service';
+import { ProjectModel } from '../../models/project-model';
 
 @Component({
   selector: 'gbp-scenario',
@@ -54,14 +55,23 @@ export class ScenarioComponent implements OnChanges {
   }
 
   public calculateClick() {
-    const request = new AssessmentRequest();
+    const request = new AssessmentRequestModel();
     request.name = 'Test scenario Geert';
+    request.model = 'NKMODEL';
     request.eco_system_service = 'AIR_REGULATION';
-    this.calculationService.startCalculation(request).subscribe(
+    this.calculationService.startImmediateCalculation(request).subscribe(
       (result) => {
         if (result) {
-          this.scenarioModel.results = result;
-          console.log('Result: ' + result.successful);
+          if (result.errors) {
+            result.errors.forEach(error => console.log('Back-end error: ' + error.message));
+          }
+          if (result.warnings) {
+            result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
+          }
+          this.scenarioModel.results = result.assessmentResults;
+          if (result.assessmentResults) {
+            console.log('Result: ' + result.assessmentResults);
+          }
         }
       },
       (error) => {
@@ -77,6 +87,7 @@ export class ScenarioComponent implements OnChanges {
       this.scenarioModel.measures = this.gbpMeasures.saveMeasures();
       this.scenarioModel.valid = true;
     }
+    console.log(JSON.stringify(this.projectService.currentProject as ProjectModel));
   }
 
   public cancelClick() {

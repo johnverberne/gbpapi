@@ -38,7 +38,7 @@ export class ScenarioListComponent implements OnInit {
     this.addScenario();
     this.currentScenarioIndex = this.scenarios.length - 1;
     this.currentScenario = this.scenarios[this.currentScenarioIndex];
-    this.menuService.scenarioChange();
+    this.menuService.scenarioChange(this.currentScenarioIndex);
   }
 
   public addScenario() {
@@ -52,7 +52,7 @@ export class ScenarioListComponent implements OnInit {
   public onScenarioClick(scenario: ScenarioModel, index: number) {
     this.currentScenarioIndex = index;
     this.currentScenario = scenario;
-    this.menuService.scenarioChange();
+    this.menuService.scenarioChange(index);
   }
 
   public onDeleteClick() {
