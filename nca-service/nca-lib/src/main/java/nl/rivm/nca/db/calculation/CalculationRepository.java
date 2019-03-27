@@ -14,13 +14,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.db.user.JobRepository;
+import nl.rivm.nca.db.user.UserRepository;
 import nl.rivm.nca.db.util.Attribute;
 import nl.rivm.nca.db.util.Attributes;
 import nl.rivm.nca.db.util.Query;
 import nl.rivm.nca.db.util.QueryBuilder;
 import nl.rivm.nca.db.util.QueryUtil;
+import nl.rivm.nca.shared.domain.JobType;
 import nl.rivm.nca.shared.domain.calculation.Calculation;
 import nl.rivm.nca.shared.domain.calculation.CalculationResult;
+import nl.rivm.nca.shared.domain.calculation.JobState;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
 
 public class CalculationRepository {
 	
@@ -200,6 +205,42 @@ public class CalculationRepository {
 		result.setModel(QueryUtil.getString(rs, RepositoryAttribute.MODEL));
 		result.setGeolayer(QueryUtil.getString(rs, RepositoryAttribute.GEOLAYER));
 		result.setData(QueryUtil.getString(rs, RepositoryAttribute.DATA));
+	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param calculationId
+	 * @param uuid 
+	 * @param modelResults
+	 * @throws SQLException
+	 */
+	public static void insertCalculationResults(Connection connection, int calculationId,
+			String correlationId, List<AssessmentResultResponse> modelResults) throws SQLException {
+		for (AssessmentResultResponse modelResult : modelResults) {
+			insertCalculationResult(connection, calculationId, modelResult.getModel(), modelResult.getName(), modelResult.toString());
+		}
+		JobRepository.setEndTimeToNow(connection, correlationId);
+		JobRepository.updateJobStatus(connection, correlationId, JobState.COMPLETED);
+	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param newCalculation
+	 * @param uuid
+	 * @param user
+	 * @param name 
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Calculation insertCalculation(Connection connection, Calculation newCalculation, String uuid, ScenarioUser user, String name) throws SQLException {
+		JobRepository.createJob(connection, user, JobType.CALCULATION, uuid, name);
+		Calculation calculation = insertCalculation(connection, newCalculation, uuid);
+		// if we run more than one scenario we will start different calculations for now only one
+		 final Iterable<Integer> calculationIds = new ArrayList<Integer>(calculation.getCalculationId());
+		JobRepository.attachCalculations(connection, uuid, calculationIds);
+		return calculation;
 	}
 
 }

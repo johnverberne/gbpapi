@@ -16,7 +16,7 @@ import nl.rivm.nca.runner.ExecParameters;
  */
 public class Xyz2Geotiff {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
 	private static final String GDAL_TRANSLATE = "gdal_translate";
 	private static final String COL2MAP = "col2map";

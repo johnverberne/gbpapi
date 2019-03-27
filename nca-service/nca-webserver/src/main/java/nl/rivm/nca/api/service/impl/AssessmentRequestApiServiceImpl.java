@@ -15,18 +15,34 @@ import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
+import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.ValidateResponse;
 import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.AssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
+import nl.rivm.nca.api.service.domain.ApiServiceContext;
 import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.pcraster.Controller;
 import nl.rivm.nca.pcraster.ControllerInterface;
-import nl.rivm.nca.pcraster.NKModel2Controller;
+import nl.rivm.nca.pcraster.NkModel2Controller;
+import nl.rivm.nca.pcraster.NkModelController;
 
+/*
+ *  This function collects the data and parse to the model.
+ *  After the model has run store the returned json list to the database.
+ */
 public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AssessmentRequestApiServiceImpl.class);
+	
+	private final ApiServiceContext context;
+	
+	public AssessmentRequestApiServiceImpl() {
+		this(new ApiServiceContext());
+	}
+
+	AssessmentRequestApiServiceImpl(final ApiServiceContext context) {
+		this.context = context;
+	}
 
 	@Override
 	public Response postAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
@@ -74,22 +90,25 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		controller.run(uuid, customAr);
 		*/
 		LOGGER.info("API requestname '{}' exceute model '{}' request.", ar.getName(), ar.getEcoSystemService());
-		controller.run(uuid, ar);
+		List<AssessmentResultResponse> result = controller.run(uuid, ar);
+		// write to database
+		
 		warnings.add(WarningUtil.ValidationInfoMessage("Task executed uuid:" + uuid));
 	}
 
-	private ControllerInterface initModelController(ModelEnum modelEnum, boolean directFile) throws IOException, InterruptedException {
+	private ControllerInterface initModelController(ModelEnum modelEnum, boolean directFile)
+			throws IOException, InterruptedException {
 		// get the environment for the supplied model.
-		ControllerInterface controller; 
+		ControllerInterface controller;
 		final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
 		} else {
 			if (modelEnum == ModelEnum.NKMODEL) {
-			controller = new Controller(new File(ncaModel), directFile);
+				controller = new NkModelController(new File(ncaModel), directFile);
 			} else {
-				controller = new NKModel2Controller(new File(ncaModel), directFile);
+				controller = new NkModel2Controller(new File(ncaModel), directFile);
 			}
 		}
 		return controller;
