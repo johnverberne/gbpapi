@@ -11,7 +11,7 @@
 
 	<artifactId>nca-lib</artifactId>
 
-	<name>NCA Api</name>
+	<name>NCA Lib</name>
 	<description>Natural Capital Assessment Api description</description>
 	<packaging>jar</packaging>
 
@@ -28,27 +28,8 @@
 		<dependency>
 			<groupId>nl.rivm.nca</groupId>
 			<artifactId>nca-api</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-		<!-- 
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		</dependency>
-		-->
-		<dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-       <dependency>
-       		<groupId>net.postgis</groupId>
-        	<artifactId>postgis-jdbc</artifactId>
-       </dependency>
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
@@ -56,31 +37,26 @@
 		<dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
-       <dependency>
-       		<groupId>net.postgis</groupId>
-        	<artifactId>postgis-jdbc</artifactId>
-        	<version>${postgis-jdbc.version}</version>
-      	</dependency>
-      	
-		<!-- this version breaks tiff reader
-		<dependency>
-  		    <groupId>org.geotools</groupId>
-  			<artifactId>gt-geotiff</artifactId>
-  			<version>${geotools.version}</version>
-		</dependency>
-		<dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-epsg-hsql</artifactId>
-            <version>2.5.6</version>
-        </dependency>
-        -->
+	    <dependency>
+	      <groupId>net.postgis</groupId>
+	      <artifactId>postgis-jdbc</artifactId>
+	      <exclusions>
+	        <exclusion>
+	          <artifactId>postgresql</artifactId>
+	          <groupId>postgresql</groupId>
+	        </exclusion>
+	        <exclusion>
+	          <groupId>ch.qos.logback</groupId>
+	          <artifactId>logback-classic</artifactId>
+	        </exclusion>
+	      </exclusions>
+	    </dependency>
 	</dependencies>
 	
 </project>

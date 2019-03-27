@@ -303,8 +303,10 @@ definitions:
           A description given to this assessment request.
           supported values are: 
           ___NKMODEL:___ Excecute nkmodel.
+          ___NKMODEL2:___ Excecute preview version of nkmodel.
         enum:
           - NKMODEL
+          - NKMODEL2
       eco_system_service:
         type: string
         description: The eco system service for which an assessment request is made.
@@ -454,7 +456,7 @@ definitions:
         type: string
         format: byte
         description: |
-          The layer data. This data must be base64 encoded.
+          The layer data. This data must be base64 encoded for tiff and text file for xyz.
   ValidationMessage:
     type: object
     required:

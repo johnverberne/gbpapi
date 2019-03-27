@@ -1,5 +1,5 @@
 /*
- * Copyright Dutch Ministry of Economic Affairs
+ * Copyright the State of the Netherlands
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,32 +14,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
-package nl.rivm.nca.shared.domain;
+package nl.rivm.nca.shared.domain.calculation;
 
-public enum JobType {
-
-  CALCULATION;
+/**
+ * States a Job can be in. The names are used in the database (lowercase), so take care when changing.
+ */
+public enum JobState {
+  /**
+   * State is undefined.
+   */
+  UNDEFINED,
+  /**
+   * Job initialized.
+   */
+  INITIALIZED,
+  /**
+   * Job running.
+   */
+  RUNNING,
+  /**
+   * Job cancelled.
+   */
+  CANCELLED,
+  /**
+   * Job is ended with a error.
+   */
+  ERROR,
+  /**
+   * Job completed.
+   */
+  COMPLETED;
 
   /**
-   * Returns the name in lowercase.
-   * @return name in lowercase
+   * Returns the name as represented in the database.
+   * @return name as represented in the database
    */
-  @Override
-  public String toString() {
+  public Object toDatabaseString() {
     return name().toLowerCase();
   }
-
-  /**
-   * Return the safe value from a type string, or null if it could not be matched.
-   * @param value Type string to get the enum value of.
-   * @return null if the type does not match, or the corresponding {@link JobType}.
-   */
-  public static JobType safeValueOf(final String value) {
-    try {
-      return value == null ? null : valueOf(value.toUpperCase());
-    } catch (final IllegalArgumentException e) {
-      return null;
-    }
-  }
-
 }

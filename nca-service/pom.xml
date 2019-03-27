@@ -10,7 +10,7 @@
 	<name>NCA Parent</name>
 	<description>Natural Capital Assessment parent pom</description>
 	<packaging>pom</packaging>
-    <url>https://www.aerius.nl</url>
+    <url>https://www.groenebatenplanner.nl</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +26,8 @@
 		<swagger-codegen-maven-plugin.version>2.3.1</swagger-codegen-maven-plugin.version>
 		<swagger-jersey2-jaxrs.version>1.5.18</swagger-jersey2-jaxrs.version>
         <postgis-jdbc.version>2.2.0</postgis-jdbc.version>
-        <postgresql.version>9.4.1207.jre7</postgresql.version>
+        <!-- <postgresql.version>9.4.1207.jre7</postgresql.version> -->
+        <postgresql.version>42.2.5</postgresql.version>
         <jogamp.version>2.3.1</jogamp.version>
 		<tomcat-servlet-api.version>8.5.28</tomcat-servlet-api.version>
 		<postgis-jdbc.version>2.2.0</postgis-jdbc.version>
@@ -47,16 +48,6 @@
 	
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>nl.rivm.nca</groupId>
-				<artifactId>nca-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.rivm.nca</groupId>
-				<artifactId>nca-lib</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>
 				<artifactId>tomcat-servlet-api</artifactId>
@@ -181,9 +172,9 @@
 			</activation>
 			
 			<modules>
-				<module>nca-api</module>
 				<module>nca-lib</module>
 			    <module>nca-pcraster</module>
+			    <module>nca-api</module>
 				<module>nca-webserver</module>
 				<module>nca-geoserver-parent/nca-geoserver-base</module>
 				<module>nca-geoserver-parent/nca-geoserver-gbp</module>

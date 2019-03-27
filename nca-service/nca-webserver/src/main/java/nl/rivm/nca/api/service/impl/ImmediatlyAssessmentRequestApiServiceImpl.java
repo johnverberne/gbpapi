@@ -2,6 +2,8 @@ package nl.rivm.nca.api.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,14 +22,29 @@ import nl.rivm.nca.api.domain.ImmediatlyAssessmentRequestResponse;
 import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.ImmediatlyAssessmentRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
+import nl.rivm.nca.api.service.domain.ApiServiceContext;
+import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.pcraster.Controller;
+import nl.rivm.nca.db.calculation.CalculationRepository;
+import nl.rivm.nca.db.user.UserRepository;
 import nl.rivm.nca.pcraster.ImmediatlyController;
 import nl.rivm.nca.pcraster.SingleRun;
+import nl.rivm.nca.shared.domain.calculation.Calculation;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
 
 public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessmentRequestApiService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImmediatlyAssessmentRequestApiServiceImpl.class);
+  
+	private final ApiServiceContext context;
+	
+	public ImmediatlyAssessmentRequestApiServiceImpl() {
+		this(new ApiServiceContext());
+	}
+
+	ImmediatlyAssessmentRequestApiServiceImpl(final ApiServiceContext context) {
+		this.context = context;
+	}
 
   @Override
   public Response postImmediatlyAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
@@ -48,13 +65,17 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
 
     } else {
       final String uuid = UUID.randomUUID().toString();
-      try {
-        
+      try  (final Connection connection = context.getPMF().getConnection()) {
+    	ScenarioUser user = UserRepository.getUserByApiKey(connection, "0000-0000-0000-0000");
+        Calculation calc = CalculationRepository.insertCalculation(connection, new Calculation(), uuid, user, ar.getName());
+    	  
         response.setKey(uuid);
-        response.setAssessmentResults(assessmentRun(ar, warnings, uuid));
+        List<AssessmentResultResponse> modelResults = assessmentRun(ar, warnings, uuid);
+        CalculationRepository.insertCalculationResults(connection,calc.getCalculationId(),uuid,modelResults);
+        response.setAssessmentResults(modelResults);
         response.setSuccessful(true);
 
-      } catch (ConfigurationException | IOException | InterruptedException e) {
+      } catch (ConfigurationException | IOException | InterruptedException | SQLException e) {
         ValidationMessage message = new ValidationMessage();
         message.setCode(1);
         message.setMessage("error is call : " + e.getMessage());
@@ -62,7 +83,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
         response.setErrors(errors);
         LOGGER.info("error in call {}", e.getMessage());
         response.setSuccessful(false);
-      }
+	}
     }
     return response;
   }
@@ -77,10 +98,10 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     //models.add("energy_savings_by_shelter_trees");
     
     List<AssessmentResultResponse> results = new ArrayList<AssessmentResultResponse>();
-    for(String model : models) {
-    results.addAll(controller.run(uuid,
-        singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT)));
-    }
+		for (String model : models) {
+			ModelEnum runModel = ModelEnum.NKMODEL;
+			results.addAll(controller.run(uuid, singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT,runModel )));
+		}
     return results;
   }
 

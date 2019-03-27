@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
-package nl.rivm.nca.shared.domain;
+package nl.rivm.nca.shared.domain.user;
 
 import java.io.Serializable;
+
+import nl.rivm.nca.shared.domain.HasId;
 
 /**
  * Data object of a user profile for Scenario.

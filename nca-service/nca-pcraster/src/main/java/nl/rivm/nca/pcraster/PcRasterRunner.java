@@ -14,10 +14,10 @@ class PcRasterRunner {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PcRasterRunner.class);
   
-  // TODO we want a version in the executed string parsed from the api
+    // TODO we want a version in the executed string parsed from the api
 	private static final String PYTHON = "python";
-	private static final String NCA = "/opt/nkmodel/nca.sh";
-	private static final String NCA_WIN = "/opt/nkmodel/nca.bat";
+	private static final String NCA = "/opt/nkmodel/nca.sh"; //{NKMODEL_PATH}/bin/nca.sh
+	private static final String NCA_WIN = "/opt/nkmodel/nca.bat"; //{NKMODEL_PATH}/bin/nca.bat
 
 	public void sanityCheck() throws IOException, InterruptedException {
 		final String[] args = { "-c", "\"import pcraster\"" };
@@ -26,15 +26,16 @@ class PcRasterRunner {
 		exec.run(new File(""));
 	}
 
-	public void runPcRaster(String correlationId, String ecoSystemService, File projectFile)
+	public void runPcRaster(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine, File workingPath)
 			throws IOException, InterruptedException {
 		final String RUNNER = OSUtils.isWindows() ? NCA_WIN : NCA;
-		String absolutePathOnly = projectFile.getAbsolutePath().replace("project.ini", "outputs\\");
-		final String[] args = { ecoSystemService, projectFile.getAbsolutePath(), absolutePathOnly };
+		String absoluteScenarioPathOnly = projectFileScenario.getAbsolutePath().replace("project.ini", ""); //"outputs\\"
+		String absoluteBaseLinePathOnly = projectFileBaseLine.getAbsolutePath().replace("project.ini", ""); //"outputs\\"
+		final String[] args = { ecoSystemService, absoluteScenarioPathOnly, absoluteBaseLinePathOnly, workingPath.getAbsolutePath()};
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
 		final Exec exec = new Exec(execParams, "", false); // run as batch file
 
 		LOGGER.debug("Execute: ({}) with parameters: {}", RUNNER, args);
-		exec.run(correlationId, new File(projectFile.getParent()));
+		exec.run(correlationId, new File(projectFileScenario.getParent()));
 	}
 }

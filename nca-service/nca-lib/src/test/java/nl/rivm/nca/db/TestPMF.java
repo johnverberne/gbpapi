@@ -26,143 +26,158 @@ import org.apache.commons.dbcp.DelegatingConnection;
 import org.postgresql.PGConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- * PMF implementation for using within tests. Has the option to cache the connection.
+ * PMF implementation for using within tests. Has the option to cache the
+ * connection.
  */
-public final class TestPMF  {
+public class TestPMF {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TestPMF.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPMF.class);
 
-  private boolean firstTime = true;
-  private String jdbcURL;
-  private String dbUsername;
-  private String dbPassword;
-  private boolean autoCommit;
-  private final boolean cacheConnection;
-  private final List<DelegatingConnectionExtension> connections = new ArrayList<>();
+	private boolean firstTime = true;
+	private String jdbcURL;
+	private String dbUsername;
+	private String dbPassword;
+	private ProductType productType;
+	private boolean autoCommit;
+	private final boolean cacheConnection;
+	private final List<DelegatingConnectionExtension> connections = new ArrayList<>();
 
-  public TestPMF(final boolean cacheConnection) {
-    this.cacheConnection = cacheConnection;
-  }
+	public TestPMF(final boolean cacheConnection) {
+		this.cacheConnection = cacheConnection;
+	}
 
-  /**
-   * Closes the connection for real. The connection's own close is hijacked to avoid in between closes in try blocks.
-   *
-   * @throws SQLException
-   */
-  public void close() throws SQLException {
-    for (final DelegatingConnectionExtension con : connections) {
-      try {
-        if (con == null) {
-          LOGGER.warn("trying to close a null connection.");
-        } else {
-          con.reallyClose();
-          if (!con.isClosed()) {
-            con.reallyClose();
-          }
-        }
-      } catch (final SQLException e) {
-        // Ingore
-      }
-    }
-    connections.clear();
-  }
+	/**
+	 * Closes the connection for real. The connection's own close is hijacked to
+	 * avoid in between closes in try blocks.
+	 *
+	 * @throws SQLException
+	 */
+	public void close() throws SQLException {
+		for (final DelegatingConnectionExtension con : connections) {
+			try {
+				if (con == null) {
+					LOGGER.warn("trying to close a null connection.");
+				} else {
+					con.reallyClose();
+					if (!con.isClosed()) {
+						con.reallyClose();
+					}
+				}
+			} catch (final SQLException e) {
+				// Ingore
+			}
+		}
+		connections.clear();
+	}
 
-  /**
-   * Returns a new connection to the AeriusDB database.
-   *
-   * @return a database connection
-   * @throws SQLException
-   */
-  public Connection getConnection() throws SQLException {
-    if (firstTime) {
-      firstTime = false; // reset init field before call in case init method decides to call getConnection.
-      //DBMessages.init(this);
-    }
+	/**
+	 * Returns a new connection to the AeriusDB database.
+	 *
+	 * @return a database connection
+	 * @throws SQLException
+	 */
+	public Connection getConnection() throws SQLException {
+		if (firstTime) {
+			firstTime = false; // reset init field before call in case init
+								// method decides to call getConnection.
+			// DBMessages.init(this);
+		}
 
-    final Connection connection;
-    if (autoCommit) {
-      connection = getAutoCommitedConnection();
-    } else {
-      connection = getNonAutoCommitedConnection();
-    }
-    return connection;
-  }
+		final Connection connection;
+		if (autoCommit) {
+			connection = getAutoCommitedConnection();
+		} else {
+			connection = getNonAutoCommitedConnection();
+		}
+		return connection;
+	}
 
-  private Connection getAutoCommitedConnection() throws SQLException {
-    final DelegatingConnectionExtension connection = createConnection();
-    connections.add(connection);
-    return connection;
-  }
+	private Connection getAutoCommitedConnection() throws SQLException {
+		final DelegatingConnectionExtension connection = createConnection();
+		connections.add(connection);
+		return connection;
+	}
 
-  private Connection getNonAutoCommitedConnection() throws SQLException {
-    final Connection connection;
-    if (!cacheConnection) {
-      close();
-    }
-    if (connections.isEmpty()) {
-      connections.add(createConnection());
-    }
-    connection = connections.get(0);
-    return connection;
-  }
+	private Connection getNonAutoCommitedConnection() throws SQLException {
+		final Connection connection;
+		if (!cacheConnection) {
+			close();
+		}
+		if (connections.isEmpty()) {
+			connections.add(createConnection());
+		}
+		connection = connections.get(0);
+		return connection;
+	}
 
-  private DelegatingConnectionExtension createConnection() throws SQLException {
-    final Connection actualConnection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
-    ((PGConnection) actualConnection).addDataType("geometry", org.postgis.PGgeometry.class);
-    actualConnection.setAutoCommit(autoCommit);
-    return new DelegatingConnectionExtension(actualConnection);
-  }
+	private DelegatingConnectionExtension createConnection() throws SQLException {
+		final Connection actualConnection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
+		((PGConnection) actualConnection).addDataType("geometry", org.postgis.PGgeometry.class);
+		actualConnection.setAutoCommit(autoCommit);
+		return new DelegatingConnectionExtension(actualConnection);
+	}
 
-  public void setJdbcURL(final String jdbcURL) {
-    this.jdbcURL = jdbcURL;
-  }
+	public void setJdbcURL(final String jdbcURL) {
+		this.jdbcURL = jdbcURL;
+	}
 
-  public void setDbUsername(final String dbUsername) {
-    this.dbUsername = dbUsername;
-  }
+	public void setDbUsername(final String dbUsername) {
+		this.dbUsername = dbUsername;
+	}
 
-  public void setDbPassword(final String dbPassword) {
-    this.dbPassword = dbPassword;
-  }
+	public void setDbPassword(final String dbPassword) {
+		this.dbPassword = dbPassword;
+	}
 
+	public void setAutoCommit(final boolean autoCommit) {
+		this.autoCommit = autoCommit;
+	}
 
-  public void setAutoCommit(final boolean autoCommit) {
-    this.autoCommit = autoCommit;
-  }
+	public ProductType getProductType() {
+		return productType;
+	}
 
-  @Override
-  public String toString() {
-    return "TestPMF [jdbcURL=" + jdbcURL + ", autoCommit=" + autoCommit + ", cacheConnection=" + cacheConnection
-        + "]";
-  }
+	public void setProductType(ProductType productType) {
+		this.productType = productType;
 
-  /**
-   * Wraps the connection class to hijack the close call, to avoid autoclosing the connection in try blocks.
-   */
-  private final class DelegatingConnectionExtension extends DelegatingConnection {
-    /**
-     * @param c
-     */
-    private DelegatingConnectionExtension(final Connection c) {
-      super(c);
-    }
+	}
 
-    @Override
-    public void close() throws SQLException {
-      // don't close when autocommit is false
-      if (autoCommit) {
-        super.close();
-      }
-    }
+	@Override
+	public String toString() {
+		return "TestPMF [jdbcURL=" + jdbcURL + ", autoCommit=" + autoCommit + ", cacheConnection=" + cacheConnection
+				+ "]";
+	}
 
-    /**
-     * Close the connection.
-     *
-     * @throws SQLException
-     */
-    public void reallyClose() throws SQLException {
-      super.close();
-    }
-  }
+	/**
+	 * Wraps the connection class to hijack the close call, to avoid autoclosing
+	 * the connection in try blocks.
+	 */
+	private final class DelegatingConnectionExtension extends DelegatingConnection {
+		/**
+		 * @param c
+		 */
+		private DelegatingConnectionExtension(final Connection c) {
+			super(c);
+		}
+
+		@Override
+		public void close() throws SQLException {
+			// don't close when autocommit is false
+			if (autoCommit) {
+				super.close();
+			}
+		}
+
+		/**
+		 * Close the connection.
+		 *
+		 * @throws SQLException
+		 */
+		public void reallyClose() throws SQLException {
+			super.close();
+		}
+	}
+
 }

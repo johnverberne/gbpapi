@@ -18,7 +18,7 @@ import nl.rivm.nca.api.service.util.SwaggerUtil;
 import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.exception.AeriusException;
-import nl.rivm.nca.shared.domain.ScenarioUser;
+import nl.rivm.nca.shared.domain.user.ScenarioUser;
 
 public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 
@@ -61,7 +61,7 @@ public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 			LOGGER.error("Generating API key failed:", e);
 			throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
 		}
-		result.getWarnings().add(WarningUtil.ValidationInfoMessage("your api key is "+ user.getApiKey())); //TEMP rely on email
+		result.getWarnings().add(WarningUtil.ValidationInfoMessage("your api key is "+ user.getApiKey())); //TEMP rely on email in futher
 		return result;
 	}
 

@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import org.apache.commons.io.FilenameUtils;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
+import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
 import nl.rivm.nca.api.domain.DataType;
 import nl.rivm.nca.api.domain.LayerObject;
 
@@ -29,19 +30,23 @@ public class SingleRun {
    * @return
    * @throws IOException
    */
-  public AssessmentRequest singleRun(String name, String ecoSystemService, final String inputDirectory, String inputType) throws IOException {
-    final Path inputFile = Paths.get(inputDirectory);
-    verifyInput(inputFile);
-    final AssessmentRequest ar = new AssessmentRequest();
+	public AssessmentRequest singleRun(String name, String ecoSystemService, final String inputDirectory,
+			String inputType, ModelEnum model) throws IOException {
+		final Path inputFile = Paths.get(inputDirectory);
+		verifyInput(inputFile);
+		final AssessmentRequest ar = new AssessmentRequest();
 
-    ar.setName(name);
-    ar.setEcoSystemService(ecoSystemService);
-    Files.list(inputFile)
-      .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-      .forEach(f -> append(ar, f, inputType.equals(GEOTIFF_EXT) ? DataType.GEOTIFF : DataType.XYZ));
-
-    return ar;
-  }
+		if (inputType.equals(GEOTIFF_EXT) || inputType.equals(XYZ_EXT)) {
+			ar.setModel(model);
+			ar.setName(name);
+			ar.setEcoSystemService(ecoSystemService);
+			Files.list(inputFile).filter(f -> inputType.equals(FilenameUtils.getExtension(f.toFile().getName())))
+					.forEach(f -> append(ar, f, inputType.equals(GEOTIFF_EXT) ? DataType.GEOTIFF : DataType.XYZ));
+		} else {
+			throw new IllegalArgumentException("input type should be '" + GEOTIFF_EXT + " or " + XYZ_EXT + "'.");
+		}
+		return ar;
+	}
 
   private void append(AssessmentRequest ar, Path file, DataType dataType) {
     try {
