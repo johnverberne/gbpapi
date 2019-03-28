@@ -65,16 +65,17 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
-        'version=1.0.0&request=GetFeature&typeName=gbp:wms_grids10_view&TRANSPARANT=TRUE&' +
-        'outputFormat=application/json&srsname=EPSG:3857',
+        'version=1.0.0&request=GetFeature&typeName=gbp:grids_view&TRANSPARANT=TRUE&' +
+        'outputFormat=application/json&srsname=EPSG:3857&' +
+        'bbox=' + extent.join(',') + ',EPSG:3857',
       format: new GeoJSON(),
-      strategy: all,
+      strategy: bbox,
     });
 
     this.gridLayer10 = new VectorLayer({
       source: this.gridSource10,
-      maxResolution: 2,
-      style: this.gridStyle
+      maxResolution: 1,
+      style: this.gridStyle,
     });
 
     this.osmLayer = new TileLayer({
@@ -102,7 +103,7 @@ export class OpenlayersComponent implements AfterViewInit {
         url: `${environment.GEOSERVER_ENDPOINT}/wms`,
         params: { 'LAYERS': 'LCEU_ini', 'TILED': true, 'STYLES': 'geotiff' },
         serverType: 'geoserver',
-        transition: 0
+        transition: 0,
       }),
       opacity: 0.2
     });
@@ -124,10 +125,10 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit() {
     this.view = new OlView({
-      center: fromLonLat([5.183735, 52.118362], this.projection),
+      center: fromLonLat([5.121775, 52.092691], this.projection),
       zoom: 18,
       minZoom: 7,
-      maxZoom: 19
+      maxZoom: 20
     });
 
     this.map = new OlMap({
