@@ -1,7 +1,7 @@
 /*
- * grids (mogelijk gridcells gaan noemen)
+ * grids
  * ---------
- * Grids (100x100 meter vierkante vlakken geometrie)
+ * Grids
  */
 CREATE TABLE grids (
 	grid_id integer NOT NULL,

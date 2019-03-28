@@ -78,5 +78,36 @@
         </plugins>
       </build>
     </profile>
+     <profile>
+      <id>sync-data</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1.1</version>
+            <executions>
+              <execution>
+                <id>sync-data</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>./</workingDirectory>
+                  <executable>ruby</executable>
+                  <arguments>
+                    <argument>${project.basedir}/../nca-database-build/bin/SyncDBData.rb</argument>
+                    <argument>settings.rb</argument>
+                    <argument>--from-sftp</argument>
+                    <argument>--to-local</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>

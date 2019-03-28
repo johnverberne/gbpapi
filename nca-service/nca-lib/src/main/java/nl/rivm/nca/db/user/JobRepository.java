@@ -52,7 +52,8 @@ public final class JobRepository {
     JOB_ID,
     TYPE,
     STATE,
-    HEXAGON_COUNTER,
+    PROGRESS_COUNT,
+    MAX_PROGRESS,
     PICK_UP_TIME,
     START_TIME,
     END_TIME,
@@ -75,7 +76,8 @@ public final class JobRepository {
   private static final Attributes FIELDS_JOB_PROGRESS = new Attributes(
       RepositoryAttribute.TYPE,
       RepositoryAttribute.STATE,
-      RepositoryAttribute.HEXAGON_COUNTER,
+      RepositoryAttribute.PROGRESS_COUNT,
+      RepositoryAttribute.MAX_PROGRESS,
       RepositoryAttribute.PICK_UP_TIME,
       RepositoryAttribute.START_TIME,
       RepositoryAttribute.END_TIME,
@@ -438,12 +440,14 @@ public final class JobRepository {
     jobProgress.setKey(QueryUtil.getString(rs, QueryAttribute.KEY));
     jobProgress.setName(QueryUtil.getString(rs, QueryAttribute.NAME));
     jobProgress.setState(QueryUtil.getEnum(rs, RepositoryAttribute.STATE, JobState.class));
-    jobProgress.setHexagonCount(QueryUtil.getLong(rs, RepositoryAttribute.HEXAGON_COUNTER));
+    jobProgress.setProgressCount(QueryUtil.getLong(rs, RepositoryAttribute.PROGRESS_COUNT));
+    jobProgress.setMaxProgress(QueryUtil.getLong(rs, RepositoryAttribute.MAX_PROGRESS));
     jobProgress.setCreationDateTime(QueryUtil.getDate(rs, RepositoryAttribute.PICK_UP_TIME));
     jobProgress.setStartDateTime(QueryUtil.getDate(rs, RepositoryAttribute.START_TIME));
     jobProgress.setEndDateTime(QueryUtil.getDate(rs, RepositoryAttribute.END_TIME));
     jobProgress.setResultUrl(QueryUtil.getString(rs, RepositoryAttribute.RESULT_URL));
   }
+  
 //
 //  private static <T> void incrementField(final Connection con, final String correlationId, final Attribute attribute, final T value)
 //      throws SQLException {

@@ -10,7 +10,7 @@ SELECT
 ;
 
 /*
- * wms_grids_view 10x10
+ * wms_grids10_view
  * ---------
  * View voor de buitenwereld.
  */

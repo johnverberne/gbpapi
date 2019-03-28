@@ -24,6 +24,11 @@ paths:
       description: |
         TDB
       parameters:
+        - name: apiKey
+          in: query
+          description: De API-key die is gebruikt bij andere opdrachten.
+          required: true
+          type: string
         - name: body
           in: body
           required: true
@@ -59,6 +64,11 @@ paths:
       description: |
         TBD
       parameters:
+        - name: apiKey
+          in: query
+          description: De API-key die is gebruikt bij andere opdrachten.
+          required: true
+          type: string
         - name: body
           in: body
           required: true
@@ -95,6 +105,11 @@ paths:
         Excecute a model and wait for the results and immediatly return the results list in the response.
         This is based on the assumption that running the model is very fast.
       parameters:
+        - name: apiKey
+          in: query
+          description: De API-key die is gebruikt bij andere opdrachten.
+          required: true
+          type: string
         - name: body
           in: body
           required: true
@@ -132,7 +147,7 @@ paths:
       parameters:
         - name: apiKey
           in: query
-          description: De API-key die is gebruikt bij andere Connect opdrachten.
+          description: De API-key die is gebruikt bij andere opdrachten.
           required: true
           type: string
         - name: resultId
@@ -198,7 +213,7 @@ paths:
       parameters:
         - name: apiKey
           in: query
-          description: De API-key die is gebruikt bij andere Connect opdrachten.
+          description: De API-key die is gebruikt bij andere opdrachten.
           required: true
           type: string
       responses:
@@ -519,6 +534,14 @@ definitions:
         type: string
         format: date-time
         description: Einddatum en tijd.
+      progressCount:
+        type: integer
+        format: int64
+        description: Aantal scenarios in deze taak klaar.
+      maxProgress:
+        type: integer
+        format: int64
+        description: Totaal aantal scenarios in deze rekentaak.
   StatusJobResponse:
     type: object
     properties:

@@ -45,12 +45,12 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 	}
 
 	@Override
-	public Response postAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
+	public Response postAssessmentRequest(String apiKey, AssessmentRequest assessmentRequest, SecurityContext securityContext)
 			throws NotFoundException {
-		return Response.ok().entity(postRequest(assessmentRequest)).build();
+		return Response.ok().entity(postRequest(apiKey, assessmentRequest)).build();
 	}
 
-	private ValidateResponse postRequest(AssessmentRequest ar) {
+	private ValidateResponse postRequest(String apiKey, AssessmentRequest ar) {
 		final ValidateResponse result = new ValidateResponse().successful(Boolean.FALSE);
 		ArrayList<ValidationMessage> warnings = new ArrayList<ValidationMessage>();
 		List<ValidationMessage> errors = new ArrayList<ValidationMessage>();

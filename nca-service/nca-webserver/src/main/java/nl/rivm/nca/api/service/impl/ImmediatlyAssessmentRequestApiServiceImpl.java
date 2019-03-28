@@ -47,13 +47,13 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
 	}
 
   @Override
-  public Response postImmediatlyAssessmentRequest(AssessmentRequest assessmentRequest, SecurityContext securityContext)
+  public Response postImmediatlyAssessmentRequest(String apiKey, AssessmentRequest assessmentRequest, SecurityContext securityContext)
       throws NotFoundException {
-    ImmediatlyAssessmentRequestResponse response = calculate(assessmentRequest);
+    ImmediatlyAssessmentRequestResponse response = calculate(apiKey, assessmentRequest);
     return Response.ok().entity(response).build();
   }
 
-  private ImmediatlyAssessmentRequestResponse calculate(AssessmentRequest ar) {
+  private ImmediatlyAssessmentRequestResponse calculate(String apiKey, AssessmentRequest ar) {
     final ImmediatlyAssessmentRequestResponse response = new ImmediatlyAssessmentRequestResponse();
     ArrayList<ValidationMessage> warnings = new ArrayList<ValidationMessage>();
     List<ValidationMessage> errors = new ArrayList<ValidationMessage>();
@@ -66,7 +66,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     } else {
       final String uuid = UUID.randomUUID().toString();
       try  (final Connection connection = context.getPMF().getConnection()) {
-    	ScenarioUser user = UserRepository.getUserByApiKey(connection, "0000-0000-0000-0000");
+    	ScenarioUser user = UserRepository.getUserByApiKey(connection, apiKey);
         Calculation calc = CalculationRepository.insertCalculation(connection, new Calculation(), uuid, user, ar.getName());
     	  
         response.setKey(uuid);

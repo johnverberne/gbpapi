@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
-package  nl.rivm.nca.shared.domain;
+package nl.rivm.nca.shared.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,95 +23,104 @@ import nl.rivm.nca.shared.domain.calculation.JobState;
 
 public class JobProgress implements Serializable {
 
-  private static final long serialVersionUID = 2439541939254337039L;
+	private static final long serialVersionUID = 2439541939254337039L;
 
-  private JobType type;
-  private String key;
-  private String name;
-  private JobState state;
-  private long hexagonCount;
-  private Date creationDateTime;
-  private Date startDateTime;
-  private Date endDateTime;
-  private String resultUrl;
+	private JobType type;
+	private String key;
+	private String name;
+	private JobState state;
+	private long progressCount;
+	private long maxProgress;
+	private Date creationDateTime;
+	private Date startDateTime;
+	private Date endDateTime;
+	private String resultUrl;
 
-  public JobType getType() {
-    return type;
-  }
+	public JobType getType() {
+		return type;
+	}
 
-  public void setType(final JobType type) {
-    this.type = type;
-  }
+	public void setType(final JobType type) {
+		this.type = type;
+	}
 
-  public JobState getState() {
-    return state;
-  }
+	public JobState getState() {
+		return state;
+	}
 
-  public void setState(final JobState state) {
-    this.state = state;
-  }
+	public void setState(final JobState state) {
+		this.state = state;
+	}
 
-  public long getHexagonCount() {
-    return hexagonCount;
-  }
+	public Date getCreationDateTime() {
+		return creationDateTime;
+	}
 
-  public void setHexagonCount(final long hexagonCount) {
-    this.hexagonCount = hexagonCount;
-  }
+	public void setCreationDateTime(final Date creationDateTime) {
+		this.creationDateTime = creationDateTime;
+	}
 
-  public Date getCreationDateTime() {
-    return creationDateTime;
-  }
+	public Date getStartDateTime() {
+		return startDateTime;
+	}
 
-  public void setCreationDateTime(final Date creationDateTime) {
-    this.creationDateTime = creationDateTime;
-  }
+	public void setStartDateTime(final Date startDateTime) {
+		this.startDateTime = startDateTime;
+	}
 
-  public Date getStartDateTime() {
-    return startDateTime;
-  }
+	public Date getEndDateTime() {
+		return endDateTime;
+	}
 
-  public void setStartDateTime(final Date startDateTime) {
-    this.startDateTime = startDateTime;
-  }
+	public void setEndDateTime(final Date endDateTime) {
+		this.endDateTime = endDateTime;
+	}
 
-  public Date getEndDateTime() {
-    return endDateTime;
-  }
+	public String getResultUrl() {
+		return resultUrl;
+	}
 
-  public void setEndDateTime(final Date endDateTime) {
-    this.endDateTime = endDateTime;
-  }
+	public void setResultUrl(final String resultUrl) {
+		this.resultUrl = resultUrl;
+	}
 
-  public String getResultUrl() {
-    return resultUrl;
-  }
+	public String getKey() {
+		return key;
+	}
 
-  public void setResultUrl(final String resultUrl) {
-    this.resultUrl = resultUrl;
-  }
+	public void setKey(final String key) {
+		this.key = key;
+	}
 
-  public String getKey() {
-    return key;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setKey(final String key) {
-    this.key = key;
-  }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public long getProgressCount() {
+		return progressCount;
+	}
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+	public void setProgressCount(long progressCount) {
+		this.progressCount = progressCount;
+	}
 
-  @Override
-  public String toString() {
-    return "JobProgress [type=" + type + ", key=" + key + ", name=" + name + ", state=" + state + ", hexagonCount="
-        + hexagonCount + ", creationDateTime=" + creationDateTime + ", startDateTime=" + startDateTime + ", endDateTime=" + endDateTime
-        + ", resultUrl=" + resultUrl + "]";
-  }
+	public long getMaxProgress() {
+		return maxProgress;
+	}
+
+	public void setMaxProgress(long maxProgress) {
+		this.maxProgress = maxProgress;
+	}
+
+	@Override
+	public String toString() {
+		return "JobProgress [type=" + type + ", key=" + key + ", name=" + name + ", state=" + state + ", progressCount="
+				+ progressCount + ", maxProgress=" + maxProgress + ", creationDateTime=" + creationDateTime + ", "
+				+ "startDateTime=" + startDateTime + ", endDateTime=" + endDateTime + ", resultUrl=" + resultUrl + "]";
+	}
 
 }
