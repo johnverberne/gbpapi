@@ -27,6 +27,7 @@ public class RasterLayers {
     arLayers.put("trees", "bomenkaart");
     arLayers.put("shrubs", "struikenkaart");
     arLayers.put("grass", "graskaart");
+    arLayers.put("woz","WOZ_buurt");
     layers.put("air_regulation", arLayers);
 
     final Map<String, String> ciuaLayers = new HashMap<>();
