@@ -28,9 +28,9 @@ import nl.rivm.nca.api.domain.DataType;
 import nl.rivm.nca.api.domain.LayerObject;
 
 /*
- * Run the model with a XYZ Source file
+ * Run the model with a XYZ Source file.
  * 
- * Create root temp directory with 3 extra directories
+ * Create root temp directory with 3 extra directories including ini files
  * ScenarioDirectory
  * BaseLineDirectory
  * ResultDirectory

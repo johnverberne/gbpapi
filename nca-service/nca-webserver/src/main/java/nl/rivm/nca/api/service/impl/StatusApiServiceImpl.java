@@ -83,7 +83,9 @@ public class StatusApiServiceImpl extends StatusApiService {
 				.startDateTime(value.getStartDateTime())
 				.endDateTime(value.getEndDateTime())
 				.state(getState(value))
-				.key(value.getKey());
+				.key(value.getKey())
+				.progressCount(value.getProgressCount())
+				.maxProgress(value.getMaxProgress());
 	}
 
 	private JobState getState(final JobProgress value) {

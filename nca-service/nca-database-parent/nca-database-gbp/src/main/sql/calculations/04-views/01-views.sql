@@ -1,18 +1,15 @@
 
 /*
- * calculation_jobs_view
+ * calculation_result_view
  * ------------------------
  */
-CREATE OR REPLACE VIEW calculation_jobs_view AS
+CREATE OR REPLACE VIEW calculation_result_view AS
 SELECT 
-	user_id,
-    job_id,
+    calculation_id,
 	model,
 	geolayer,
 	data
 	
-	FROM jobs 
-		INNER JOIN job_calculations USING (job_id ) 
-		INNER JOIN calculation_results USING (calculation_id)
+	FROM calculation_results 
 ;
 
