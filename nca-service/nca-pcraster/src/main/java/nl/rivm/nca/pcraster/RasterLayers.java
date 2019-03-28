@@ -9,6 +9,10 @@ public class RasterLayers {
   private final Map<String, Map<String, String>> layers = new HashMap<>();
   private final File path;
 
+  public RasterLayers() {
+	  this.path = null;
+  }
+  
   public RasterLayers(File path) {
     this.path = path;
   }
