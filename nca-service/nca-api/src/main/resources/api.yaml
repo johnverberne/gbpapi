@@ -60,7 +60,7 @@ paths:
     post:
       operationId: postAssessmentScenarioRequest
       tags:
-        - assessmentScenarioRequest
+        - assessmentRequest
       description: |
         TBD
       parameters:
@@ -232,6 +232,35 @@ paths:
             Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
           schema:
             $ref: '#/definitions/ErrorResponse'
+  /modeldata/{model}:
+    get:
+      operationId: getModelData
+      tags:
+        - modeldata
+      description: |
+        Deze functie geeft een lijst met rasterlayers die voor het gevraagde model nodig zijn.
+      parameters:
+        - name: model
+          in: path
+          description: Eco system service naam
+          required: true
+          type: string
+      responses:
+        '200':
+          description: |
+            Bij een normale afhandeling van de API functie.
+          schema:
+            $ref: '#/definitions/ModelDataResponse'
+        '400':
+          description: |
+            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
             
 securityDefinitions:
    apiKey:
@@ -341,71 +370,7 @@ definitions:
         minItems: 1
         description: An array of measures that determine the scenario
         items: 
-          $ref: '#/definitions/Measure'
-  Measure:
-    type: object
-    required:
-      - name
-      - model
-      - landuse
-      - vegetation
-      - inhabitants
-      - woz
-      - layer
-    properties:
-      name:
-        type: string
-        description: The name of the given measure.
-      model:
-        type: string
-        description: |
-          A description given to this assessment request.
-          supported values are: 
-          ___NKMODEL:___ Excecute nkmodel.
-        enum:
-          - NKMODEL
-      landuse:
-        type: string
-        enum:
-          - RESIDENTIAL
-          - LAKES_AND_PONDS
-      vegetation:
-        $ref: '#/definitions/Vegetation'
-      layer:
-        type: array
-        minItems: 1
-        items:
-          $ref: '#/definitions/GridCell'
-  Vegetation:
-    type: object
-    description: Fraction of low, middle & high vegetation
-    required:
-      - low
-      - middle
-      - high
-    properties:
-      low:
-        type: number
-        format: double
-      middle:
-        type: number
-        format: double
-      high:
-        type: number
-        format: double
-  GridCell:
-    type: object
-    description: spatial grid information 
-    required:
-      - xy
-    properties:
-      xy:
-        type: array
-        minItems: 2
-        maxItems: 2
-        items:
-          type: number
-          format: long
+          $ref: '#/definitions/AssessmentRequest'
   AssessmentRequestResponse:
     allOf:
       - $ref: '#/definitions/ValidateResponse'
@@ -549,3 +514,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/StatusJobProgress'
+  ModelDataResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Naam van de eco system service
+      version:
+        type: string
+        description: Versienummer van eco system service
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Layer'
+  Layer:
+    type: string
+    description: |
+      Benodigde lagen voor het gekozen eco system service
+    enum:
+      - LAND_COVER
+      - PM_10
+      - POPULATION
+      - TREES
+      - SHRUBS
+      - GRASS
