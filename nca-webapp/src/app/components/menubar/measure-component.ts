@@ -182,6 +182,11 @@ export class MeasureComponent implements OnChanges {
       measureGeom = new FeatureModel();
       measureGeom.styleName = this.getColor();
       measureGeom.id = this.measures.length;
+      const model = new GridCellModel();
+      model.coords = [0, 0];
+      model.gridId = 1;
+      measureGeom.cells.push(model);
+      this.addFeatures(measureGeom);
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
     }

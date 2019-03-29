@@ -62,18 +62,20 @@ paths:
       tags:
         - assessmentRequest
       description: |
-        TBD
+        Excecute one or more scenarios and affiliated measures (models) 
       parameters:
         - name: apiKey
           in: query
           description: De API-key die is gebruikt bij andere opdrachten.
           required: true
           type: string
-        - name: body
+        - name: scenarios
           in: body
           required: true
           schema:
-            $ref: '#/definitions/AssessmentScenarioRequest'
+            type: array
+            items:
+              $ref: '#/definitions/AssessmentScenarioRequest'
       responses:
         '200':
           description: |
@@ -236,7 +238,7 @@ paths:
     get:
       operationId: getModelData
       tags:
-        - modeldata
+        - model
       description: |
         Deze functie geeft een lijst met rasterlayers die voor het gevraagde model nodig zijn.
       parameters:
@@ -519,10 +521,10 @@ definitions:
     properties:
       name:
         type: string
-        description: Naam van de eco system service
+        description: Name of the eco system service
       version:
         type: string
-        description: Versienummer van eco system service
+        description: Version number of the eco system service
       entries:
         type: array
         items:

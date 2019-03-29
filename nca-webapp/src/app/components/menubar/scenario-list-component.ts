@@ -3,6 +3,9 @@ import { CurrentProjectService } from 'src/app/services/current-project-service'
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { MenuEventService } from '../../services/menu-event-service';
 import { TranslateService } from '@ngx-translate/core';
+import { CalculationService } from '../../services/calculation-service';
+import { AssessmentRequestModel } from '../../models/assessment-request-model';
+import { ScenarioRequestModel } from '../../models/scenario-request-model';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -18,6 +21,7 @@ export class ScenarioListComponent implements OnInit {
   constructor(public cdRef: ChangeDetectorRef,
     public projectService: CurrentProjectService,
     private menuService: MenuEventService,
+    private calculationService: CalculationService,
     private translateService: TranslateService) {
   }
 
@@ -62,6 +66,50 @@ export class ScenarioListComponent implements OnInit {
       this.currentScenarioIndex = 0;
     }
     this.ensureOneScenarioExists();
+  }
+
+  public calculateClick() {
+    this.calculationService.getModelData('AIR_REGULATION'.toLowerCase()).subscribe(
+      (result) => {
+        const modelData = result;
+      }
+    );
+    const request = new ScenarioRequestModel();
+    this.scenarios.forEach(scenario => {
+      scenario.measures.forEach(measure => {
+        const measureRequest = new AssessmentRequestModel();
+        measureRequest.name = scenario.scenarioName + '-' + measure.measureName;
+        measureRequest.model = 'NKMODEL';
+        measureRequest.eco_system_service = 'AIR_REGULATION';
+        // TODO create xyz layers
+        request.scenarios.push(measureRequest);
+      });
+    });
+
+    this.calculationService.startImmediateScenarioCalculation(request).subscribe(
+      (result) => {
+        if (result) {
+          if (result.errors) {
+            result.errors.forEach(error => console.log('Back-end error: ' + error.message));
+          }
+          if (result.warnings) {
+            result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
+          }
+          //this.scenarioModel.results = result.assessmentResults;
+          if (result.assessmentResults) {
+            console.log('Result: ' + result.assessmentResults);
+          }
+        }
+      },
+      (error) => {
+       // this.scenarioModel.results = error;
+      }
+    );
+  }
+
+  public areScenariosValid() {
+    const scenarios = this.scenarios.filter(scenario => scenario.valid);
+    return scenarios.length === this.scenarios.length;
   }
 
   private ensureOneScenarioExists() {

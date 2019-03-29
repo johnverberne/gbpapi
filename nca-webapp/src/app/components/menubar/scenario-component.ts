@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, OnChanges, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ViewChild, OnChanges, ChangeDetectorRef, Input } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { MeasureComponent } from './measure-component';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuEventService } from '../../services/menu-event-service';
 import { ProjectModel } from '../../models/project-model';
 
 @Component({
@@ -23,7 +22,6 @@ export class ScenarioComponent implements OnChanges {
   constructor(private fb: FormBuilder,
     public cdRef: ChangeDetectorRef,
     public projectService: CurrentProjectService,
-    private calculationService: CalculationService,
     private translateService: TranslateService) {
     this.scenarioForm = this.constructForm(this.fb);
   }
@@ -54,32 +52,6 @@ export class ScenarioComponent implements OnChanges {
     }
   }
 
-  public calculateClick() {
-    const request = new AssessmentRequestModel();
-    request.name = 'Test scenario Geert';
-    request.model = 'NKMODEL';
-    request.eco_system_service = 'AIR_REGULATION';
-    this.calculationService.startImmediateCalculation(request).subscribe(
-      (result) => {
-        if (result) {
-          if (result.errors) {
-            result.errors.forEach(error => console.log('Back-end error: ' + error.message));
-          }
-          if (result.warnings) {
-            result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
-          }
-          this.scenarioModel.results = result.assessmentResults;
-          if (result.assessmentResults) {
-            console.log('Result: ' + result.assessmentResults);
-          }
-        }
-      },
-      (error) => {
-        this.scenarioModel.results = error;
-      }
-    );
-  }
-
   public saveClick() {
     if (this.scenarioForm.valid) {
       const name = this.scenarioForm.get('name').value;
@@ -97,10 +69,6 @@ export class ScenarioComponent implements OnChanges {
 
   public hasMeasures() {
     return this.gbpMeasures.measures.length > 0;
-  }
-
-  public isValidScenario() {
-    return this.scenarioModel.valid;
   }
 
 }
