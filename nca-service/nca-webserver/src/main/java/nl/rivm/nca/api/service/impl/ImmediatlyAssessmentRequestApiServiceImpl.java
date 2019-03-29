@@ -53,7 +53,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     return Response.ok().entity(response).build();
   }
 
-  private ImmediatlyAssessmentRequestResponse calculate(String apiKey, AssessmentRequest ar) {
+  public ImmediatlyAssessmentRequestResponse calculate(String apiKey, AssessmentRequest ar) {
     final ImmediatlyAssessmentRequestResponse response = new ImmediatlyAssessmentRequestResponse();
     ArrayList<ValidationMessage> warnings = new ArrayList<ValidationMessage>();
     List<ValidationMessage> errors = new ArrayList<ValidationMessage>();
