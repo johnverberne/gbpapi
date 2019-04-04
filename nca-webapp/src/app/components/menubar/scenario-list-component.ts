@@ -75,25 +75,7 @@ export class ScenarioListComponent implements OnInit {
     this.calculationService.getModelData('AIR_REGULATION'.toLowerCase()).subscribe(
       (model) => {
         modelData = model;
-        const request = [];
-        this.scenarios.forEach(scenario => {
-          const scenarioRequest = new ScenarioRequestModel();
-          scenario.measures.forEach(measure => {
-            const measureRequest = new AssessmentRequestModel();
-            measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
-            measureRequest.model = 'NKMODEL';
-            measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
-            modelData.entries.forEach(model => {
-              const layer = new LayerModel();
-              layer.classType = model;
-              layer.dataType = 'XYZ';
-              layer.data = this.processCellData(measure, model);
-              measureRequest.layers.push();
-            });
-            scenarioRequest.measures.push(measureRequest);
-          });
-          request.push(scenarioRequest);
-        });
+        const request = this.createScenarioRequest(modelData);
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
             if (result) {
@@ -119,6 +101,29 @@ export class ScenarioListComponent implements OnInit {
 
   }
 
+  private createScenarioRequest(modelData: any) {
+    const request = [];
+    this.scenarios.forEach(scenario => {
+      const scenarioRequest = new ScenarioRequestModel();
+      scenario.measures.forEach(measure => {
+        const measureRequest = new AssessmentRequestModel();
+        measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
+        measureRequest.model = 'NKMODEL';
+        measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
+        modelData.entries.forEach(model => {
+          const layer = new LayerModel();
+          layer.classType = model;
+          layer.dataType = 'XYZ';
+          layer.data = this.processCellData(measure, model);
+          measureRequest.layers.push();
+        });
+        scenarioRequest.measures.push(measureRequest);
+      });
+      request.push(scenarioRequest);
+    });
+    return request;
+  }
+
   public areScenariosValid() {
     const scenarios = this.scenarios.filter(scenario => scenario.valid);
     return scenarios.length === this.scenarios.length;
@@ -129,7 +134,7 @@ export class ScenarioListComponent implements OnInit {
     let value;
     switch (model) {
       case 'POPULATION': {
-        value = measure.inhabitants;
+        value = measure.geom.cells.length > 0 ? measure.inhabitants / measure.geom.cells.length : 0;
         break;
       }
       case 'TREES': {
