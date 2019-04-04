@@ -2,8 +2,6 @@ import { Component, ViewChild, OnChanges, ChangeDetectorRef, Input } from '@angu
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { CalculationService } from '../../services/calculation-service';
-import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { MeasureComponent } from './measure-component';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectModel } from '../../models/project-model';

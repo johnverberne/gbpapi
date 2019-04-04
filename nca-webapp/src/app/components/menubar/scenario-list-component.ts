@@ -6,6 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { CalculationService } from '../../services/calculation-service';
 import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { ScenarioRequestModel } from '../../models/scenario-request-model';
+import { LayerModel } from '../../models/layer-model';
+import { MeasureModel } from '../../models/measure-model';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -69,47 +71,98 @@ export class ScenarioListComponent implements OnInit {
   }
 
   public calculateClick() {
+    let modelData;
     this.calculationService.getModelData('AIR_REGULATION'.toLowerCase()).subscribe(
       (result) => {
-        const modelData = result;
+        modelData = result;
+        const request = [];
+        this.scenarios.forEach(scenario => {
+          const scenarioRequest = new ScenarioRequestModel();
+          scenario.measures.forEach(measure => {
+            const measureRequest = new AssessmentRequestModel();
+            measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
+            measureRequest.model = 'NKMODEL';
+            measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
+            modelData.entries.forEach(model => {
+              const layer = new LayerModel();
+              layer.classType = model;
+              layer.dataType = 'XYZ';
+              layer.data = this.processCellData(measure, model);
+              measureRequest.layers.push();
+            });
+            scenarioRequest.measures.push(measureRequest);
+          });
+          request.push(scenarioRequest);
+        });
+        // TODO remove this first calculation call, added for testing purposes
+        this.calculationService.startImmediateCalculation(request[0].measures[0]).subscribe(
+          (result2) => {
+            console.log('calculation succeeded: ' + result2);
+          }
+        );
+        this.calculationService.startImmediateScenarioCalculation(request).subscribe(
+          (result) => {
+            if (result) {
+              if (result.errors) {
+                result.errors.forEach(error => console.log('Back-end error: ' + error.message));
+              }
+              if (result.warnings) {
+                result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
+              }
+              //this.scenarioModel.results = result.assessmentResults;
+              if (result.assessmentResults) {
+                console.log('Result: ' + result.assessmentResults);
+              }
+            }
+          },
+          (error) => {
+            // this.scenarioModel.results = error;
+          }
+        );
       }
     );
-    const request = new ScenarioRequestModel();
-    this.scenarios.forEach(scenario => {
-      scenario.measures.forEach(measure => {
-        const measureRequest = new AssessmentRequestModel();
-        measureRequest.name = scenario.scenarioName + '-' + measure.measureName;
-        measureRequest.model = 'NKMODEL';
-        measureRequest.eco_system_service = 'AIR_REGULATION';
-        // TODO create xyz layers
-        request.scenarios.push(measureRequest);
-      });
-    });
 
-    this.calculationService.startImmediateScenarioCalculation(request).subscribe(
-      (result) => {
-        if (result) {
-          if (result.errors) {
-            result.errors.forEach(error => console.log('Back-end error: ' + error.message));
-          }
-          if (result.warnings) {
-            result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
-          }
-          //this.scenarioModel.results = result.assessmentResults;
-          if (result.assessmentResults) {
-            console.log('Result: ' + result.assessmentResults);
-          }
-        }
-      },
-      (error) => {
-       // this.scenarioModel.results = error;
-      }
-    );
+
   }
 
   public areScenariosValid() {
     const scenarios = this.scenarios.filter(scenario => scenario.valid);
     return scenarios.length === this.scenarios.length;
+  }
+
+  private processCellData(measure: MeasureModel, model: string) {
+    let data;
+    let value;
+    switch (model) {
+      case 'POPULATION': {
+        value = measure.inhabitants;
+        break;
+      }
+      case 'TREES': {
+        value = measure.vegetation.high;
+        break;
+      }
+      case 'SHRUBS': {
+        value = measure.vegetation.middle;
+        break;
+      }
+      case 'GRASS': {
+        value = measure.vegetation.low;
+        break;
+      }
+      case 'WOZ': {
+        value = measure.woz;
+        break;
+      }
+      case 'LAND_COVER': {
+        value = measure.landuse;
+        break;
+      }
+    }
+    data = measure.geom.cells.map(cells => {
+      return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
+    });
+    return data;
   }
 
   private ensureOneScenarioExists() {
