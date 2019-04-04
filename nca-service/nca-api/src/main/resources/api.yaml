@@ -81,7 +81,7 @@ paths:
           description: |
             In case of normal behavior.
           schema:
-            $ref: '#/definitions/AssessmentRequestResponse'
+            $ref: '#/definitions/AssessmentScenarioRequestResponse'
         '400':
           description: |
             In case of user error - thing of missing fields.
@@ -390,7 +390,18 @@ definitions:
           assessmentResults:
             type: array
             items:
-              $ref: '#/definitions/AssessmentResultResponse'       
+              $ref: '#/definitions/AssessmentResultResponse'
+  AssessmentScenarioRequestResponse:
+    allOf:
+      - $ref: '#/definitions/ValidateResponse'
+      - properties:
+          key:
+            type: string
+            description: A unique id to identify this request.
+          assessmentResults:
+            type: array
+            items:
+              $ref: '#/definitions/AssessmentResultResponse'         
   DataType:
     type: string
     description: |

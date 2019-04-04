@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 
 public abstract class BaseController implements ControllerInterface {
@@ -61,13 +62,13 @@ public abstract class BaseController implements ControllerInterface {
 
 	
 	// copy input geotiff files to working map and convert to pcraster format
-	protected File copyInputToWorkingMap(Map<String, String> layerFiles, File workingPath, List<LayerObject> userLayers, String FILE_EXT, String prefix) {
+	protected File copyInputToWorkingMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String FILE_EXT, String prefix) {
 		final List<File> files = userLayers.stream().map(ul -> writeToFile(layerFiles, workingPath, ul, FILE_EXT, prefix)).collect(Collectors.toList());
 		files.forEach(this::convertOutput2GeoTiff);
 		return files.isEmpty() ? null : files.get(0);
 	}
 
-	protected File writeToFile(Map<String, String> layerFiles, File workingPath, LayerObject layerObject, String FILE_EXT, String prefix) {
+	protected File writeToFile(Map<Layer, String> layerFiles, File workingPath, LayerObject layerObject, String FILE_EXT, String prefix) {
 		final File targetFile = new File(workingPath, prefix + layerFiles.get(layerObject.getClassType()) + FILE_EXT);
 		final File file = directFile(layerObject.getData());
 
@@ -111,7 +112,7 @@ public abstract class BaseController implements ControllerInterface {
 		return coverage.getEnvelope2D();
 	}
 
-	protected void cookieCutOtherLayersToWorkingPath(File workingPath, Map<String, String> layerFiles,
+	protected void cookieCutOtherLayersToWorkingPath(File workingPath, Map<Layer, String> layerFiles,
 			List<LayerObject> userLayers, Envelope2D extend) throws IOException {
 		final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
 		final Set<String> userDefinedClasses = userLayers.stream().map(ul -> ul.getClassType())

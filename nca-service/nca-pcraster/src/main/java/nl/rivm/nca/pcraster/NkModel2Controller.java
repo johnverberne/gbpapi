@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.DataType;
+import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 
 /*
@@ -67,7 +68,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 		final File baseLinePath =  Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
 		final File scenarioPath =  Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 		
-		final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
+		final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
 		final File first = copyInputToWorkingMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX);
 		final Envelope2D extend = calculateExtend(first);
 		cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, assessmentRequest.getLayers(), extend);
@@ -108,7 +109,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 		return envelope;
 	}
 	
-	protected void cookieCutAllLayersToBaseLinePath(File workingPath, Map<String, String> layerFiles,
+	protected void cookieCutAllLayersToBaseLinePath(File workingPath, Map<Layer, String> layerFiles,
 			List<LayerObject> userLayers, Envelope2D extend) throws IOException {
 		final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
 		// create all source files
@@ -124,13 +125,13 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 	}
 	
 	// copy input xyz files convert to geotiff files to working map and convert to pcraster format
-	protected File copyInputToWorkingMap(Map<String, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix) {
+	protected File copyInputToWorkingMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix) {
 		final List<File> files = userLayers.stream().map(ul -> writeToFileConvertToTiff(layerFiles, workingPath, ul, prefix)).collect(Collectors.toList());
 		files.forEach(this::convertOutput2GeoTiff);
 		return files.isEmpty() ? null : files.get(0);
 	}
 
-	private File writeToFileConvertToTiff(Map<String, String> layerFiles, File workingPath, LayerObject layerObject, String prefix) {
+	private File writeToFileConvertToTiff(Map<Layer, String> layerFiles, File workingPath, LayerObject layerObject, String prefix) {
 		File file = writeToFile(layerFiles, workingPath, layerObject, XYZ_DOT_EXT, prefix);
 		return convertXyzInput2GeoTiff(file);
 	}

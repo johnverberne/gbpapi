@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
 import nl.rivm.nca.api.domain.DataType;
+import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 
 /*
@@ -43,7 +44,7 @@ public class NkModelController extends BaseController implements ControllerInter
 			throws IOException, ConfigurationException, InterruptedException {
 		final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
 		final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
-		final Map<String, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
+		final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
 		final File first = copyInputToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers(), GEOTIFF_DOT_EXT, "");
 		final Envelope2D extend = calculateExtend(first);
 		cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
