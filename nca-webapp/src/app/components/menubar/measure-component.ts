@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef } 
 import { MeasureModel } from '../../models/measure-model';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { LandUseType } from '../../models/enums/landuse-type';
-import { VegetationModel } from '../../models/vegetation-model';
 import { MapService } from '../../services/map-service';
 import { Subscription } from 'rxjs';
 import { MenuEventService } from '../../services/menu-event-service';
@@ -10,8 +9,7 @@ import { FeatureModel } from '../../models/feature-model';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageEventService } from '../../services/message-event-service';
 import { MeasureStyles } from '../map/openlayers/measure-styles';
-import { RegularShape } from 'ol/style';
-import { GridCellModel } from '../../models/grid-cell-model';
+import { EnumUtils } from '../../shared/enum-utils';
 
 @Component({
   selector: 'gbp-measure',
@@ -29,7 +27,7 @@ export class MeasureComponent implements OnChanges {
 
   public openMeasure: number = -1;
   public isOpen: boolean = true;
-  public landUseValues: any[];
+  public landUseValues: Array<{ enumValue: LandUseType, enumLabel: string }>;
   public validated: boolean = false;
   public addMeasureColor: string;
   private numberPattern: '^[0-9][0-9]?$|^100$';
@@ -43,7 +41,7 @@ export class MeasureComponent implements OnChanges {
     private menuService: MenuEventService,
     private translateService: TranslateService,
     private messageService: MessageEventService) {
-    this.landUseValues = Object.keys(LandUseType);
+    this.landUseValues = EnumUtils.toMap(LandUseType);
     this.menuService.onMainMenuChange().subscribe(() => this.disableDrawForMeasure());
     this.mapService.onRemoveCells().subscribe((geom) => this.removeGeoms(geom));
   }
@@ -182,10 +180,10 @@ export class MeasureComponent implements OnChanges {
       measureGeom = new FeatureModel();
       measureGeom.styleName = this.getColor();
       measureGeom.id = this.measures.length;
-      const model = new GridCellModel();
-      model.coords = [0, 0];
-      model.gridId = 1;
-      measureGeom.cells.push(model);
+      // const model = new GridCellModel();
+      // model.coords = [0, 0];
+      // model.gridId = 1;
+      // measureGeom.cells.push(model);
       this.addFeatures(measureGeom);
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
@@ -260,12 +258,12 @@ export class MeasureComponent implements OnChanges {
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
     // Mock data
-    // newModel.inhabitants = 125;
-    // newModel.landuse = LandUseType.RESIDENTIAL;
-    // newModel.woz = 200000;
-    // newModel.vegetation.low = 10;
-    // newModel.vegetation.middle = 50;
-    // newModel.vegetation.high = 40;
+    newModel.inhabitants = 125;
+    newModel.landuse = LandUseType.RESIDENTIAL;
+    newModel.woz = 200000;
+    newModel.vegetation.low = 10;
+    newModel.vegetation.middle = 50;
+    newModel.vegetation.high = 40;
     // End mock data
     newModel.measureName = this.generateUniqueMeasureName();
     if (geom) {
