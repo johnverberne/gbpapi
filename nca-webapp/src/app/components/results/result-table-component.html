@@ -1,6 +1,11 @@
 <div class="table-component">
   <div class="header">{{'BENEFITS' | translate}}</div>
-
+  <div class="result-type">
+    <button type="button" class="btn btn-secondary round-button-start" [ngClass]="{'active': resultType === 'PHYSICAL'}"
+      (click)="onResultTypeClick('PHYSICAL')">{{ 'PHYSICAL' | translate }}</button>
+    <button type="button" class="btn btn-secondary round-button-end" [ngClass]="{'active': resultType === 'MONETARY'}"
+      (click)="onResultTypeClick('MONETARY')">{{ 'MONETARY' | translate }}</button>
+  </div>
   <table mdbTable striped="true">
     <thead>
       <tr>

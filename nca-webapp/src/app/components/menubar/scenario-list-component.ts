@@ -64,6 +64,11 @@ export class ScenarioListComponent implements OnInit {
     this.ensureOneScenarioExists();
   }
 
+  public areScenariosValid() {
+    const scenarios = this.scenarios.filter(scenario => scenario.valid);
+    return scenarios.length === this.scenarios.length;
+  }
+
   private ensureOneScenarioExists() {
     if (this.scenarios.length === 0) {
       this.scenarios.push(new ScenarioModel());

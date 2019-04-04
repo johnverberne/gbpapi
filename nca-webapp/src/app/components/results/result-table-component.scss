@@ -7,9 +7,38 @@
 
   .header {
     font-size: 22px;
-    padding-top: 2rem;
+    padding-top: 0.5rem;
     padding-bottom: 1rem;
     font-family: 'RO-Sans-Text';
+  }
+  
+  .result-type {
+    padding-bottom: 0.8rem;
+
+    .btn-secondary {
+      padding-right: 0.5rem;
+      &:not(:disabled):not(.disabled).active {
+        color: white;
+        background-color: map-get($theme-colors, "primary");
+        border-color: map-get($theme-colors, "primary");
+      }
+    }
+  }
+
+  .round-button-one-item {
+    border-radius: 20px 20px 20px 20px;
+  }
+  
+  .round-button-start {
+    border-radius: 20px 0px 0px 20px;
+  }
+  
+  .round-button-middle {
+    border-radius: 0px 0px 0px 0px;
+  }
+  
+  .round-button-end {
+    border-radius: 0px 20px 20px 0px;
   }
 
   table {
