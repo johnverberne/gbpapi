@@ -73,8 +73,8 @@ export class ScenarioListComponent implements OnInit {
   public calculateClick() {
     let modelData;
     this.calculationService.getModelData('AIR_REGULATION'.toLowerCase()).subscribe(
-      (result) => {
-        modelData = result;
+      (model) => {
+        modelData = model;
         const request = [];
         this.scenarios.forEach(scenario => {
           const scenarioRequest = new ScenarioRequestModel();
@@ -94,12 +94,6 @@ export class ScenarioListComponent implements OnInit {
           });
           request.push(scenarioRequest);
         });
-        // TODO remove this first calculation call, added for testing purposes
-        this.calculationService.startImmediateCalculation(request[0].measures[0]).subscribe(
-          (result2) => {
-            console.log('calculation succeeded: ' + result2);
-          }
-        );
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
             if (result) {
