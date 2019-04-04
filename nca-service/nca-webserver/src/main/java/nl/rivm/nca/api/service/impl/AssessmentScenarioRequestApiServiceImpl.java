@@ -1,5 +1,6 @@
 package nl.rivm.nca.api.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -11,17 +12,22 @@ import nl.rivm.nca.api.service.AssessmentScenarioRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 
 public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioRequestApiService {
-	ImmediatlyAssessmentRequestApiServiceImpl immediatlyAssessmentRequestApiServiceImpl = new ImmediatlyAssessmentRequestApiServiceImpl();
-	
+	ImmediatlyAssessmentRequestApiServiceImpl immediatlyAssessmentRequestApiServiceImpl;
+
 	@Override
 	public Response postAssessmentScenarioRequest(String apiKey, List<AssessmentScenarioRequest> scenarios,
 			SecurityContext securityContext) throws NotFoundException {
-	    ImmediatlyAssessmentRequestResponse response = calculate(apiKey, scenarios);
-	    return Response.ok().entity(response).build();
+		immediatlyAssessmentRequestApiServiceImpl = new ImmediatlyAssessmentRequestApiServiceImpl();
+		List<ImmediatlyAssessmentRequestResponse> response = calculate(apiKey, scenarios);
+		return Response.ok().entity(response).build();
 	}
 
-	private ImmediatlyAssessmentRequestResponse calculate(String apiKey, List<AssessmentScenarioRequest> scenarios) {
-		return immediatlyAssessmentRequestApiServiceImpl.calculate(apiKey, scenarios.get(0).getMeasures().get(0));
+	private List<ImmediatlyAssessmentRequestResponse> calculate(String apiKey,
+			List<AssessmentScenarioRequest> scenarios) {
+		List<ImmediatlyAssessmentRequestResponse> responses = new ArrayList<>();
+		scenarios.forEach(scenario -> scenario.getMeasures().forEach(
+				measure -> responses.add(immediatlyAssessmentRequestApiServiceImpl.calculate(apiKey, measure))));
+		return responses;
 	}
 
 }
