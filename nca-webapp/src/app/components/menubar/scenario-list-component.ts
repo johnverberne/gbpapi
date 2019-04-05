@@ -76,6 +76,8 @@ export class ScenarioListComponent implements OnInit {
       (model) => {
         modelData = model;
         const request = this.createScenarioRequest(modelData);
+        this.calculationService.startImmediateCalculation(request[0].measures[0]).subscribe(
+          (result) => console.log('Test immediate calculation: ' + result));
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
             if (result) {
