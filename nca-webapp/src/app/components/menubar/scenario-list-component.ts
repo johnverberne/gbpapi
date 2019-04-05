@@ -76,8 +76,6 @@ export class ScenarioListComponent implements OnInit {
       (model) => {
         modelData = model;
         const request = this.createScenarioRequest(modelData);
-        this.calculationService.startImmediateCalculation(request[0].measures[0]).subscribe(
-          (result) => console.log('Test immediate calculation: ' + result));
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
             if (result) {
@@ -85,7 +83,7 @@ export class ScenarioListComponent implements OnInit {
                 result.errors.forEach(error => console.log('Back-end error: ' + error.message));
               }
               if (result.warnings) {
-                result.warnings.forEach(warning => console.log('Back-end error: ' + warning.message));
+                result.warnings.forEach(warning => console.log('Back-end warning: ' + warning.message));
               }
               //this.scenarioModel.results = result.assessmentResults;
               if (result.assessmentResults) {
