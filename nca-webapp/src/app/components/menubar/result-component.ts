@@ -6,6 +6,8 @@ import { MeasureModel } from '../../models/measure-model';
 import { MessageEventService } from '../../services/message-event-service';
 import { ResultType } from '../../models/enums/result-type';
 import { MapService } from '../../services/map-service';
+import { LandUseType } from '../../models/enums/landuse-type';
+import { EnumUtils } from '../../shared/enum-utils';
 
 @Component({
   selector: 'gbp-result',
@@ -18,16 +20,18 @@ export class ResultComponent implements OnInit {
   public openMenu: boolean = true;
   public currentScenarioIndex: number = 0;
   public resultType: ResultType = ResultType.PHYSICAL;
+  public landUseValues = new Map();
 
   constructor(public projectService: CurrentProjectService,
     public router: Router,
     private menuEventService: MenuEventService,
     private messageEventService: MessageEventService,
     private mapService: MapService) {
-    this.menuEventService.onMenuCollapse().subscribe((collapse) => {
-      this.openMenu = collapse;
-    });
-    this.menuEventService.onShowResultMap().subscribe(() => this.drawMeasures());
+      this.landUseValues = EnumUtils.toMap(LandUseType);
+      this.menuEventService.onMenuCollapse().subscribe((collapse) => {
+        this.openMenu = collapse;
+      });
+      this.menuEventService.onShowResultMap().subscribe(() => this.drawMeasures());
   }
 
   public ngOnInit() {
