@@ -70,11 +70,6 @@ export class ResultComponent implements OnInit {
     this.drawMeasures();
   }
 
-  public onResultTypeClick(resultType: ResultType) {
-    this.resultType = resultType;
-    this.menuEventService.resultTypeChange(resultType);
-  }
-
   private drawMeasures() {
     this.mapService.clearMap();
     this.measures.forEach((measure) => this.mapService.showFeatures(measure.geom));

@@ -1,12 +1,5 @@
 <div class="result-component" [ngClass]="{'closed-menu':!openMenu}">
-  <div class="header">{{'RESULT' | translate}}
-    <div class="result-type">
-      <button type="button" class="btn btn-secondary round-button-start" [ngClass]="{'active': resultType === 'PHYSICAL'}"
-        (click)="onResultTypeClick('PHYSICAL')">{{ 'PHYSICAL' | translate }}</button>
-      <button type="button" class="btn btn-secondary round-button-end" [ngClass]="{'active': resultType === 'MONETARY'}"
-        (click)="onResultTypeClick('MONETARY')">{{ 'MONETARY' | translate }}</button>
-    </div>
-  </div>
+  <div class="header">{{'RESULT' | translate}}</div>
 
   <div class="sub-header">
     <div class="pager">
