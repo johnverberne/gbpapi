@@ -161,7 +161,8 @@ export class ScenarioListComponent implements OnInit {
     data = measure.geom.cells.map(cells => {
       return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
     });
-    return data;
+    const blob = new Blob([data], {type : 'text/plain'});
+    return blob;
   }
 
   private ensureOneScenarioExists() {

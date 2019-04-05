@@ -25,7 +25,7 @@
 			<artifactId>nca-lib</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	    <dependency>
+		<dependency>
 			<groupId>nl.rivm.nca</groupId>
 			<artifactId>nca-pcraster</artifactId>
 			<version>${project.version}</version>
@@ -37,11 +37,11 @@
 		</dependency>
 		<!-- This dependency is already present in swagger-jersey2-jaxrs, but because we're using Java8 we need at least jersey 2.7.
          Overriding works. We should upgrade to a newer version of Swagger when they decide to upgrade Jersey. -->
-	    <dependency>
-	      <groupId>org.glassfish.jersey.containers</groupId>
-	      <artifactId>jersey-container-servlet-core</artifactId>
-	      <version>2.7</version>
-	    </dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>2.7</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
@@ -59,70 +59,75 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
 		</dependency>
-	    <dependency>
-		    <groupId>commons-codec</groupId>
-		    <artifactId>commons-codec</artifactId>
-		    <version>1.9</version>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
-	    <!-- Tomcat 7 deployment name --> 
-	    <finalName>${project.artifactId}</finalName>
+		<!-- Tomcat 7 deployment name -->
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
-		  <plugin>
-		    <groupId>org.codehaus.mojo</groupId>
-		    <artifactId>build-helper-maven-plugin</artifactId>
-		    <executions>
-		      <execution>
-	            <phase>generate-sources</phase>
-	            <goals>
-	              <goal>add-source</goal>
-	            </goals>
-	            <configuration>
-	              <sources>
-	                <source>${project.build.directory}/swagger/src/gen/java</source>
-	                <source>${project.build.directory}/swagger/src/main/java</source>
-	              </sources>
-	            </configuration>
-	          </execution>
-	        </executions>
-	      </plugin>
-	      <plugin>
-	        <groupId>org.codehaus.mojo</groupId>
-	        <artifactId>buildnumber-maven-plugin</artifactId>
-	        <configuration>
-	         <doCheck>false</doCheck>
-	        </configuration>
-	      </plugin>
-	      <plugin>
-	        <artifactId>maven-war-plugin</artifactId>
-	        <configuration>
-	          <webResources>
-	            <webResource>
-	              <directory>${project.basedir}/src/main/webapp/WEB-INF</directory>
-	              <includes>
-	                <include>web.xml</include>
-	              </includes>
-	              <targetPath>WEB-INF</targetPath>
-	              <filtering>true</filtering>
-	            </webResource>
-	            <webResource>
-	              <directory>${project.basedir}/../nca-api/src/main/resources</directory>
-	              <includes>
-	                <include>api.yaml</include>
-	              </includes>
-	              <!-- Should contain the API version -->
-	              <targetPath>schema/1</targetPath>
-	              <filtering>true</filtering>
-	            </webResource>
-	          </webResources>
-	        </configuration>
-	      </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/swagger/src/gen/java</source>
+								<source>${project.build.directory}/swagger/src/main/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<configuration>
+					<doCheck>false</doCheck>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<webResource>
+							<directory>${project.basedir}/src/main/webapp/WEB-INF</directory>
+							<includes>
+								<include>web.xml</include>
+							</includes>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+						<webResource>
+							<directory>${project.basedir}/../nca-api/src/main/resources</directory>
+							<includes>
+								<include>api.yaml</include>
+							</includes>
+							<!-- Should contain the API version -->
+							<targetPath>schema/1</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+					</webResources>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>${maven-resources-plugin.version}</version>
@@ -140,7 +145,7 @@
 									<directory>${project.basedir}</directory>
 									<includes>
 										<!-- Swagger needs this file in the output directory which just 
-										e	happens to be in the target directory. So yeah, it gets deleted after every 
+											e happens to be in the target directory. So yeah, it gets deleted after every 
 											clean and such. -->
 										<include>.swagger-codegen-ignore</include>
 									</includes>
