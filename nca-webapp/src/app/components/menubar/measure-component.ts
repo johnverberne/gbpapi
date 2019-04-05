@@ -180,10 +180,6 @@ export class MeasureComponent implements OnChanges {
       measureGeom = new FeatureModel();
       measureGeom.styleName = this.getColor();
       measureGeom.id = this.measures.length;
-      // const model = new GridCellModel();
-      // model.coords = [0, 0];
-      // model.gridId = 1;
-      // measureGeom.cells.push(model);
       this.addFeatures(measureGeom);
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
@@ -257,14 +253,6 @@ export class MeasureComponent implements OnChanges {
 
   private addNewMeasure(geom?: FeatureModel) {
     const newModel = new MeasureModel();
-    // Mock data
-    newModel.inhabitants = 125;
-    newModel.landuse = LandUseType.RESIDENTIAL;
-    newModel.woz = 200000;
-    newModel.vegetation.low = 10;
-    newModel.vegetation.middle = 50;
-    newModel.vegetation.high = 40;
-    // End mock data
     newModel.measureName = this.generateUniqueMeasureName();
     if (geom) {
       newModel.geom = geom;
