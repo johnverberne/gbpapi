@@ -21,8 +21,8 @@
               </div>
               <div class="row col-sm-12">
                 <select id="landuse" class="form-control" formControlName="landuse">
-                  <option *ngFor="let value of landUseValues" [ngValue]="value.enumValue">{{'LANDUSE_'
-                    + value.enumLabel | translate}}</option>
+                  <option *ngFor="let landuse of landUseValues | keyvalue" [ngValue]="landuse.key">{{'LANDUSE_'
+                    + landuse.value | translate}}</option>
                 </select>
               </div>
             </div>

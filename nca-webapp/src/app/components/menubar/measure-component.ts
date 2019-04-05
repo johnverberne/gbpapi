@@ -27,7 +27,7 @@ export class MeasureComponent implements OnChanges {
 
   public openMeasure: number = -1;
   public isOpen: boolean = true;
-  public landUseValues: Array<{ enumValue: LandUseType, enumLabel: string }>;
+  public landUseValues: Map<number, string>;
   public validated: boolean = false;
   public addMeasureColor: string;
   private numberPattern: '^[0-9][0-9]?$|^100$';

@@ -85,9 +85,10 @@ export class ScenarioListComponent implements OnInit {
               if (result.warnings) {
                 result.warnings.forEach(warning => console.log('Back-end warning: ' + warning.message));
               }
-              //this.scenarioModel.results = result.assessmentResults;
-              if (result.assessmentResults) {
-                console.log('Result: ' + result.assessmentResults);
+              if (result.successful && result.assessmentResults) {
+                this.scenarios.forEach((scenario, index) => {
+                  scenario.results = result.assessmentResults[index].entries;
+                });
               }
             }
           },
