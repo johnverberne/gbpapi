@@ -19,7 +19,6 @@ export class SidebarComponent {
     private translateService: TranslateService,
     private messageService: MessageEventService,
     private router: Router,
-    private route: ActivatedRoute,
     public projectService: CurrentProjectService,
     private menuService: MenuEventService) {
   }
