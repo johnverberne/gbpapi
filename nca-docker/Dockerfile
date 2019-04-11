@@ -9,7 +9,8 @@ RUN apt-get update && \
     apt-get install -y python-numpy lsb libjpeg62 && \
     cd /opt && \
     tar zxf /tmp/${pcraster}.tar.gz && \
-    rm /tmp/${pcraster}.tar.gz
+    rm /tmp/${pcraster}.tar.gz && \
+    apt-get install -y gdal-bin python-gdal ### python3-gdal
 
 ENV PATH=/opt/${pcraster}/bin:$PATH
 ENV PYTHONPATH=/opt/${pcraster}/python:$PYTHONPATH
