@@ -57,8 +57,8 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		result.setWarnings(warnings);
 		result.setErrors(errors);
 
-		if (ar.getModel() != ModelEnum.NKMODEL) {
-			warnings.add(WarningUtil.ValidationInfoMessage("Only NKMODEL is allowed."));
+		if (ar.getModel() != ModelEnum.NKMODEL2) {
+			warnings.add(WarningUtil.ValidationInfoMessage("Only NKMODEL2 is allowed."));
 
 		} else {
 			// build a request.
