@@ -17,12 +17,11 @@ import nl.rivm.nca.api.domain.AssessmentResultsResponse;
 import nl.rivm.nca.api.domain.AssessmentScenarioRequest;
 import nl.rivm.nca.api.domain.AssessmentScenarioRequestResponse;
 import nl.rivm.nca.api.domain.ValidationMessage;
-import nl.rivm.nca.api.domain.AssessmentRequest.ModelEnum;
 import nl.rivm.nca.api.service.AssessmentScenarioRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.pcraster.ImmediatlyController;
-import nl.rivm.nca.pcraster.SingleRun;
+import nl.rivm.nca.pcraster.ControllerInterface;
+import nl.rivm.nca.pcraster.NkModel2Controller;
 
 public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioRequestApiService {
 
@@ -85,23 +84,19 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 
 	private List<AssessmentResultResponse> assessmentRun(AssessmentRequest ar, final String uuid)
 			throws IOException, ConfigurationException, InterruptedException {
-		final ImmediatlyController controller = initController(true);
-		final SingleRun singleRun = new SingleRun();
-
+		final ControllerInterface controller = initController(true);
 		List<AssessmentResultResponse> results = new ArrayList<>();
-		ModelEnum runModel = ModelEnum.NKMODEL;
-		results.addAll(controller.run(uuid, singleRun.singleRun(ar.getName(), "air_regulation",
-				"/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.XYZ_EXT, runModel)));
+		results.addAll(controller.run(uuid, ar));
 		return results;
 	}
 
-	private ImmediatlyController initController(boolean directFile) throws IOException, InterruptedException {
+	private ControllerInterface initController(boolean directFile) throws IOException, InterruptedException {
 		final String ncaModel = System.getenv("NCA_MODEL");
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
 		}
-		return new ImmediatlyController(new File(ncaModel), directFile);
+		return new NkModel2Controller(new File(ncaModel), directFile);
 	}
 
 }
