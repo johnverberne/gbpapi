@@ -50,10 +50,12 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 	
 	private static final String XYZ_EXT = "xyz";
 	private static final String XYZ_DOT_EXT = "." + XYZ_EXT;
+	private final PreProcessRunner preProcessRunner = new PreProcessRunner();
 	protected static final String PREFIX = "org_";
 	protected static final String BASELINE = "baseline";
 	protected static final String SCENARIO = "scenario";
 	protected static final int EXTEND_DISTANCE_METERS = 1000;
+
 
 
 	public NkModel2Controller(File path, boolean directFile) throws IOException, InterruptedException {
@@ -136,7 +138,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 		return convertXyzInput2GeoTiff(file);
 	}
 	
-	private File convertXyzInput2GeoTiff(File xyzFile) {
+	private File convertXyzInput2GeoTiff(File xyzFile)  {
 		final int indexOf = xyzFile.getName().indexOf(XYZ_DOT_EXT);
 
 		if (indexOf < 0) {
@@ -151,8 +153,10 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 			Xyz2Geotiff.xyz2geoTiff(xyzFile, geotiffFile);
 			// convert input xyz to map file
 			Xyz2Geotiff.xyz2gmap(xyzFile, mapFile);
+			// preprocess scenario map file
+			preProcessRunner.runPreProcessor("", xyzFile, mapFile);
 			
-		} catch (final IOException e) {
+		} catch (final IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 		return geotiffFile;
