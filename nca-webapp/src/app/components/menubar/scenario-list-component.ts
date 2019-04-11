@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { ScenarioModel } from 'src/app/models/scenario-model';
 import { MenuEventService } from '../../services/menu-event-service';
@@ -8,6 +8,8 @@ import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { ScenarioRequestModel } from '../../models/scenario-request-model';
 import { LayerModel } from '../../models/layer-model';
 import { MeasureModel } from '../../models/measure-model';
+import { CalculationEventService } from '../../services/calculation-event-serivce';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -24,7 +26,9 @@ export class ScenarioListComponent implements OnInit {
     public projectService: CurrentProjectService,
     private menuService: MenuEventService,
     private calculationService: CalculationService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,
+    private calculationEventService: CalculationEventService,
+    private router: Router) {
   }
 
   public ngOnInit(): void {
@@ -76,6 +80,7 @@ export class ScenarioListComponent implements OnInit {
       (model) => {
         modelData = model;
         const request = this.createScenarioRequest(modelData);
+        this.calculationEventService.calculationStarted();
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
             if (result) {
@@ -91,8 +96,11 @@ export class ScenarioListComponent implements OnInit {
                 });
               }
             }
+            this.calculationEventService.calculationFinished();
+            this.router.navigate([{ outlets: { primary: 'result', main: 'map' }}]);
           },
           (error) => {
+            this.calculationEventService.calculationFinished();
             // this.scenarioModel.results = error;
           }
         );

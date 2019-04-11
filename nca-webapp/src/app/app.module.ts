@@ -35,6 +35,8 @@ import { ScenarioComponent } from './components/menubar/scenario-component';
 import { MainComponent } from './components/main/main-component';
 import { ResultTableComponent } from './components/results/result-table-component';
 import { registerLocaleData } from '@angular/common';
+import { CalculationEventService } from './services/calculation-event-serivce';
+import { CalculationDialogComponent } from './shared/confirm-dialog/calculation-dialog-component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,7 +62,8 @@ registerLocaleData(localeNl, 'nl');
     ResultComponent,
     ResultBarComponent,
     MainComponent,
-    ResultTableComponent
+    ResultTableComponent,
+    CalculationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,8 @@ registerLocaleData(localeNl, 'nl');
     ModalModule
   ],
   entryComponents: [
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CalculationDialogComponent
   ],
   providers: [
     MessageEventService,
@@ -88,7 +92,8 @@ registerLocaleData(localeNl, 'nl');
     CurrentProjectService,
     CalculationService,
     MenuEventService,
-    MapService
+    MapService,
+    CalculationEventService
   ],
   bootstrap: [AppComponent]
 })

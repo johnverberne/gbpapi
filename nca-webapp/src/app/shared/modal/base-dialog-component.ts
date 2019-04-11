@@ -24,7 +24,7 @@ export abstract class BaseDialogComponent implements OnInit {
     this.getDialog().cancelDialog();
   }
 
-  private closeDialog() {
+  public closeDialog() {
     this.getDialog().closeDialog();
   }
 }
