@@ -124,7 +124,7 @@ export class ScenarioListComponent implements OnInit {
           layer.classType = model;
           layer.dataType = 'XYZ';
           layer.data = this.processCellData(measure, model);
-          measureRequest.layers.push();
+          measureRequest.layers.push(layer);
         });
         scenarioRequest.measures.push(measureRequest);
       });
@@ -170,7 +170,8 @@ export class ScenarioListComponent implements OnInit {
     data = measure.geom.cells.map(cells => {
       return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
     });
-    const blob = new Blob([data], {type : 'text/plain'});
+    const encodedData = window.btoa(data);
+    const blob = new Blob([encodedData], {type : 'contentType'});
     return blob;
   }
 
