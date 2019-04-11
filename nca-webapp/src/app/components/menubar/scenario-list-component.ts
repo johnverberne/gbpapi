@@ -117,7 +117,7 @@ export class ScenarioListComponent implements OnInit {
       scenario.measures.forEach(measure => {
         const measureRequest = new AssessmentRequestModel();
         measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
-        measureRequest.model = 'NKMODEL';
+        measureRequest.model = 'NKMODEL2';
         measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
         modelData.entries.forEach(model => {
           const layer = new LayerModel();
@@ -171,8 +171,7 @@ export class ScenarioListComponent implements OnInit {
       return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
     });
     const encodedData = window.btoa(data);
-    const blob = new Blob([encodedData], {type : 'contentType'});
-    return blob;
+    return encodedData;
   }
 
   private ensureOneScenarioExists() {
