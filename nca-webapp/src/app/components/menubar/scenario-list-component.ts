@@ -10,6 +10,7 @@ import { LayerModel } from '../../models/layer-model';
 import { MeasureModel } from '../../models/measure-model';
 import { CalculationEventService } from '../../services/calculation-event-serivce';
 import { Router } from '@angular/router';
+import { GridCellModel } from '../../models/grid-cell-model';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -139,7 +140,7 @@ export class ScenarioListComponent implements OnInit {
   }
 
   private processCellData(measure: MeasureModel, model: string) {
-    let data;
+    let data: string[];
     let value;
     switch (model) {
       case 'POPULATION': {
@@ -167,10 +168,13 @@ export class ScenarioListComponent implements OnInit {
         break;
       }
     }
+    measure.geom.cells.sort(this.compare);
     data = measure.geom.cells.map(cells => {
       return cells.coordsAfrt[0] + ' ' + cells.coordsAfrt[1] + ' ' + value;
     });
-    const encodedData = window.btoa(data);
+
+
+    const encodedData = window.btoa(data.join('\n'));
     return encodedData;
   }
 
@@ -178,5 +182,9 @@ export class ScenarioListComponent implements OnInit {
     if (this.scenarios.length === 0) {
       this.scenarios.push(new ScenarioModel());
     }
+  }
+
+  private compare(a: GridCellModel, b: GridCellModel) {
+    return a.coordsAfrt[1] === b.coordsAfrt[1] ? a.coordsAfrt[0] - b.coordsAfrt[0] : a.coordsAfrt[1] - b.coordsAfrt[1];
   }
 }
