@@ -100,7 +100,8 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 			throws IOException, InterruptedException {
 		// get the environment for the supplied model.
 		ControllerInterface controller;
-		final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
+		//final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
+		final String ncaModel = System.getenv("NCA_MODEL");
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
@@ -113,48 +114,5 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		}
 		return controller;
 	}
-
-/*
-	private String extractImportFile(AssessmentRequest ar, ArrayList<ValidationMessage> warnings, String uuid)
-			throws IOException {
-		final File inputWorkingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
-		LOGGER.info("Writing {} input files to temp directory", ar.getLayers().size());
-		for (LayerObject layer : ar.getLayers()) {
-			String fileName = layer.getClassType() + "." + layer.getDataType();
-
-			BufferedWriter output = null;
-			// FileOutputStream output = null;
-			// FileOutputStream output =null;
-			try {
-				final File projectFile = new File(inputWorkingPath, fileName);
-				// write static content for test
-				output = new BufferedWriter(new FileWriter(projectFile));
-				output.write("140810.699379817495 459491.563811304339 0.1\n"
-						+ "140820.671979452542 459491.563811304339 0.2\n"
-						+ "140830.644579087588 459491.563811304339 0.3\n"
-						+ "142147.027730912407 458583.740768695658 0.4\n"
-						+ "142157.000330547453 458583.740768695658 0.5\n"
-						+ "142166.972930182499 458583.740768695658 0.6");
-
-				// this does not work
-				byte[] byteArray = Base64.decodeBase64(layer.getData());
-				String str = new String(byteArray, StandardCharsets.UTF_8);
-				LOGGER.info("BASE64 to to text : {}", str);
-				// output.write(byteArray);
-
-			} catch (IOException e) {
-				// no throw error
-				e.printStackTrace();
-			} finally {
-				if (output != null) {
-					output.close();
-				}
-			}
-			LOGGER.info("Writing input to temp directory {} {} {} {}", inputWorkingPath, layer.getClassType(),
-					layer.getDataType(), layer.getData());
-		}
-		return inputWorkingPath.getPath();
-	}
-	*/
 
 }

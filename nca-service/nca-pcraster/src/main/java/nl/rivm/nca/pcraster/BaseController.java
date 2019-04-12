@@ -177,7 +177,7 @@ public abstract class BaseController implements ControllerInterface {
 		Files.list(outputPath.toPath()).filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
 				.forEach(f -> {
 					try {
-						LOGGER.info("read result file {}", f.getFileName());
+						LOGGER.info("read result file {} {}", f.toFile().getAbsolutePath(), f.getFileName());
 						@SuppressWarnings("resource")
 						FileReader fr = new FileReader(f.toFile().getAbsolutePath());
 						int i;
