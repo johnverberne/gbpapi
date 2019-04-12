@@ -168,7 +168,7 @@ export class ScenarioListComponent implements OnInit {
       }
     }
     data = measure.geom.cells.map(cells => {
-      return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
+      return cells.coordsAfrt[0] + ' ' + cells.coordsAfrt[1] + ' ' + value;
     });
     const encodedData = window.btoa(data);
     return encodedData;
