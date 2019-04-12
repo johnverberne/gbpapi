@@ -10,6 +10,7 @@ import { LayerModel } from '../../models/layer-model';
 import { MeasureModel } from '../../models/measure-model';
 import { CalculationEventService } from '../../services/calculation-event-serivce';
 import { Router } from '@angular/router';
+import { GridCellModel } from '../../models/grid-cell-model';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -139,23 +140,23 @@ export class ScenarioListComponent implements OnInit {
   }
 
   private processCellData(measure: MeasureModel, model: string) {
-    let data;
-    let value;
+    let data: string[];
+    let value = 0;
     switch (model) {
       case 'POPULATION': {
         value = measure.geom.cells.length > 0 ? measure.inhabitants / measure.geom.cells.length : 0;
         break;
       }
       case 'TREES': {
-        value = measure.vegetation.high;
+        value = measure.vegetation.high / 100;
         break;
       }
       case 'SHRUBS': {
-        value = measure.vegetation.middle;
+        value = measure.vegetation.middle / 100;
         break;
       }
       case 'GRASS': {
-        value = measure.vegetation.low;
+        value = measure.vegetation.low / 100;
         break;
       }
       case 'WOZ': {
@@ -167,10 +168,13 @@ export class ScenarioListComponent implements OnInit {
         break;
       }
     }
+    measure.geom.cells.sort(this.compare);
     data = measure.geom.cells.map(cells => {
-      return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
+      return cells.coordsAfrt[0] + ' ' + cells.coordsAfrt[1] + ' ' + value;
     });
-    const encodedData = window.btoa(data);
+
+
+    const encodedData = window.btoa(data.join('\n'));
     return encodedData;
   }
 
@@ -178,5 +182,9 @@ export class ScenarioListComponent implements OnInit {
     if (this.scenarios.length === 0) {
       this.scenarios.push(new ScenarioModel());
     }
+  }
+
+  private compare(a: GridCellModel, b: GridCellModel) {
+    return a.coordsAfrt[1] === b.coordsAfrt[1] ? a.coordsAfrt[0] - b.coordsAfrt[0] : a.coordsAfrt[1] - b.coordsAfrt[1];
   }
 }
