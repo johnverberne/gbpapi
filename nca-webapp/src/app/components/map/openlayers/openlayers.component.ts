@@ -20,6 +20,8 @@ import { LayerSwitcher } from 'ol-layerswitcher';
 import { Coordinate } from 'ol/coordinate';
 import { GridCellModel } from '../../../models/grid-cell-model';
 import { Style, Stroke, Fill } from 'ol/style';
+import proj4 from 'proj4';
+import {register as proj4register } from 'ol/proj/proj4';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -40,8 +42,8 @@ export class OpenlayersComponent implements AfterViewInit {
   private bagLayer: VectorLayer;
   private lceuLayer: TileLayer;
 
-  private projection = new Projection({
-    code: 'EPSG:3857'
+  private targetProjection = new Projection({
+    code: 'EPSG:28992'
   });
 
   private gridStyle = new Style({
@@ -54,9 +56,11 @@ export class OpenlayersComponent implements AfterViewInit {
     }),
   });
 
-  private readonly GRID_SIZE = 16.2;
+  private readonly GRID_SIZE = 10;
 
   constructor(private mapService: MapService) {
+    proj4.defs("EPSG:28992",'+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,1.9725,-1.7004,9.0677,4.0812 +units=m +no_defs');
+    proj4register(proj4);
     this.mapService.onStartDrawing().subscribe((geom) => this.enableGetGrid(geom));
     this.mapService.onStopDrawing().subscribe(() => this.disableSelectGrid());
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
@@ -66,8 +70,8 @@ export class OpenlayersComponent implements AfterViewInit {
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
         'version=1.0.0&request=GetFeature&typeName=gbp:grids_view&TRANSPARANT=TRUE&' +
-        'outputFormat=application/json&srsname=EPSG:3857&' +
-        'bbox=' + extent.join(',') + ',EPSG:3857',
+        'outputFormat=application/json&srsname=EPSG:28992&' +
+        'bbox=' + extent.join(',') + ',EPSG:28992',
       format: new GeoJSON(),
       strategy: bbox,
     });
@@ -110,8 +114,8 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.selectedGridSource = new VectorSource({
       format: new GeoJSON({
-        dataProjection: this.projection,
-        featureProjection: this.projection
+        dataProjection: this.targetProjection,
+        featureProjection: this.targetProjection
       }),
       strategy: bbox,
     });
@@ -125,9 +129,10 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit() {
     this.view = new OlView({
-      center: fromLonLat([5.121775, 52.092691], this.projection),
+      projection: this.targetProjection.getCode(),
+      center: fromLonLat([5.121775, 52.092691], this.targetProjection),
       zoom: 18,
-      minZoom: 7,
+      // minZoom: 7,
       maxZoom: 20
     });
 
