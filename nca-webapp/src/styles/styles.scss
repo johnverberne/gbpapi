@@ -6,10 +6,10 @@
 @import "~bootstrap/scss/mixins";
 // Import Reboot
 @import "~bootstrap/scss/reboot";
-@import "node_modules/bootstrap/dist/css/bootstrap.min.css";
-@import "node_modules/leaflet/dist/leaflet.css";
-@import "node_modules/ol/ol.css";
-@import "node_modules/material-design-icons-iconfont/dist/material-design-icons.css";
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~leaflet/dist/leaflet.css";
+@import "~ol/ol.css";
+@import "~material-design-icons-iconfont/dist/material-design-icons.css";
 
 
 .btn-primary, .btn-secondary {
