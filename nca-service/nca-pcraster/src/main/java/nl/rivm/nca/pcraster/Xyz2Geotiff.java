@@ -39,12 +39,8 @@ public class Xyz2Geotiff {
 		}
 	}
 
-	/*
-	 * col2map -S bomenkaart.xyz bomenkaart_edit.map --clone bomenkaart.map
-	 * pcrcalc bomenkaart.map=cover^(bomenkaart_edit.map,bomenkaart.map^)
-	 */
 	public static void xyz2gmap(File xyzFile, File mapFile) throws IOException {
-		final String[] args = { "-S", xyzFile.getAbsolutePath(), mapFile.getAbsolutePath() , "-clone" , mapFile.getAbsolutePath()};
+		final String[] args = {xyzFile.getAbsolutePath(), mapFile.getAbsolutePath()};
 		final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
 		final Exec exec = new Exec(execParams, "");
 		

@@ -30,8 +30,7 @@ class PcRasterRunner {
 			throws IOException, InterruptedException {
 		final String RUNNER = OSUtils.isWindows() ? NCA_WIN : NCA;
 		String absoluteScenarioPathOnly = projectFileScenario.getAbsolutePath().replace("project.ini", "outputs\\");
-		String absoluteBaseLinePathOnly = projectFileBaseLine.getAbsolutePath().replace("project.ini", "outputs\\");
-		final String[] args = { ecoSystemService, absoluteScenarioPathOnly, absoluteBaseLinePathOnly, workingPath.getAbsolutePath()};
+		final String[] args = { ecoSystemService, projectFileScenario.getAbsolutePath(), absoluteScenarioPathOnly, absoluteScenarioPathOnly};
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
 		final Exec exec = new Exec(execParams, "", false); // run as batch file
 
