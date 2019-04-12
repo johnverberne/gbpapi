@@ -141,22 +141,22 @@ export class ScenarioListComponent implements OnInit {
 
   private processCellData(measure: MeasureModel, model: string) {
     let data: string[];
-    let value;
+    let value = 0;
     switch (model) {
       case 'POPULATION': {
         value = measure.geom.cells.length > 0 ? measure.inhabitants / measure.geom.cells.length : 0;
         break;
       }
       case 'TREES': {
-        value = measure.vegetation.high;
+        value = measure.vegetation.high / 100;
         break;
       }
       case 'SHRUBS': {
-        value = measure.vegetation.middle;
+        value = measure.vegetation.middle / 100;
         break;
       }
       case 'GRASS': {
-        value = measure.vegetation.low;
+        value = measure.vegetation.low / 100;
         break;
       }
       case 'WOZ': {
