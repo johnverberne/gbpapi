@@ -69,7 +69,7 @@ public abstract class BaseController implements ControllerInterface {
 	}
 
 	protected File writeToFile(Map<Layer, String> layerFiles, File workingPath, LayerObject layerObject, String FILE_EXT, String prefix) {
-		final File targetFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layerObject.getClassType())) + FILE_EXT);
+		final File targetFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layerObject.getClassType().toUpperCase())) + FILE_EXT);
 		final File file = directFile(layerObject.getData());
 
 		if (file == null || !file.exists()) {
