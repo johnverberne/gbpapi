@@ -339,6 +339,7 @@ definitions:
       - model
       - eco_system_service
       - layers
+      - extent
     properties:
       name:
         type: string
@@ -362,6 +363,14 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/LayerObject'
+      extent:
+        type: array
+        minItems: 2
+        items:
+          type: array
+          minItems: 2
+          items:
+            type: integer
   AssessmentScenarioRequest:
     type: object
     required:

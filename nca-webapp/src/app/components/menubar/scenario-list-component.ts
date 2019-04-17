@@ -120,6 +120,7 @@ export class ScenarioListComponent implements OnInit {
         measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
         measureRequest.model = 'NKMODEL2';
         measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
+        this.defineExtent(measure, measureRequest);
         modelData.entries.forEach(model => {
           const layer = new LayerModel();
           layer.classType = model;
@@ -132,6 +133,16 @@ export class ScenarioListComponent implements OnInit {
       request.push(scenarioRequest);
     });
     return request;
+  }
+
+  private defineExtent(measure: MeasureModel, measureRequest: AssessmentRequestModel) {
+    measure.geom.cells.sort(this.compare);
+    let start = measure.geom.cells[0].coordsAfrt;
+    start = start.map(coord => coord - 1000);
+    let end = measure.geom.cells[measure.geom.cells.length - 1].coordsAfrt;
+    end = end.map(coord => coord + 1000);
+    measureRequest.extent.push(start);
+    measureRequest.extent.push(end);
   }
 
   public areScenariosValid() {
