@@ -180,7 +180,6 @@ export class MeasureComponent implements OnChanges {
       measureGeom = new FeatureModel();
       measureGeom.styleName = this.getColor();
       measureGeom.id = this.measures.length;
-      this.addFeatures(measureGeom);
     } else {
       measureGeom = this.geomPerMeasure[this.openMeasure];
     }
