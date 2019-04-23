@@ -70,6 +70,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   @Override
   public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
       throws IOException, ConfigurationException, InterruptedException {
+    LOGGER.info("AssessmentRequest {}", assessmentRequest.toString());
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
 
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();

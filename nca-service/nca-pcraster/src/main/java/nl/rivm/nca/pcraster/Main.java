@@ -81,7 +81,8 @@ public class Main {
 	private void singleRun(final String[] args) throws IOException {
 		final String uuid = UUID.randomUUID().toString();
 		final SingleRun singleRun = new SingleRun();
-		runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2], args[3], ModelEnum.NKMODEL));
+		runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2], args[3], 
+		    args[3].toLowerCase().contains("xyz") ? ModelEnum.NKMODEL2 : ModelEnum.NKMODEL)); 
 	}
 
 	/**
@@ -112,7 +113,6 @@ public class Main {
 
 	private void runAssessment(String correlationId, AssessmentRequest ar) {
 		try {
-			LOGGER.info("AssessmentRequest {}", ar.toString());
 			controller.run(correlationId, ar);
 		} catch (IOException | ConfigurationException e) {
 			e.printStackTrace();
