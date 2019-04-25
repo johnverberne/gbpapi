@@ -131,22 +131,23 @@ export class MeasureComponent implements OnChanges {
   public saveMeasures(): MeasureModel[] {
     this.validated = true;
     if (!this.validateGeom()) {
-      console.log('ERROR: One or more measures don\'t have gridcells associated.');
-    }
-    if (this.validateVegetation() && this.measureForm.valid) {
-      this.openMeasure = -1;
-      const measures: MeasureModel[] = [];
-      for (const index in this.measures.controls) {
-        if (this.measures.controls[index] instanceof FormGroup) {
-          const measureFormGroup = this.measures.controls[index] as FormGroup;
-          const measureModel = this.fromFormGroupToModel(measureFormGroup);
-          measureModel.geom.cells = this.geomPerMeasure[index].cells;
-          measures.push(measureModel);
+      this.messageService.sendMessage('MEASURES_WITHOUT_CELLS');
+    } else {
+      if (this.validateVegetation() && this.measureForm.valid) {
+        this.openMeasure = -1;
+        const measures: MeasureModel[] = [];
+        for (const index in this.measures.controls) {
+          if (this.measures.controls[index] instanceof FormGroup) {
+            const measureFormGroup = this.measures.controls[index] as FormGroup;
+            const measureModel = this.fromFormGroupToModel(measureFormGroup);
+            measureModel.geom.cells = this.geomPerMeasure[index].cells;
+            measures.push(measureModel);
+          }
         }
+        this.validated = false;
+        this.disableDrawForMeasure();
+        return measures;
       }
-      this.validated = false;
-      this.disableDrawForMeasure();
-      return measures;
     }
   }
 
