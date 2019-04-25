@@ -151,6 +151,11 @@
      reasons 
      -->
    </filter>
+   
+   	<filter>
+	  <filter-name>CorsFilter</filter-name>
+	  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+	</filter>
 
     <!-- 
       THIS FILTER MUST BE THE FIRST ONE, otherwise we end up with ruined chars in the input from the GUI
@@ -181,6 +186,11 @@
       <filter-name>Request Logging Filter</filter-name>
       <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+   	<filter-mapping>
+	  <filter-name>CorsFilter</filter-name>
+	  <url-pattern>*</url-pattern>
+	</filter-mapping>
    
     <!-- 
       If you want to use your security system comment out this one too
