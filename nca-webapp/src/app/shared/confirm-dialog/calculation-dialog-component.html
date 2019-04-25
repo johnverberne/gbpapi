@@ -1,6 +1,11 @@
-<gbp-modal #dialog class="calculation-dialog" title="{{ 'CALCULATION_DIALOG_HEADER' | translate }}">
+<gbp-modal #dialog class="calculation-dialog" title="{{ 'CALCULATION_DIALOG_HEADER' | translate }}" [closeButton]="false">
 
-  <div body>{{ 'CALCULATION_RUNNING' | translate }}</div>
+  <div body>
+    <div>{{ 'CALCULATION_RUNNING' | translate }}</div>
+    <div class="row spinner">
+      <svg-icon src="assets/img/loading-spinner-green.svg"></svg-icon>
+    </div>
+  </div>
 
   <div footer class="row">
     <div class="okay-button" *ngIf="okayButton">

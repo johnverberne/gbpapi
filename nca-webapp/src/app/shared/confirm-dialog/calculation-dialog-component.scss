@@ -4,6 +4,14 @@
   margin-left: initial;
 }
 
+.spinner {
+  justify-content: center;
+  
+  svg-icon {
+    width: 4rem;
+  }
+}
+
 .okay-button {
   margin-left: auto;
 }

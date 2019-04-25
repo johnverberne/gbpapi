@@ -27,7 +27,7 @@ export class CalculationDialogComponent extends BaseDialogComponent {
   }
 
   public newTab() {
-    window.open(environment.ENDPOINT, '_blank');
+    window.open(environment.ENDPOINT + '/reference(main:map)', '_blank');
   }
 
 }
