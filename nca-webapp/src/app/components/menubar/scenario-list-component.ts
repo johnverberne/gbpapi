@@ -98,7 +98,7 @@ export class ScenarioListComponent implements OnInit {
               }
             }
             this.calculationEventService.calculationFinished();
-            this.router.navigate([{ outlets: { primary: 'result', main: 'map' }}]);
+            this.router.navigate([{ outlets: { primary: 'result', main: 'table' }}]);
           },
           (error) => {
             this.calculationEventService.calculationFinished();
