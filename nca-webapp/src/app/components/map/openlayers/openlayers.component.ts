@@ -272,6 +272,7 @@ export class OpenlayersComponent implements AfterViewInit {
   }
 
   private disableSelectGrid() {
+    this.gridLayer10.setVisible(false);
     this.map.removeInteraction(this.select);
     this.map.removeInteraction(this.dragBox);
   }
