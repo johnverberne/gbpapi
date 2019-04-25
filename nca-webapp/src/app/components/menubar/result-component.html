@@ -2,7 +2,7 @@
   <div class="header">{{'RESULT' | translate}}</div>
 
   <div class="sub-header">
-    <div class="pager">
+    <div class="pager" *ngIf="scenarios.length > 1">
       <div *ngFor="let scenario of scenarios; let i = index">
         <button type="button" class="btn btn-secondary pager-number" 
           [ngClass]="{'active': i === currentScenarioIndex, 
