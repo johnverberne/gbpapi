@@ -18,7 +18,7 @@ export class ScenarioComponent implements OnChanges {
   @ViewChild(MeasureComponent) private gbpMeasures: MeasureComponent;
   @Input() public scenarioModel: ScenarioModel;
   public scenarioForm: FormGroup;
-  private EXTENT_THRESHOLD: number = 10000000;
+  private EXTENT_THRESHOLD: number = 1000000;
 
   constructor(private fb: FormBuilder,
     public cdRef: ChangeDetectorRef,
