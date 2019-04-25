@@ -56,8 +56,7 @@ export class ScenarioComponent implements OnChanges {
 
   public saveClick() {
     if (this.scenarioForm.valid) {
-      const name = this.scenarioForm.get('name').value;
-      this.scenarioModel.scenarioName = name;
+      this.scenarioModel.scenarioName = this.scenarioForm.get('name').value;
       this.scenarioModel.measures = this.gbpMeasures.saveMeasures();
       if (this.scenarioModel.measures) {
         this.scenarioModel.valid = true;

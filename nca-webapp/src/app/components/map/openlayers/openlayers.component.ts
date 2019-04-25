@@ -199,6 +199,7 @@ export class OpenlayersComponent implements AfterViewInit {
     }
     this.select = new Select({
       layers: [this.gridLayer10],
+      style: this.gridStyle,
       multi: false
     });
     this.map.addInteraction(this.select);
