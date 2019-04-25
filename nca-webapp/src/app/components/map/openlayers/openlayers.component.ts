@@ -16,7 +16,6 @@ import { environment } from '../../../../environments/environment';
 import { bbox } from 'ol/loadingstrategy';
 import { Select, DragBox } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
-import { LayerSwitcher } from 'ol-layerswitcher';
 import { Coordinate } from 'ol/coordinate';
 import { GridCellModel } from '../../../models/grid-cell-model';
 import { Style, Stroke, Fill } from 'ol/style';
@@ -69,6 +68,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
+    this.mapService.onShowResults().subscribe((geom) => this.showResults(geom));
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
@@ -83,6 +83,7 @@ export class OpenlayersComponent implements AfterViewInit {
       source: this.gridSource10,
       maxResolution: 1,
       style: this.gridStyle,
+      visible: false
     });
 
     this.osmLayer = new TileLayer({
@@ -126,9 +127,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.selectedGridLayer = new VectorLayer({
       source: this.selectedGridSource
     });
-
   }
-
 
   public ngAfterViewInit() {
     this.view = new OlView({
@@ -140,13 +139,9 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.map = new OlMap({
       target: 'map',
-      // this.bagLayer,
-      // this.osmLayer,
-      // this.lceuLayer
       layers: [this.osmLayer, this.lceuLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
-    // this.map.addControl(new LayerSwitcher());
   }
 
   private getStyle(styleName: string) {
@@ -165,6 +160,13 @@ export class OpenlayersComponent implements AfterViewInit {
     this.selectedGridSource.clear();
   }
 
+  private showResults(geom: FeatureModel) {
+    this.gridLayer10.setVisible(false);
+    this.showFeatures(geom);
+    const extent = this.selectedGridSource.getExtent();
+    this.map.getView().fit(extent);
+  }
+
   private showFeatures(geom: FeatureModel) {
     const features: Feature[] = [];
     if (geom.cells.length > 0) {
@@ -178,8 +180,6 @@ export class OpenlayersComponent implements AfterViewInit {
         features.push(feature);
       });
       this.selectedGridSource.addFeatures(features);
-      const extent = this.selectedGridSource.getExtent();
-      this.map.getView().fit(extent);
     }
   }
 
@@ -194,6 +194,9 @@ export class OpenlayersComponent implements AfterViewInit {
   }
 
   private enableGetGrid(geom: FeatureModel) {
+    if (!this.gridLayer10.getVisible()) {
+      this.gridLayer10.setVisible(true);
+    }
     this.select = new Select({
       layers: [this.gridLayer10],
       multi: false

@@ -72,7 +72,7 @@ export class ResultComponent implements OnInit {
 
   private drawMeasures() {
     this.mapService.clearMap();
-    this.measures.forEach((measure) => this.mapService.showFeatures(measure.geom));
+    this.measures.forEach((measure) => this.mapService.showResults(measure.geom));
   }
 
 }

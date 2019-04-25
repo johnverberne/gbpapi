@@ -11,6 +11,7 @@ export class MapService {
   private removeSubject: Subject<number> = new Subject();
   private clearMapSubject: Subject<void> = new Subject();
   private showFeaturesSubject: Subject<FeatureModel> = new Subject();
+  private showResultsSubject: Subject<FeatureModel> = new Subject();
   private removeCellsSubject: Subject<FeatureModel> = new Subject();
 
   public onStartDrawing(): Observable<FeatureModel> {
@@ -59,6 +60,14 @@ export class MapService {
 
   public showFeatures(geom: FeatureModel) {
     this.showFeaturesSubject.next(geom);
+  }
+
+  public onShowResults(): Observable<FeatureModel> {
+    return this.showResultsSubject.asObservable();
+  }
+
+  public showResults(geom: FeatureModel) {
+    this.showResultsSubject.next(geom);
   }
 
   public onRemoveCells(): Observable<FeatureModel> {
