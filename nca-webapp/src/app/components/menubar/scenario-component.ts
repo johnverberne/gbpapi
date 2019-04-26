@@ -67,12 +67,18 @@ export class ScenarioComponent implements OnChanges {
   }
 
   public cancelClick() {
-    this.gbpMeasures.ngOnChanges();
-    this.ngOnChanges();
+    this.gbpMeasures.cancelMeasure();
+    this.cancelScenario();
   }
 
   public hasMeasures() {
     return this.gbpMeasures.measures.length > 0;
+  }
+
+  private cancelScenario() {
+    this.scenarioForm.patchValue({
+      'name': this.scenarioModel.scenarioName
+    });
   }
 
   private checkMeasureExtent() {

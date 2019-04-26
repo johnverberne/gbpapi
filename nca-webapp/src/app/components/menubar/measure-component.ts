@@ -60,7 +60,6 @@ export class MeasureComponent implements OnChanges {
     this.measureForm.reset(resetObject);
     this.setMeasures(this.measureModels);
     this.cdRef.detectChanges();
-    this.openMeasure = -1;
     if (this.measures.value.length === 0) {
       this.manageDrawing();
     }
@@ -146,9 +145,14 @@ export class MeasureComponent implements OnChanges {
         }
         this.validated = false;
         this.disableDrawForMeasure();
+        this.openMeasure = -1;
         return measures;
       }
     }
+  }
+
+  public cancelMeasure() {
+    this.ngOnChanges();
   }
 
   private getColorFromStyle(styleName: string): string {
