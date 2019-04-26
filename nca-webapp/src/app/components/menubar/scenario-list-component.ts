@@ -146,7 +146,7 @@ export class ScenarioListComponent implements OnInit {
   }
 
   public areScenariosValid() {
-    const scenarios = this.scenarios.filter(scenario => scenario.valid);
+    const scenarios = this.scenarios.filter(scenario => scenario.measures && scenario.measures.length > 0);
     return scenarios.length === this.scenarios.length;
   }
 
