@@ -11,12 +11,10 @@ import { Router } from '@angular/router';
 export class ResultBarComponent {
 
   public isOpen: boolean = true;
-  public activeMenu: string = 'MAP';
 
   constructor(private menuEventService: MenuEventService,
     private messageService: MessageEventService,
     private router: Router) {
-
   }
 
   public onCollapseClick() {
@@ -25,9 +23,8 @@ export class ResultBarComponent {
   }
 
   public onMenuClick(event: string) {
-    if (this.activeMenu !== event) {
-      this.activeMenu = event;
-      this.router.navigate([{ outlets: { main: event.toLowerCase()}}]);
+    if (this.currentAuxRoute !== event) {
+      this.router.navigate([{ outlets: { main: event.toLowerCase() } }]);
       if (event === 'GRAPH') {
         this.messageService.sendMessage('WIP');
       }
@@ -37,5 +34,12 @@ export class ResultBarComponent {
         }, 500);
       }
     }
+  }
+
+  public get currentAuxRoute() {
+    const url = this.router.routerState.snapshot.url;
+    const startIndex = url.indexOf(':');
+    const endIndex = url.indexOf(')');
+    return url.substring(startIndex + 1, endIndex).toLocaleUpperCase();
   }
 }
