@@ -28,9 +28,9 @@ import org.junit.Test;
 
 import nl.rivm.nca.db.BaseDBTest;
 import nl.rivm.nca.db.TestPMF;
-import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.shared.domain.JobProgress;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.shared.exception.AeriusException;
 
 public class UserRepositoryTest extends BaseDBTest {
 

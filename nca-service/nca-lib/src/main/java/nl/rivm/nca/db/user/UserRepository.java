@@ -34,9 +34,9 @@ import nl.rivm.nca.db.util.Query;
 import nl.rivm.nca.db.util.QueryAttribute;
 import nl.rivm.nca.db.util.QueryBuilder;
 import nl.rivm.nca.db.util.QueryUtil;
-import nl.rivm.nca.exception.AeriusException;
-import nl.rivm.nca.exception.AeriusException.Reason;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.shared.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException.Reason;
 
 public final class UserRepository {
 

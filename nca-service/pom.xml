@@ -6,11 +6,18 @@
 	<groupId>nl.rivm.nca</groupId>
 	<artifactId>nca-parent</artifactId>
 	<version>1.0-SNAPSHOT</version>
-
-	<name>NCA Parent</name>
+    <packaging>pom</packaging>
+	<name>NCA</name>
 	<description>Natural Capital Assessment parent pom</description>
-	<packaging>pom</packaging>
     <url>https://www.groenebatenplanner.nl</url>
+
+	<repositories>
+		<repository>
+			<id>opengeo</id>
+			<name>OpenGeo Maven Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+	</repositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,13 +41,7 @@
     	<postgresql.version>9.4.1207.jre7</postgresql.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>opengeo</id>
-			<name>OpenGeo Maven Repository</name>
-			<url>http://download.osgeo.org/webdav/geotools/</url>
-		</repository>
-	</repositories>
+
 	
     <scm>
       <developerConnection>scm:git:ssh://git@github.com/rivm-syso/GroeneBatenPlanner</developerConnection>
@@ -181,6 +182,16 @@
 				<module>nca-database-parent/nca-database-gbp</module>
 			</modules>
 		</profile>
+		
+	    <profile>
+          <id>api</id>
+          <modules>
+            <module>nca-lib</module>
+			<module>nca-pcraster</module>
+			<module>nca-api</module>
+			<module>nca-webserver</module>
+          </modules>
+        </profile>
 		
         <profile>
           <id>geoserver</id>

@@ -20,8 +20,8 @@ import java.util.Locale;
 
 import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.domain.ApiServiceContext;
-import nl.rivm.nca.exception.AeriusException;
-import nl.rivm.nca.exception.AeriusException.Reason;
+import nl.rivm.nca.shared.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException.Reason;
 
 /**
  * Util to convert exceptions to {@link AeriusException}.

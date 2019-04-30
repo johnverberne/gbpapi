@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import nl.rivm.nca.api.domain.ValidationMessage;
-import nl.rivm.nca.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException;
 
 
 

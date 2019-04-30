@@ -24,9 +24,9 @@ import nl.rivm.nca.api.service.util.SwaggerUtil;
 import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.db.user.JobRepository;
-import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.shared.domain.JobProgress;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.shared.exception.AeriusException;
 
 public class StatusApiServiceImpl extends StatusApiService {
 	
