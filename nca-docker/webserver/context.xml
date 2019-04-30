@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure id="wac" class="org.eclipse.jetty.webapp.WebAppContext">
+  <Set name="contextPath">/${APPNAME}</Set>
+  <Set name="war"><Property name="jetty.base" default="." />/webapps/${APPNAME}.war</Set>
+
+  <New id="${DATASOURCENAME}" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref refid="wac"/></Arg>
+    <Arg>jdbc/${DATASOURCENAME}</Arg>
+    <Arg>
+      <New class="org.apache.commons.dbcp.BasicDataSource">
+        <Set name="driverClassName">org.postgresql.Driver</Set>
+        <Set name="url">jdbc:postgresql://${DBHOSTNAME}/${DBNAME}</Set>
+        <Set name="username">${DBUSERNAME}</Set>
+        <Set name="password">${DBPASSWORD}</Set>
+      </New>
+    </Arg>
+  </New>
+</Configure>

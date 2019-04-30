@@ -20,9 +20,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import nl.rivm.nca.db.user.UserRepository;
-import nl.rivm.nca.exception.AeriusException;
-import nl.rivm.nca.exception.AeriusException.Reason;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.shared.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException.Reason;
 import nl.rivm.nca.util.UuidUtil;
 
 /**

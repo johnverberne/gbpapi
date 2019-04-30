@@ -17,8 +17,8 @@ import nl.rivm.nca.api.service.util.AeriusExceptionConversionUtil;
 import nl.rivm.nca.api.service.util.SwaggerUtil;
 import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.exception.AeriusException;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
+import nl.rivm.nca.shared.exception.AeriusException;
 
 public class GenerateAPIKeyApiServiceImpl extends GenerateAPIKeyApiService {
 

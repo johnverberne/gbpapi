@@ -1,0 +1,18 @@
+From 
+
+ARG SFTP_READONLY_PASSWORD
+ARG GIT_USERNAME
+ARG GIT_TOKEN
+
+ENV DBSOURCE_PATH aerius-database-calculator
+ENV DATABASE_NAME calculator
+
+RUN /build-database.shFrom 
+FROM aerius-database-build:9.4
+
+ENV DBDATA_PATH db-data/aeriusII
+ENV DBCONFIG_PATH aerius-database-build/config
+
+ENV GIT_HOSTNAME github.com
+ENV GIT_ORG aerius
+ENV GIT_REPOSITORY AERIUS-II
