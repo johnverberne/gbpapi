@@ -1,0 +1,15 @@
+<layer>
+  <name>LCEU_ini</name>
+  <id>LayerInfoImpl-4cbbf5fc:1694e5cf14b:-7ffe</id>
+  <type>RASTER</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-4cbbf5fc:1694e5cf14b:-7fe6</id>
+  </defaultStyle>
+  <resource class="coverage">
+    <id>CoverageInfoImpl-4cbbf5fc:1694e5cf14b:-7fff</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>
