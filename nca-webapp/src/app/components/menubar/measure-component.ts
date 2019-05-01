@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MessageEventService } from '../../services/message-event-service';
 import { MeasureStyles } from '../map/openlayers/measure-styles';
 import { EnumUtils } from '../../shared/enum-utils';
+import { GridCellModel } from '../../models/grid-cell-model';
 
 @Component({
   selector: 'gbp-measure',
