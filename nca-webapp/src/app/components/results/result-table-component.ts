@@ -10,8 +10,8 @@ import { ResultType } from '../../models/enums/result-type';
 })
 export class ResultTableComponent {
 
+  public resultType: ResultType = ResultType.PHYSICAL;
   private scenarioIndex = 0;
-  private resultType: ResultType = ResultType.PHYSICAL;
 
   constructor(private menuEventService: MenuEventService, public projectService: CurrentProjectService) {
     this.menuEventService.onScenarioChange().subscribe((index) => this.scenarioIndex = index);
@@ -42,8 +42,8 @@ export class ResultTableComponent {
     return results;
   }
 
-  public onResultTypeClick(resultType: ResultType) {
-    this.resultType = resultType;
+  public onResultTypeClick(resultType: string) {
+    this.resultType = ResultType[resultType];
   }
 
 }

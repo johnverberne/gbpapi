@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CurrentProjectService } from 'src/app/services/current-project-service';
 import { MessageEventService } from '../../services/message-event-service';
+import { ReferenceType } from '../../models/enums/reference-type';
 
 @Component({
   selector: 'gbp-reference',
@@ -16,5 +17,9 @@ export class ReferenceComponent {
 
   public onScenarioReferenceClick() {
     this.messageService.sendMessage('WIP');
+  }
+
+  public onDefaultReferenceClick() {
+    this.projectService.currentProject.reference = ReferenceType.DEFAULT;
   }
 }

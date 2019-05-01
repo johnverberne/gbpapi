@@ -9,7 +9,7 @@
       </div>
       <div class="header measure">{{'MEASURE' | translate}}</div>
       <div class="measures">
-        <gbp-measure id="measures" [measureForm]="scenarioForm.controls.measures" [(measureModels)]="measures"
+        <gbp-measure id="measures" [measureForm]="scenarioForm.controls.measures" [measureModels]="measures"
           name="gbp-measure"></gbp-measure>
         <div class="row save-cancel" *ngIf="hasMeasures()">
           <button type="button" class="btn btn-secondary"
