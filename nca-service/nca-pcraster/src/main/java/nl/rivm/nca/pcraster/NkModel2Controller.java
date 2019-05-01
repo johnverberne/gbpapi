@@ -96,7 +96,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     
     convertOutput(diffPath);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath);
-    publishFiles(correlationId, diffPath);
+    //publishFiles(correlationId, diffPath);
 
     // create zip file
     ZipOutputStream content = zipResult(correlationId, workingPath);

@@ -72,7 +72,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
-        'version=1.0.0&request=GetFeature&typeName=gbp:grids&TRANSPARANT=TRUE&' +
+        'version=1.0.0&request=GetFeature&typeName=gbp:wms_grids_view&TRANSPARANT=TRUE&' +
         'outputFormat=application/json&srsname=EPSG:3857&' +
         'bbox=' + extent.join(',') + ',EPSG:3857',
       format: new GeoJSON(),
@@ -113,7 +113,7 @@ export class OpenlayersComponent implements AfterViewInit {
         serverType: 'geoserver',
         transition: 0,
       }),
-      opacity: 0.2
+      opacity: 0.8
     });
 
     this.selectedGridSource = new VectorSource({

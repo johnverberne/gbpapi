@@ -3,6 +3,6 @@
   <name>default</name>
   <className>org.geoserver.security.password.URLMasterPasswordProvider</className>
   <readOnly>false</readOnly>
-  <url>file:c:/etc/tomcat/geoserverpasswd</url>
+  <url>file:/etc/tomcat/geoserverpasswd</url>
   <encrypting>true</encrypting>
 </urlProvider>

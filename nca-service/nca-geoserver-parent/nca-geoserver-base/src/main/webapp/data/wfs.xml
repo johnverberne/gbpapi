@@ -1,6 +1,6 @@
 <wfs>
   <id>WFSInfoImpl-7091e3f2:14b2bd12d4c:-7ffb</id>
-  <enabled>false</enabled>
+  <enabled>true</enabled>
   <name>WFS</name>
   <versions>
     <org.geotools.util.Version>

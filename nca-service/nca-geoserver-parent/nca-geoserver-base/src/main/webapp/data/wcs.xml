@@ -1,6 +1,6 @@
 <wcs>
   <id>WCSInfoImpl-7091e3f2:14b2bd12d4c:-7ffc</id>
-  <enabled>false</enabled>
+  <enabled>true</enabled>
   <name>WCS</name>
   <versions>
     <org.geotools.util.Version>
