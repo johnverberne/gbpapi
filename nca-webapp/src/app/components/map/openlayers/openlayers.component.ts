@@ -113,7 +113,7 @@ export class OpenlayersComponent implements AfterViewInit {
         serverType: 'geoserver',
         transition: 0,
       }),
-      opacity: 0.2
+      opacity: 0.8
     });
 
     this.selectedGridSource = new VectorSource({
