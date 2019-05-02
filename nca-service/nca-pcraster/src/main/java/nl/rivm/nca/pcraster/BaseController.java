@@ -44,7 +44,7 @@ public abstract class BaseController implements ControllerInterface {
 	private static final String MAP_EXT = "map";
 	protected static final String MAP_DOT_EXT = '.' + MAP_EXT;
 	private static final String JSON_EXT = "json";
-	private static final String WORKSPACE_NAME = "nca";
+	private static final String WORKSPACE_NAME = "result";
 	protected static final String OUTPUTS = "outputs";
 
 	protected final RasterLayers rasterLayers;
@@ -201,12 +201,13 @@ public abstract class BaseController implements ControllerInterface {
 
 	protected boolean publishFiles(final String correlationId, File outputPath) throws IOException {
 		boolean successfull = true;
+		LOGGER.info("Scan {} for {}", outputPath.getPath(), GEOTIFF_EXT);
 		Files.list(outputPath.toPath())
-				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
-				.forEach(f -> LOGGER.info(f.toFile().getName()));
+				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName().toLowerCase())))
+				.forEach(f -> LOGGER.info(f.toFile().getName().toLowerCase()));
 
 		Files.list(outputPath.toPath())
-				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName()))).forEach(f -> {
+				.filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName().toLowerCase()))).forEach(f -> {
 					try {
 						publishGeotiff.publish(WORKSPACE_NAME, correlationId, f.toFile(),
 								FilenameUtils.removeExtension(f.toFile().getName()));
