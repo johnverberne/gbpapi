@@ -11,6 +11,7 @@ import { MeasureModel } from '../../models/measure-model';
 import { CalculationEventService } from '../../services/calculation-event-serivce';
 import { Router } from '@angular/router';
 import { GridCellModel } from '../../models/grid-cell-model';
+import { MessageEventService } from '../../services/message-event-service';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -29,6 +30,7 @@ export class ScenarioListComponent implements OnInit {
     private calculationService: CalculationService,
     private translateService: TranslateService,
     private calculationEventService: CalculationEventService,
+    private messageService: MessageEventService,
     private router: Router) {
   }
 
@@ -84,25 +86,25 @@ export class ScenarioListComponent implements OnInit {
         this.calculationEventService.calculationStarted();
         this.calculationService.startImmediateScenarioCalculation(request).subscribe(
           (result) => {
+            this.calculationEventService.calculationFinished();
             if (result) {
-              if (result.errors) {
+              if (result.errors && result.errors.length > 0) {
                 result.errors.forEach(error => console.log('Back-end error: ' + error.message));
+                this.messageService.sendMessage('ERROR_CALCULATION');
               }
-              if (result.warnings) {
+              if (result.warnings && result.warnings.length > 0) {
                 result.warnings.forEach(warning => console.log('Back-end warning: ' + warning.message));
               }
               if (result.successful && result.assessmentResults) {
                 this.scenarios.forEach((scenario, index) => {
                   scenario.results = result.assessmentResults[index].entries;
                 });
+                this.router.navigate([{ outlets: { primary: 'result', main: 'table' }}]);
               }
             }
-            this.calculationEventService.calculationFinished();
-            this.router.navigate([{ outlets: { primary: 'result', main: 'table' }}]);
           },
           (error) => {
             this.calculationEventService.calculationFinished();
-            // this.scenarioModel.results = error;
           }
         );
       }
