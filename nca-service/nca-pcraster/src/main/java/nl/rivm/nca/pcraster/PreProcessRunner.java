@@ -35,14 +35,14 @@ class PreProcessRunner {
 		String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, "");
 		// new file will be created in batch file
 		String editMapFilePath = new File(mapFilePath.replace(".map", "_edit.map")).getAbsolutePath();
+		String newMapFilePath = new File(mapFilePath.replace(".map", "_new.map")).getAbsolutePath();
 		// parse as parameter string
 		String mapFileParameter = paramString(mapFilePath.replaceAll("\\/", "\\\\"));
 		String editMapFileParameter = paramString(editMapFilePath.replaceAll("\\/", "\\\\"));
-		final String[] args = { xyzFilePath, editMapFilePath, mapFilePath, editMapFileParameter, mapFileParameter };
+		String newMapFileParameter = paramString(newMapFilePath.replaceAll("\\/", "\\\\"));
+		final String[] args = { xyzFilePath, editMapFilePath, mapFilePath, editMapFileParameter, mapFileParameter, newMapFileParameter };
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
 		final Exec exec = new Exec(execParams, "", false); // run as batch file
-
-		//LOGGER.debug("Execute: ({}) with parameters: {}", RUNNER, args);
 		exec.run(correlationId, new File(xyzFile.getParent()));
 	}
 
