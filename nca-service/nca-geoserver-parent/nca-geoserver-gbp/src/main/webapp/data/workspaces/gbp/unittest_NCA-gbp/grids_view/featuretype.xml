@@ -1,14 +1,14 @@
 <featureType>
   <id>FeatureTypeInfoImpl--24e1916a:1690aba7c5c:-7ffe</id>
-  <name>wms_grids_view</name>
-  <nativeName>wms_grids_view</nativeName>
+  <name>grids_view</name>
+  <nativeName>grids_view</nativeName>
   <namespace>
     <id>NamespaceInfoImpl-69610152:1690a6cd286:-7ffe</id>
   </namespace>
-  <title>wms_grids_view</title>
+  <title>grids_view</title>
   <keywords>
     <string>features</string>
-    <string>wms_grids_view</string>
+    <string>grids_view</string>
   </keywords>
   <nativeCRS class="projected">PROJCS[&quot;Amersfoort / RD New&quot;, &#xd;
   GEOGCS[&quot;Amersfoort&quot;, &#xd;
