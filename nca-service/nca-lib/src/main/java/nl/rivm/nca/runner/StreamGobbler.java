@@ -74,7 +74,11 @@ public class StreamGobbler extends Thread {
   }
 
   private void logLine(final String line) {
-    LOGGER.error("{}:{}>{}", parentId, type, line);
+    if (line.indexOf("ERROR") > -1) {
+      LOGGER.error("{}:{}>{}", parentId, type, line);
+    } else {
+      LOGGER.info("{}:{}>{}", parentId, type, line);
+    }
   }
 
   /**
