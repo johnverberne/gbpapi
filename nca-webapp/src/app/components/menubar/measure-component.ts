@@ -129,11 +129,13 @@ export class MeasureComponent implements OnChanges {
   }
 
   public saveMeasures(): MeasureModel[] {
-    this.validated = true;
     if (!this.validateGeom()) {
       this.messageService.sendMessage('MEASURES_WITHOUT_CELLS');
+    } else if (!this.validateVegetation()) {
+      this.messageService.sendMessage('VEGETATION_VALUES_INVALID');
     } else {
-      if (this.validateVegetation() && this.measureForm.valid) {
+      if (this.measureForm.valid) {
+        this.validated = true;
         this.openMeasure = -1;
         const measures: MeasureModel[] = [];
         for (const index in this.measures.controls) {
@@ -167,7 +169,6 @@ export class MeasureComponent implements OnChanges {
         const vegFG = measureFormGroup.get('vegetation') as FormGroup;
         const value = vegFG.get('low').value + vegFG.get('middle').value + vegFG.get('high').value;
         if (value > 100 || value < 0) {
-          this.messageService.sendMessage('VEGETATION_VALUES_INVALID');
           return false;
         }
       }
