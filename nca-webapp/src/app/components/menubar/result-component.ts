@@ -31,11 +31,11 @@ export class ResultComponent implements OnInit {
       this.menuEventService.onMenuCollapse().subscribe((collapse) => {
         this.openMenu = collapse;
       });
-      this.menuEventService.onShowResultMap().subscribe(() => this.drawMeasures());
+      this.menuEventService.onShowResultMap().subscribe(() => this.drawResults());
   }
 
   public ngOnInit() {
-    this.drawMeasures();
+    this.drawResults();
   }
 
   public get measures() {
@@ -67,12 +67,12 @@ export class ResultComponent implements OnInit {
   public onScenarioClick(index: number) {
     this.currentScenarioIndex = index;
     this.menuEventService.scenarioChange(index);
-    this.drawMeasures();
+    this.drawResults();
   }
 
-  private drawMeasures() {
+  private drawResults() {
     this.mapService.clearMap();
-    this.measures.forEach((measure) => this.mapService.showResults(measure.geom));
+    this.mapService.showResults();
   }
 
 }

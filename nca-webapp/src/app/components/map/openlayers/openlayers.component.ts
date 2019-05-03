@@ -41,6 +41,7 @@ export class OpenlayersComponent implements AfterViewInit {
   private gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
   private lceuLayer: TileLayer;
+  private resultLayer: TileLayer;
 
   private targetProjection = new Projection({
     code: 'EPSG:28992'
@@ -68,7 +69,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
-    this.mapService.onShowResults().subscribe((geom) => this.showResults(geom));
+    this.mapService.onShowResults().subscribe((show) => this.showResults(show));
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
@@ -81,7 +82,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.gridLayer10 = new VectorLayer({
       source: this.gridSource10,
-      maxResolution: 1,
+      maxResolution: 0.8,
       style: this.gridStyle,
       visible: false
     });
@@ -116,6 +117,17 @@ export class OpenlayersComponent implements AfterViewInit {
       opacity: 0.2
     });
 
+    this.resultLayer = new TileLayer({
+      source: new TileWMS({
+        url: `${environment.GEOSERVER_ENDPOINT}/results/wms`,
+        params: { 'LAYERS': 'result', 'TILED': false },
+        serverType: 'geoserver',
+        transition: 0,
+      }),
+      opacity: 0.5,
+      visible: false
+    });
+
     this.selectedGridSource = new VectorSource({
       format: new GeoJSON({
         dataProjection: 'EPSG:3857',
@@ -131,7 +143,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit() {
     this.view = new OlView({
-      center: fromLonLat([5.121775, 52.092691], 'EPSG:3857'),
+      center: fromLonLat([5.1075035, 52.0814808], 'EPSG:3857'),
       zoom: 18,
       minZoom: 7,
       maxZoom: 20
@@ -139,7 +151,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.lceuLayer, this.gridLayer10, this.selectedGridLayer],
+      layers: [this.osmLayer, this.lceuLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
   }
@@ -160,11 +172,9 @@ export class OpenlayersComponent implements AfterViewInit {
     this.selectedGridSource.clear();
   }
 
-  private showResults(geom: FeatureModel) {
+  private showResults(show: boolean) {
     this.gridLayer10.setVisible(false);
-    this.showFeatures(geom);
-    const extent = this.selectedGridSource.getExtent();
-    this.map.getView().fit(extent);
+    this.resultLayer.setVisible(show);
   }
 
   private showFeatures(geom: FeatureModel) {
