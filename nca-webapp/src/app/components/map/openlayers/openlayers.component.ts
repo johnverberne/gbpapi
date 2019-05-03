@@ -170,6 +170,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private clearMap() {
     this.selectedGridSource.clear();
+    this.resultLayer.setVisible(false);
   }
 
   private showResults(show: boolean) {
