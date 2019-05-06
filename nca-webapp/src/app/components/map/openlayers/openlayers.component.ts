@@ -109,7 +109,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.lceuLayer = new TileLayer({
       source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/wms`,
+        url: `${environment.GEOSERVER_ENDPOINT}wms`,
         params: { 'LAYERS': 'LCEU_ini', 'TILED': true, 'STYLES': 'geotiff' },
         serverType: 'geoserver',
         transition: 0,
@@ -119,8 +119,8 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.resultLayer = new TileLayer({
       source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/results/wms`,
-        params: { 'LAYERS': 'result', 'TILED': false },
+        url: `${environment.GEOSERVER_ENDPOINT}result/wms`,
+        params: { 'LAYERS': 'b5d539d5-014e-466e-8dee-49bd77be3f6d_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change', 'TILED': false },
         serverType: 'geoserver',
         transition: 0,
       }),
