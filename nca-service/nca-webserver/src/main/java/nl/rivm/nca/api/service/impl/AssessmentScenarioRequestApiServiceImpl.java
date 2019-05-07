@@ -40,6 +40,7 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		response.setWarnings(warnings);
 		response.setErrors(errors);
 		final String uuid = UUID.randomUUID().toString();
+		response.setKey(uuid);
 		scenarios.forEach(scenario -> {
 			try {
 				response.getAssessmentResults().add(scenarioCalculation(scenario, warnings, errors, uuid));
