@@ -6,4 +6,5 @@ export class ScenarioModel {
   public scenarioName: string;
   public measures: MeasureModel[] = [];
   public results: AssessmentResultModel[] = [];
+  public key: string;
 }
