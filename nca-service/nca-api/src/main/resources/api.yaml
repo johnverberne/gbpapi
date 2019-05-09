@@ -298,7 +298,10 @@ definitions:
       entries:
         type: array
         items:
-          $ref: '#/definitions/AssessmentResultResponse'  
+          $ref: '#/definitions/AssessmentResultResponse'
+      key:
+        type: string
+        description: A unique key for the geoserver results layers.
   AssessmentResultResponse:
     type: object
     required:

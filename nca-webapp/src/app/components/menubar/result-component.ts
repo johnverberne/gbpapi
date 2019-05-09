@@ -72,7 +72,7 @@ export class ResultComponent implements OnInit {
 
   private drawResults() {
     this.mapService.clearMap();
-    this.mapService.showResults(true);
+    this.mapService.showResults(true, this.scenario.key);
   }
 
 }

@@ -22,6 +22,7 @@ import { Style, Stroke, Fill } from 'ol/style';
 import proj4 from 'proj4';
 import {register as proj4register } from 'ol/proj/proj4';
 import { transform } from 'ol/proj';
+import { ResultSubject } from '../../../models/result-subject';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -42,6 +43,7 @@ export class OpenlayersComponent implements AfterViewInit {
   private bagLayer: VectorLayer;
   private lceuLayer: TileLayer;
   private resultLayer: TileLayer;
+  private resultSource: TileWMS;
 
   private targetProjection = new Projection({
     code: 'EPSG:28992'
@@ -69,7 +71,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
-    this.mapService.onShowResults().subscribe((show) => this.showResults(show));
+    this.mapService.onShowResults().subscribe((resultSubject) => this.showResults(resultSubject));
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
@@ -117,13 +119,15 @@ export class OpenlayersComponent implements AfterViewInit {
       opacity: 0.2
     });
 
+    this.resultSource = new TileWMS({
+      url: `${environment.GEOSERVER_ENDPOINT}/result/wms`,
+      params: { 'LAYERS': '', 'TILED': false },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+
     this.resultLayer = new TileLayer({
-      source: new TileWMS({
-        url: `${environment.GEOSERVER_ENDPOINT}/result/wms`,
-        params: { 'LAYERS': 'b5d539d5-014e-466e-8dee-49bd77be3f6d_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change', 'TILED': false },
-        serverType: 'geoserver',
-        transition: 0,
-      }),
+      source: this.resultSource,
       opacity: 0.5,
       visible: false
     });
@@ -173,9 +177,11 @@ export class OpenlayersComponent implements AfterViewInit {
     this.resultLayer.setVisible(false);
   }
 
-  private showResults(show: boolean) {
+  private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultLayer.setVisible(show);
+    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change',
+      'TILED': false});
+    this.resultLayer.setVisible(resultSubject.show);
   }
 
   private showFeatures(geom: FeatureModel) {
