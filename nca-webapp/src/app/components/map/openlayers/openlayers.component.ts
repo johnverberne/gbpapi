@@ -1,6 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
 import OlMap from 'ol/Map';
-import OlXYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import OlView from 'ol/View';
 import { Vector as VectorSource } from 'ol/source';
@@ -23,6 +22,9 @@ import proj4 from 'proj4';
 import {register as proj4register } from 'ol/proj/proj4';
 import { transform } from 'ol/proj';
 import { ResultSubject } from '../../../models/result-subject';
+import { getTopLeft } from 'ol/extent';
+import { WMTS } from 'ol/source';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -31,7 +33,7 @@ import { ResultSubject } from '../../../models/result-subject';
 })
 export class OpenlayersComponent implements AfterViewInit {
   public map: OlMap;
-  private osmLayer: TileLayer;
+  private pdokLayer: TileLayer;
   private view: OlView;
   private dragBox: DragBox;
   private select: Select;
@@ -59,13 +61,26 @@ export class OpenlayersComponent implements AfterViewInit {
     }),
   });
 
-  private readonly GRID_SIZE = 16.2;
+  private readonly GRID_SIZE = 10.0;
+
+  // PDOK data:
+  // Geldigheidsgebied van het tiling schema in RD-coördinaten:
+  private projectionExtent = [-285401.92, 22598.08, 595401.9199999999, 903401.9199999999];
+  // Resoluties (pixels per meter) van de zoomniveaus:
+  private resolutions = [3440.640, 1720.320, 860.160, 430.080, 215.040, 107.520, 53.760, 26.880, 13.440, 6.720, 3.360, 1.680, 0.840, 0.420, 0.210];
+  // Er zijn 15 (0 tot 14) zoomniveaus beschikbaar van de WMTS-service voor de BRT-Achtergrondkaart:
+  private matrixIds = new Array(15);
 
   constructor(private mapService: MapService) {
     proj4.defs('EPSG:28992',
       '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel ' +
       '+towgs84=565.2369,50.0087,465.658,1.9725,-1.7004,9.0677,4.0812 +units=m +no_defs');
     proj4register(proj4);
+
+    for (let z = 0; z < 15; ++z) {
+      this.matrixIds[z] = 'EPSG:28992:' + z;
+    }
+
     this.mapService.onStartDrawing().subscribe((geom) => this.enableGetGrid(geom));
     this.mapService.onStopDrawing().subscribe(() => this.disableSelectGrid());
     this.mapService.onRemoveMeasure().subscribe((id) => this.clearFeatures(id));
@@ -76,8 +91,8 @@ export class OpenlayersComponent implements AfterViewInit {
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
         'version=1.0.0&request=GetFeature&typeName=gbp:grids_view&TRANSPARANT=TRUE&' +
-        'outputFormat=application/json&srsname=EPSG:3857&' +
-        'bbox=' + extent.join(',') + ',EPSG:3857',
+        'outputFormat=application/json&srsname=EPSG:28992&' +
+        'bbox=' + extent.join(',') + ',EPSG:28992',
       format: new GeoJSON(),
       strategy: bbox,
     });
@@ -89,11 +104,23 @@ export class OpenlayersComponent implements AfterViewInit {
       visible: false
     });
 
-    this.osmLayer = new TileLayer({
-      source: new OlXYZ({
-        url: 'http://tile.osm.org/{z}/{x}/{y}.png'
-      }),
-      opacity: 0.5
+    this.pdokLayer = new TileLayer({
+      source: new WMTS({
+        attributions: 'Kaartgegevens: &copy; <a href="https://www.kadaster.nl">Kadaster</a>',
+        url: 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts?',
+        layer: 'brtachtergrondkaart',
+        matrixSet: this.targetProjection.getCode(),
+        format: 'image/png',
+        projection: this.targetProjection,
+        tileGrid: new WMTSTileGrid({
+            origin: getTopLeft(this.projectionExtent),
+            resolutions: this.resolutions,
+            matrixIds: this.matrixIds
+        }),
+        style: 'default',
+        wrapX: false
+    }),
+    opacity: 0.4
     });
 
     this.bagVector = new VectorSource({
@@ -114,7 +141,7 @@ export class OpenlayersComponent implements AfterViewInit {
         url: `${environment.GEOSERVER_ENDPOINT}/wms`,
         params: { 'LAYERS': 'LCEU_ini', 'TILED': true, 'STYLES': 'geotiff' },
         serverType: 'geoserver',
-        transition: 0,
+        transition: 0
       }),
       opacity: 0.2
     });
@@ -134,8 +161,8 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.selectedGridSource = new VectorSource({
       format: new GeoJSON({
-        dataProjection: 'EPSG:3857',
-        featureProjection: 'EPSG:3857'
+        dataProjection: this.targetProjection.getCode(),
+        featureProjection: this.targetProjection.getCode()
       }),
       strategy: bbox,
     });
@@ -147,15 +174,16 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit() {
     this.view = new OlView({
-      center: fromLonLat([5.1075035, 52.0814808], 'EPSG:3857'),
+      center: fromLonLat([5.1075035, 52.0814808], this.targetProjection.getCode()),
       zoom: 18,
       minZoom: 7,
-      maxZoom: 20
+      maxZoom: 20,
+      projection: this.targetProjection.getCode()
     });
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.osmLayer, this.lceuLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
+      layers: [this.pdokLayer, this.lceuLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
   }
@@ -265,10 +293,8 @@ export class OpenlayersComponent implements AfterViewInit {
     newFeature.setId(feature.getProperties()['grid_id']);
     const cell = new GridCellModel();
     cell.gridId = (newFeature.getId() as number);
-    cell.coords = (newFeature.getGeometry() as Polygon).getFirstCoordinate();
-    cell.coordsAfrt = transform(cell.coords, 'EPSG:3857', this.targetProjection);
-    cell.coordsAfrt[0] = Math.round(cell.coordsAfrt[0]);
-    cell.coordsAfrt[1] = Math.round(cell.coordsAfrt[1]);
+    const extent = (newFeature.getGeometry() as Polygon).getExtent();
+    cell.coords = [extent[0], extent[1]];
     geom.cells.push(cell);
     this.selectedGridSource.addFeature(newFeature);
     this.mapService.featureDrawn();

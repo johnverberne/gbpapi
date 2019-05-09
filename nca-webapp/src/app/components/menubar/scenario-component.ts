@@ -84,8 +84,8 @@ export class ScenarioComponent implements OnChanges {
   private checkMeasureExtent() {
     for (const measure of this.scenarioModel.measures) {
       measure.geom.cells.sort(this.compare);
-      const start = measure.geom.cells[0].coordsAfrt;
-      const end = measure.geom.cells[measure.geom.cells.length - 1].coordsAfrt;
+      const start = measure.geom.cells[0].coords;
+      const end = measure.geom.cells[measure.geom.cells.length - 1].coords;
       if (this.getExtentSize(start, end) > this.EXTENT_THRESHOLD) {
         this.messageService.sendMessage('WARNING_LARGE_EXTENT_CALCULATION');
         break;
@@ -94,7 +94,7 @@ export class ScenarioComponent implements OnChanges {
   }
 
   private compare(a: GridCellModel, b: GridCellModel) {
-    return a.coordsAfrt[1] === b.coordsAfrt[1] ? a.coordsAfrt[0] - b.coordsAfrt[0] : a.coordsAfrt[1] - b.coordsAfrt[1];
+    return a.coords[1] === b.coords[1] ? a.coords[0] - b.coords[0] : a.coords[1] - b.coords[1];
   }
 
   private getExtentSize(start: any, end: any): number {
