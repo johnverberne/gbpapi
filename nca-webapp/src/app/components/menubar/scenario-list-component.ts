@@ -139,9 +139,9 @@ export class ScenarioListComponent implements OnInit {
 
   private defineExtent(measure: MeasureModel, measureRequest: AssessmentRequestModel) {
     measure.geom.cells.sort(this.compare);
-    let start = measure.geom.cells[0].coordsAfrt;
+    let start = measure.geom.cells[0].coords;
     start = start.map(coord => coord - 1000);
-    let end = measure.geom.cells[measure.geom.cells.length - 1].coordsAfrt;
+    let end = measure.geom.cells[measure.geom.cells.length - 1].coords;
     end = end.map(coord => coord + 1000);
     measureRequest.extent.push(start);
     measureRequest.extent.push(end);
@@ -183,7 +183,7 @@ export class ScenarioListComponent implements OnInit {
     }
     measure.geom.cells.sort(this.compare);
     data = measure.geom.cells.map(cells => {
-      return cells.coordsAfrt[0] + ' ' + cells.coordsAfrt[1] + ' ' + value;
+      return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
     });
 
 
@@ -198,6 +198,6 @@ export class ScenarioListComponent implements OnInit {
   }
 
   private compare(a: GridCellModel, b: GridCellModel) {
-    return a.coordsAfrt[1] === b.coordsAfrt[1] ? a.coordsAfrt[0] - b.coordsAfrt[0] : a.coordsAfrt[1] - b.coordsAfrt[1];
+    return a.coords[1] === b.coords[1] ? a.coords[0] - b.coords[0] : a.coords[1] - b.coords[1];
   }
 }
