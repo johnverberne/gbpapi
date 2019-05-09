@@ -40,15 +40,18 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		response.setWarnings(warnings);
 		response.setErrors(errors);
 		final String uuid = UUID.randomUUID().toString();
+		// keep uuid for task
 		response.setKey(uuid);
 		scenarios.forEach(scenario -> {
+			// create unique uuid per scenario
+			final String scenario_uuid = UUID.randomUUID().toString();
 			try {
-				response.getAssessmentResults().add(scenarioCalculation(scenario, warnings, errors, uuid));
+				response.getAssessmentResults().add(scenarioCalculation(scenario, warnings, errors, scenario_uuid));
 			} catch (RuntimeException e) {
 				ValidationMessage message = new ValidationMessage();
 				message.setCode(1);
 				message.setMessage("error is call : " + e.getMessage());
-				errors.add(WarningUtil.ValidationInfoMessage("Task executed uuid:" + uuid));
+				errors.add(WarningUtil.ValidationInfoMessage("Task executed uuid: " + uuid + " for scenario uuid: " + scenario_uuid ));
 				response.setErrors(errors);
 				response.setSuccessful(false);
 			}
@@ -62,6 +65,7 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 	private AssessmentResultsResponse scenarioCalculation(AssessmentScenarioRequest scenario,
 			List<ValidationMessage> warnings, List<ValidationMessage> errors, String uuid) {
 		AssessmentResultsResponse response = new AssessmentResultsResponse();
+		response.setKey(uuid);
 		scenario.getMeasures().forEach(measure -> {
 			try {
 				response.setEntries(singleCalculation(measure, warnings, errors, uuid));

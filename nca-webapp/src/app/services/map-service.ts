@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { FeatureModel } from '../models/feature-model';
+import { ResultSubject } from '../models/result-subject';
 
 @Injectable()
 export class MapService {
@@ -11,7 +12,7 @@ export class MapService {
   private removeSubject: Subject<number> = new Subject();
   private clearMapSubject: Subject<void> = new Subject();
   private showFeaturesSubject: Subject<FeatureModel> = new Subject();
-  private showResultsSubject: Subject<boolean> = new Subject();
+  private showResultsSubject: Subject<ResultSubject> = new Subject();
   private removeCellsSubject: Subject<FeatureModel> = new Subject();
 
   public onStartDrawing(): Observable<FeatureModel> {
@@ -62,12 +63,12 @@ export class MapService {
     this.showFeaturesSubject.next(geom);
   }
 
-  public onShowResults(): Observable<boolean> {
+  public onShowResults(): Observable<ResultSubject> {
     return this.showResultsSubject.asObservable();
   }
 
-  public showResults(show: boolean) {
-    this.showResultsSubject.next(show);
+  public showResults(show: boolean, key: string) {
+    this.showResultsSubject.next({show, key});
   }
 
   public onRemoveCells(): Observable<FeatureModel> {
