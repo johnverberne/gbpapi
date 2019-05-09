@@ -4,6 +4,8 @@
 }
 
 .scenario-component {
+  height: 100%;
+  
   .header {
     padding: 0.5rem;
   }
@@ -46,14 +48,18 @@
 }
 
 .scenario-form {
+  height: 100%;
   background-color: $menu-bar-background;
 }
 
 .scenario-content {
+  height: 100%;
   padding: 0.5rem;
 }
 
 .measures {
+  height: calc(100% - 120px);
+  overflow-y: auto;
   padding-top: 0.5rem;
 }
 

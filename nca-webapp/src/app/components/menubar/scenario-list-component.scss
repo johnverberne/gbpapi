@@ -7,12 +7,16 @@
 }
 
 .scenario-component {
-  height: 100%;
+  height: calc(100% - 100px);
   display: flex;
   flex-direction: column;
 
   .header {
     padding: 0.5rem;
+  }
+
+  gbp-scenario {
+    height: calc(100% - 100px);
   }
 }
 
@@ -65,8 +69,9 @@
 }
 
 .row.save-cancel {
-  margin-bottom: 15px;
-  margin-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-right: 10px;
   .okay-button {
     margin-left: auto;
   }
