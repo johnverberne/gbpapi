@@ -121,7 +121,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.resultSource = new TileWMS({
       url: `${environment.GEOSERVER_ENDPOINT}/result/wms`,
-      params: { 'LAYERS': 'b5d539d5-014e-466e-8dee-49bd77be3f6d_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change', 'TILED': false },
+      params: { 'LAYERS': '', 'TILED': false },
       serverType: 'geoserver',
       transition: 0,
     });
@@ -181,6 +181,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.gridLayer10.setVisible(false);
     this.resultSource.updateParams({'LAYERS': resultSubject.key + '_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change',
       'TILED': false});
+    this.resultLayer.setVisible(resultSubject.show);
   }
 
   private showFeatures(geom: FeatureModel) {
