@@ -1,0 +1,17 @@
+7-5-2019
+Initiele release van de applicatie.
+
+9-5-2019
+Vandaag een update gedaan van gbp-app met de volgende verbeteringen:
+basis kaartlaag is pdok kaart geworden;
+grid stelsel veranderd waardoor grid nu scherp getekend en bij bewaren niet meer verschuift word;
+resultaat laag is van de het berekende scenario;
+bewaar en bereken knoppen beter in beeld bij kleine schermen;
+teksten van de resultaten aangepast;
+
+14-5-2019
+Vandaag een update
+Keuzenlijst van landgebruik uitgebreid;
+Resultaten pagina toont geen eenheden achter de waardes;
+resultaten pagina lijnt alle resultaten inclusief kolom titel rechts uit;
+Update van de iconenen.
