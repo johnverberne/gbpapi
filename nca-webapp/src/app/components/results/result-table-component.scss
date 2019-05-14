@@ -25,6 +25,10 @@
     }
   }
 
+  .result-type-value-item {
+    text-align:right;
+  }
+
   .round-button-one-item {
     border-radius: 20px 20px 20px 20px;
   }
@@ -43,7 +47,7 @@
 
   table {
     th {
-      padding-right: 5rem;
+      padding-left: 5rem;
     }
   }
 }
