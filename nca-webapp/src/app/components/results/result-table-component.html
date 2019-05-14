@@ -10,13 +10,15 @@
     <thead>
       <tr>
         <th>{{'DOMAIN' | translate}}</th>
-        <th *ngFor="let head of headers" scope="col">{{head}} </th>
+        <th *ngFor="let head of headers" scope="col" class="result-type-value-item">{{head}} </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let result of results">
         <th scope="row">{{result.code.toString() | translate}}</th>
-        <td *ngFor="let scenarioResult of scenarioResults(result.code)">{{scenarioResult.sum | number:'1.0-0':'nl'}} ({{scenarioResult.units | translate}})</td>
+        <td *ngFor="let scenarioResult of scenarioResults(result.code)" 
+          title="({{scenarioResult.units | translate}}) ({{scenarioResult}})"
+          class="result-type-value-item">{{scenarioResult.sum | number:'1.0-0':'nl'}}</td>
       </tr>
     </tbody>
   </table>
