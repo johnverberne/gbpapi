@@ -23,6 +23,7 @@ import nl.rivm.nca.api.service.ModeldataApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.domain.ApiServiceContext;
 import nl.rivm.nca.api.service.util.WarningUtil;
+import nl.rivm.nca.pcraster.EnvironmentConstants;
 import nl.rivm.nca.pcraster.RasterLayers;
 
 public class ModelEnvironmentApiServiceImpl extends ModelEnvironmentApiService {
@@ -43,23 +44,22 @@ public class ModelEnvironmentApiServiceImpl extends ModelEnvironmentApiService {
   public Response getModelEnvironment(SecurityContext securityContext) throws NotFoundException {
     ModelEnvironmentResponse response = new ModelEnvironmentResponse();
     List<String> envList = new ArrayList<>();
-//    try  (final Connection connection = context.getPMF().getConnection()) {
-//      envList.add("database " + connection.toString());
-//      //    }
+    //    try  (final Connection connection = context.getPMF().getConnection()) {
+    //      envList.add("database " + connection.toString());
+    //      //    }
     envList.add("database");
     envList.add("database not tested!");
-    // System.getenv("GEOSERVER_PASSWORD"
     envList.add("nca appliation");
-    envList.add("GEOSERVER_URL : " + System.getenv("GEOSERVER_URL"));
-    envList.add("GEOSERVER_USER  : " + System.getenv("GEOSERVER_USER"));
-    envList.add("NCA_MODEL : " + System.getenv("NCA_MODEL"));
+    envList.add("GEOSERVER_URL : " + System.getenv(EnvironmentConstants.GEOSERVER_URL));
+    envList.add("GEOSERVER_USER  : " + System.getenv(EnvironmentConstants.GEOSERVER_USER));
+    envList.add("NCA_MODEL : " + System.getenv(EnvironmentConstants.NCA_MODEL));
     envList.add("all enviroments");
-    StringBuilder sb = new StringBuilder(); 
-    Map<String, String> env = System.getenv(); 
-    for (String key : env.keySet()) { 
+    StringBuilder sb = new StringBuilder();
+    Map<String, String> env = System.getenv();
+    for (String key : env.keySet()) {
       String value = env.get(key);
-     envList.add(key+ ": " + (key.toLowerCase().contains("pass") ? "*secret*" : env.get(key)));
-    } 
+      envList.add(key + ": " + (key.toLowerCase().contains("pass") ? "*secret*" : env.get(key)));
+    }
     response.setEntries(envList);
     return Response.ok().entity(response).build();
   }

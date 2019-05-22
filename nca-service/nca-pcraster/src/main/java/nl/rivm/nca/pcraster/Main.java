@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.configuration2.SystemConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class Main {
 	private final ControllerInterface controller;
 
 	public Main(boolean directFile) throws IOException, InterruptedException {
-		final String ncaModel = System.getenv("NCA_MODEL");
+		final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");

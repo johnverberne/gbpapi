@@ -56,7 +56,8 @@ public abstract class BaseController implements ControllerInterface {
   public BaseController(File path, boolean directFile) throws IOException, InterruptedException {
     rasterLayers = RasterLayers.loadRasterLayers(path);
     this.directFile = directFile;
-    publishGeotiff = new PublishGeotiff(System.getenv("GEOSERVER_URL"), System.getenv("GEOSERVER_USER"), System.getenv("GEOSERVER_PASSWORD"));
+    publishGeotiff = new PublishGeotiff(System.getenv(EnvironmentConstants.GEOSERVER_URL), 
+        System.getenv(EnvironmentConstants.GEOSERVER_USER), System.getenv(EnvironmentConstants.GEOSERVER_PASSWORD));
     // python via docker dan geen test draaien pcRasterRunner.sanityCheck();
   }
 

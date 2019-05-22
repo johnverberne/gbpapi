@@ -44,6 +44,10 @@ import nl.rivm.nca.api.domain.LayerObject;
 
 public class NkModel2Controller extends BaseController implements ControllerInterface {
 
+  
+
+  private static final String JOBLOGGER_TXT = "joblogger.txt";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModel2Controller.class);
 
   private static final String XYZ_EXT = "xyz";
@@ -69,7 +73,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
 
     //create jobLogger for the job
-    FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + "joblogger.txt", true);
+    FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
     java.util.logging.Logger jobLogger = createJobLogger(jobLoggerFile);
     long start = System.currentTimeMillis();
     jobLogger.entering(NkModel2Controller.class.toString(), "run");
@@ -128,7 +132,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
     // create zip file in server environment for download 
     String fileName = zipResult(correlationId, workingPath);
-    String downloadFileUrl = System.getenv("NCA_DOWNLOAD_URL") + "/" + fileName;
+    String downloadFileUrl = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_URL) + "/" + fileName;
     LOGGER.info("download resultset {}", downloadFileUrl);
 
     // cleanup
@@ -147,7 +151,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   }
 
   private String zipResult(String correlationId, File workingPath) {
-    String downloadPath = System.getenv("NCA_DOWNLOAD_PATH");
+    String downloadPath = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_PATH);
     String fileName = "" + correlationId + ".zip";
     FileOutputStream fos;
     ZipOutputStream zipOut = null;

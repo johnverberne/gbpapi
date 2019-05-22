@@ -27,6 +27,7 @@ import nl.rivm.nca.api.service.util.UserUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.db.calculation.CalculationRepository;
 import nl.rivm.nca.db.user.UserRepository;
+import nl.rivm.nca.pcraster.EnvironmentConstants;
 import nl.rivm.nca.pcraster.ImmediatlyController;
 import nl.rivm.nca.pcraster.SingleRun;
 import nl.rivm.nca.shared.domain.calculation.Calculation;
@@ -106,7 +107,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
   }
 
   private ImmediatlyController initController(boolean directFile) throws IOException, InterruptedException {
-    final String ncaModel = System.getenv("NCA_MODEL");
+    final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
     if (ncaModel == null) {
       throw new IllegalArgumentException(
           "Environment variable 'NCA_MODEL' not set. This should point to the raster data");

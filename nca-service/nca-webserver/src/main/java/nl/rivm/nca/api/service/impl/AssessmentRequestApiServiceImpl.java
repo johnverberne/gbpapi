@@ -23,6 +23,7 @@ import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.domain.ApiServiceContext;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.pcraster.ControllerInterface;
+import nl.rivm.nca.pcraster.EnvironmentConstants;
 import nl.rivm.nca.pcraster.NkModel2Controller;
 import nl.rivm.nca.pcraster.NkModelController;
 
@@ -101,7 +102,7 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		// get the environment for the supplied model.
 		ControllerInterface controller;
 		//final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
-		final String ncaModel = System.getenv("NCA_MODEL");
+		final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
