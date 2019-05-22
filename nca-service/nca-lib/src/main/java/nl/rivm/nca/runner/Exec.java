@@ -1,6 +1,5 @@
 package nl.rivm.nca.runner;
 
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public final class Exec {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Exec.class);
+  private java.util.logging.Logger jobLogger;
 
   private static final String ERROR_LOGGING_PREFIX = "ERROR";
 
@@ -36,7 +36,7 @@ public final class Exec {
     this.binDir = binDir;
     this.runAsWindows = OSUtils.isWindows();
   }
-  
+
   /**
    * Initializes.
    *
@@ -45,9 +45,9 @@ public final class Exec {
    * @param boolean to indicate to add .exe for windows envirorment
    */
   public Exec(final ExecParameters execParameters, final String binDir, final boolean runAsWindows) {
-	  this.executeParameters = execParameters;
-	  this.binDir = binDir;
-	  this.runAsWindows = runAsWindows;
+    this.executeParameters = execParameters;
+    this.binDir = binDir;
+    this.runAsWindows = runAsWindows;
   }
 
   public String run(final File currentWorkingDirectory) throws IOException, InterruptedException {
@@ -105,6 +105,9 @@ public final class Exec {
 
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("Executing: {}", Strings.join(Arrays.asList(executeArray), ' '));
+        if (jobLogger != null) {
+          jobLogger.info("Executing: " + Strings.join(Arrays.asList(executeArray), ' '));
+        }
       }
       final Process process = Runtime.getRuntime().exec(executeArray, null, currentWorkingDirectory);
 
@@ -131,5 +134,9 @@ public final class Exec {
         LOGGER.error("Error reading output gobbler.", e);
       }
     }
+  }
+
+  public void setJobLogger(java.util.logging.Logger jobLogger) {
+    this.jobLogger = jobLogger;
   }
 }

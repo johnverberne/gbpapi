@@ -43,7 +43,7 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		// keep uuid for task
 		response.setKey(uuid);
 		scenarios.forEach(scenario -> {
-			// create unique uuid per scenario
+			// create unique uuid for each scenario
 			final String scenario_uuid = UUID.randomUUID().toString();
 			try {
 				response.getAssessmentResults().add(scenarioCalculation(scenario, warnings, errors, scenario_uuid));

@@ -32,31 +32,31 @@ import nl.rivm.nca.api.domain.LayerObject;
  * 
  */
 public class NkModelController extends BaseController implements ControllerInterface {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(NkModelController.class);
-	
-	public NkModelController(File path, boolean directFile) throws IOException, InterruptedException {
-		super(path, directFile);
-	}
 
-	@Override
-	public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
-			throws IOException, ConfigurationException, InterruptedException {
-		final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
-		final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
-		final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
-		final File first = copyInputToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers(), GEOTIFF_DOT_EXT, "");
-		final Envelope2D extend = calculateExtend(first);
-		cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend);
-		final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(), outputPath.getAbsolutePath());
-		
-		LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
-		runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile, projectFile, outputPath);
-		convertOutput(outputPath);
-		List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, outputPath);
-		publishFiles(correlationId, outputPath);
-		cleanUp(workingPath, false);
-		return assessmentResultlist;
-	}
-	
+  private static final Logger LOGGER = LoggerFactory.getLogger(NkModelController.class);
+
+  public NkModelController(File path, boolean directFile) throws IOException, InterruptedException {
+    super(path, directFile);
+  }
+
+  @Override
+  public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
+      throws IOException, ConfigurationException, InterruptedException {
+    final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
+    final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
+    final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
+    final File first = copyInputToWorkingMap(layerFiles, workingPath, assessmentRequest.getLayers(), GEOTIFF_DOT_EXT, "");
+    final Envelope2D extend = calculateExtend(first);
+    cookieCutOtherLayersToWorkingPath(workingPath, layerFiles, assessmentRequest.getLayers(), extend, null);
+    final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(), outputPath.getAbsolutePath());
+
+    LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
+    runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile, projectFile, outputPath);
+    convertOutput(outputPath);
+    List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, outputPath);
+    publishFiles(correlationId, outputPath);
+    cleanUp(workingPath, false);
+    return assessmentResultlist;
+  }
+
 }
