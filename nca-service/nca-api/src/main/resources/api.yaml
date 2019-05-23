@@ -592,3 +592,6 @@ definitions:
       - TREES
       - SHRUBS
       - GRASS
+      - MASK
+      - CROP
+      - TREE_HEIGHT

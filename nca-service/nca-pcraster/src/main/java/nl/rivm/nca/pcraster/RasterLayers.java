@@ -34,6 +34,10 @@ public class RasterLayers {
     arLayers.put(Layer.TREES, "bomenkaart");
     arLayers.put(Layer.SHRUBS, "struikenkaart");
     arLayers.put(Layer.GRASS, "graskaart");
+    arLayers.put(Layer.MASK, "mask");
+    arLayers.put(Layer.CROP, "gewas");
+    arLayers.put(Layer.TREE_HEIGHT, "boomhoogte");
+    
     layers.put("air_regulation", arLayers);
 
 //    final Map<String, String> ciuaLayers = new HashMap<>();

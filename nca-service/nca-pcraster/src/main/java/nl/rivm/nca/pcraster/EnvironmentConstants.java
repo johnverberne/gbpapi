@@ -4,6 +4,11 @@ public class EnvironmentConstants {
  
   /*
    * location of the nca modellen the python scripts to run the model
+   * d:\nkmodel\raster\nederland
+   * d:\nkmodel\NatuurlijkKapitaalModellen
+   * d:\nkmodel\nca [sh|bat]
+   * d:\nkmodel\nca2 [sh|bat]
+   * d:\nkmodel\nca_preprocess_scenarion_map [sh|bat]
    */
   public static final String NCA_MODEL = "NCA_MODEL";
 
