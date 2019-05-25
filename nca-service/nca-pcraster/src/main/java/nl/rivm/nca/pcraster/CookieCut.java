@@ -3,6 +3,9 @@ package nl.rivm.nca.pcraster;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
+
+import javax.sql.rowset.Joinable;
 
 import org.geotools.geometry.Envelope2D;
 
@@ -21,8 +24,9 @@ public class CookieCut {
 
   //[--indices] <source> <x_min> <y_max> <x_max> <y_min> <destination>
   //gdal_translate -q -of {format} -{method} {x_min} {y_max} {x_max} {y_min} {source} {destination}".format(
-//      method="projwin" if not use_indices else "srcwin",
-  public void run(File source, File destination, Envelope2D extend) throws IOException, InterruptedException {
+  //      method="projwin" if not use_indices else "srcwin",
+
+  public void run(File source, File destination, Envelope2D extend, Logger jobLogger) throws IOException, InterruptedException {
     final String method = "-projwin"; // bounding box in actual coordinates given
     final Rectangle b = extend.getBounds();
     final String[] args = {"-q", "-of", "PCRaster", method,
@@ -30,7 +34,7 @@ public class CookieCut {
         source.getAbsolutePath(), destination.getAbsolutePath()};
     final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
     final Exec exec = new Exec(execParams, "");
-
+    exec.setJobLogger(jobLogger);
     exec.run(new File(destination.getParent()));
   }
 

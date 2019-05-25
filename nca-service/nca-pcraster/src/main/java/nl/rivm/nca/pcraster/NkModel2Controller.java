@@ -1,33 +1,34 @@
 package nl.rivm.nca.pcraster;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FilenameUtils;
-import org.geotools.coverage.grid.GridCoverage2D;
-import org.geotools.factory.Hints;
-import org.geotools.gce.geotiff.GeoTiffFormat;
-import org.geotools.gce.geotiff.GeoTiffReader;
 import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.swagger.util.Json;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
-import nl.rivm.nca.api.domain.DataType;
+import nl.rivm.nca.api.domain.AssessmentScenarioRequest;
 import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 
@@ -49,6 +50,7 @@ import nl.rivm.nca.api.domain.LayerObject;
 
 public class NkModel2Controller extends BaseController implements ControllerInterface {
 
+  private static final String JOBLOGGER_TXT = "joblogger.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModel2Controller.class);
 
   private static final String XYZ_EXT = "xyz";
@@ -61,6 +63,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   protected static final String SCENARIO = "scenario";
   protected static final String SCENARIO_OUTPUTS = "scenario/outputs";
   protected static final String DIFF = "diff";
+  protected static final String NKMODEL_SCENARIO_EXPORT = "nkmodel_scenarion.json";
   protected static final int EXTEND_DISTANCE_METERS = 1000;
 
   public NkModel2Controller(File path, boolean directFile) throws IOException, InterruptedException {
@@ -70,12 +73,32 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   @Override
   public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
       throws IOException, ConfigurationException, InterruptedException {
+
+    final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
+
+    //create jobLogger for the job
+    FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
+    java.util.logging.Logger jobLogger = createJobLogger(jobLoggerFile);
+    long start = System.currentTimeMillis();
+    jobLogger.entering(NkModel2Controller.class.toString(), "run");
+    jobLogger.info("Start at :" + start);
+
+    // write input json to temp directory
+    createScenarionFile(workingPath, assessmentRequest);
+
+
     LOGGER.info("AssessmentRequest {}", assessmentRequest.toString());
-    LOGGER.info("extend {}",assessmentRequest.getExtent());
+    LOGGER.info("extend {}", assessmentRequest.getExtent());
     LOGGER.info("extend x {}, y {}, maxx {}, maxy {}",
         assessmentRequest.getExtent().get(0).get(0), assessmentRequest.getExtent().get(0).get(1),
         assessmentRequest.getExtent().get(1).get(0), assessmentRequest.getExtent().get(1).get(1));
-    final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
+    jobLogger.info("AssessmentRequest");
+    jobLogger.info(Json.pretty(assessmentRequest));
+    jobLogger.info("extend " + assessmentRequest.getExtent());
+    jobLogger.info("extend x " + assessmentRequest.getExtent().get(0).get(0) +
+        ", y " + assessmentRequest.getExtent().get(0).get(1) +
+        ", maxx " + assessmentRequest.getExtent().get(1).get(0) +
+        ", maxy " + assessmentRequest.getExtent().get(1).get(1));
 
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
@@ -86,65 +109,140 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles(assessmentRequest.getEcoSystemService());
     copyInputToWorkingMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX);
     final Envelope2D extend = new Envelope2D();
-    extend.include( assessmentRequest.getExtent().get(0).get(0), assessmentRequest.getExtent().get(0).get(1));
-    extend.include( assessmentRequest.getExtent().get(1).get(0), assessmentRequest.getExtent().get(1).get(1));
-    LOGGER.info("extend {}",extend);
-    cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, assessmentRequest.getLayers(), extend);
-    cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, assessmentRequest.getLayers(), extend);
-    prePrepocessSenarioMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX);
+    extend.include(assessmentRequest.getExtent().get(0).get(0), assessmentRequest.getExtent().get(0).get(1));
+    extend.include(assessmentRequest.getExtent().get(1).get(0), assessmentRequest.getExtent().get(1).get(1));
+    LOGGER.info("extend {}", extend);
+    jobLogger.info("extend " + extend);
+
+    cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
+    cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
+
+    long startMeasure = System.currentTimeMillis();
+    prePrepocessSenarioMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX, jobLogger);
+    jobLogger.info("Durration of PrepocessSenarioMap :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
 
     // create ini files for scenario and baseline
     final File projectFileScenario = ProjectIniFile.generateIniFile(scenarioPath.getAbsolutePath(), scenarioOutputPath.getAbsolutePath());
     final File projectFileBaseLine = ProjectIniFile.generateIniFile(baseLinePath.getAbsolutePath(), baseLineOutputPath.getAbsolutePath());
 
     LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
+    startMeasure = System.currentTimeMillis();
     runPcRaster2(correlationId, assessmentRequest.getEcoSystemService(), projectFileScenario, projectFileBaseLine, scenarioOutputPath,
-        baseLineOutputPath, diffPath);
-    
+        baseLineOutputPath, diffPath, jobLogger);
+    jobLogger.info("Durration of PCRaster models :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
+
     convertOutput(diffPath);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath);
+    startMeasure = System.currentTimeMillis();
     publishFiles(correlationId, diffPath);
+    jobLogger.info("Durration of publisching to GEO Server :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
 
-    // create zip file
-   ZipOutputStream content = zipResult(correlationId, workingPath);
-    
+    // close logger
+    jobLogger.info("List<AssessmentResultResponse>");
+    jobLogger.info(Json.pretty(assessmentResultlist));
+    long end = System.currentTimeMillis();
+    jobLogger.info("Execute time " + (end - start) / 1000F + " seconds");
+    jobLogger.removeHandler(jobLoggerFile);
+    jobLoggerFile.close();
+
+    // create zip file in server environment for download 
+    String fileName = zipResult(correlationId, workingPath);
+    String downloadFileUrl = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_URL) + "/" + fileName;
+    LOGGER.info("download resultset {}", downloadFileUrl);
+
+    // cleanup
     cleanUp(workingPath, false);
+
     return assessmentResultlist;
   }
-  
-  private ZipOutputStream zipResult(String correlationId, File workingPath) {
+
+  private void createScenarionFile(File workingPath, AssessmentRequest assessmentRequest) {
+    FileWriter fileWriter = null;
+    
+    // convert to make it possible to import again
+    AssessmentScenarioRequest request = new AssessmentScenarioRequest();
+    request.addMeasuresItem(assessmentRequest);
+    
+    try {
+      fileWriter = new FileWriter(workingPath + "/" + NKMODEL_SCENARIO_EXPORT);
+      fileWriter.write(Json.pretty(request));
+      
+    } catch (IOException e) {
+      LOGGER.warn("Writing to the file failure " + e.getMessage());
+    } finally {
+      if (fileWriter != null) {
+        try {
+          fileWriter.close();
+        } catch (IOException e) {
+          LOGGER.warn("Closing the file failure");
+        }
+      }
+    }
+
+  }
+
+  private java.util.logging.Logger createJobLogger(FileHandler jobLoggerFile) {
+    java.util.logging.Logger jobLogger = java.util.logging.Logger.getLogger("JobLogger");
+    jobLogger.setLevel(Level.ALL);
+    jobLoggerFile.setFormatter(new Formatter() {
+
+      @Override
+      public String format(LogRecord record) {
+        SimpleDateFormat logTime = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(record.getMillis());
+        return record.getLevel()
+            + logTime.format(cal.getTime())
+            + " || "
+            + record.getSourceClassName().substring(
+                record.getSourceClassName().lastIndexOf(".") + 1,
+                record.getSourceClassName().length())
+            + "."
+            + record.getSourceMethodName()
+            + "() : "
+            + record.getMessage() + "\n";
+      }
+
+    });
+    jobLogger.addHandler(jobLoggerFile);
+    return jobLogger;
+  }
+
+  private String zipResult(String correlationId, File workingPath) {
+    String downloadPath = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_PATH);
+    String fileName = "" + correlationId + ".zip";
     FileOutputStream fos;
     ZipOutputStream zipOut = null;
     try {
-      fos = new FileOutputStream("resultset_" + correlationId +".zip");
+      fos = new FileOutputStream(downloadPath + "/" + fileName);
       zipOut = new ZipOutputStream(fos);
       File fileToZip = new File(workingPath.getAbsolutePath());
       ZipDirectory.zipFile(fileToZip, fileToZip.getName(), zipOut);
       zipOut.close();
-      
+
     } catch (IOException e) {
       // eat error
-     LOGGER.error("Problem with zipping content {}", e.getLocalizedMessage());
+      LOGGER.error("Problem with zipping content {}", e.getLocalizedMessage());
     }
-    return zipOut;
+    return fileName;
   }
 
   protected void runPcRaster2(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine,
-      File workingPathScenario, File workingPathBaseLine, File projectPathDiff)
+      File workingPathScenario, File workingPathBaseLine, File projectPathDiff, java.util.logging.Logger jobLogger)
       throws IOException, InterruptedException {
     pcRasterRunner2.runPcRaster(correlationId, ecoSystemService, projectFileScenario, projectFileBaseLine, workingPathScenario, workingPathBaseLine,
-        projectPathDiff);
+        projectPathDiff, jobLogger);
   }
 
   protected void cookieCutAllLayersToBaseLinePath(File workingPath, Map<Layer, String> layerFiles,
-      List<LayerObject> userLayers, Envelope2D extend) throws IOException {
+      List<LayerObject> userLayers, Envelope2D extend, java.util.logging.Logger jobLogger) throws IOException {
     final CookieCut cc = new CookieCut(workingPath.getAbsolutePath());
     // create all source files
     layerFiles.entrySet().stream().forEach(e -> {
       try {
         final String sourceFile = e.getValue();
 
-        cc.run(rasterLayers.mapOriginalFilePath(sourceFile), rasterLayers.mapFilePath(workingPath, sourceFile), extend);
+        cc.run(rasterLayers.mapOriginalFilePath(sourceFile), rasterLayers.mapFilePath(workingPath, sourceFile), extend, jobLogger);
       } catch (IOException | InterruptedException e1) {
         e1.printStackTrace();
       }
@@ -152,23 +250,21 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   }
 
   protected void copyInputToWorkingMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix) {
-    userLayers.stream().map(ul -> writeToXYZFile(layerFiles, workingPath, ul, prefix))
-        .collect(Collectors.toList());
+    userLayers.stream().map(ul -> writeToXYZFile(layerFiles, workingPath, ul, prefix)).collect(Collectors.toList());
     return;
   }
 
   private File writeToXYZFile(Map<Layer, String> layerFiles, File workingPath, LayerObject layerObject, String prefix) {
-    File file = writeToFile(layerFiles, workingPath, layerObject, XYZ_DOT_EXT, prefix);
-    return file;
+    return writeToFile(layerFiles, workingPath, layerObject, XYZ_DOT_EXT, prefix);
   }
 
-
-  protected void prePrepocessSenarioMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix) {
+  protected void prePrepocessSenarioMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix,
+      java.util.logging.Logger jobLogger) {
     for (LayerObject layer : userLayers) {
       File xyzFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + XYZ_DOT_EXT);
       final File mapFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + MAP_DOT_EXT);
       try {
-        preProcessRunner.runPreProcessor("", xyzFile, mapFile, prefix);
+        preProcessRunner.runPreProcessor("", xyzFile, mapFile, prefix, jobLogger);
       } catch (final IOException | InterruptedException e) {
         e.printStackTrace();
       }

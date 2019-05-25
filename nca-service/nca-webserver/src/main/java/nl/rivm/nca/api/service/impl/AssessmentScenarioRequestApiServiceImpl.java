@@ -21,6 +21,7 @@ import nl.rivm.nca.api.service.AssessmentScenarioRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.pcraster.ControllerInterface;
+import nl.rivm.nca.pcraster.EnvironmentConstants;
 import nl.rivm.nca.pcraster.NkModel2Controller;
 
 public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioRequestApiService {
@@ -43,7 +44,7 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		// keep uuid for task
 		response.setKey(uuid);
 		scenarios.forEach(scenario -> {
-			// create unique uuid per scenario
+			// create unique uuid for each scenario
 			final String scenario_uuid = UUID.randomUUID().toString();
 			try {
 				response.getAssessmentResults().add(scenarioCalculation(scenario, warnings, errors, scenario_uuid));
@@ -96,7 +97,7 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 	}
 
 	private ControllerInterface initController(boolean directFile) throws IOException, InterruptedException {
-		final String ncaModel = System.getenv("NCA_MODEL");
+		final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
 		if (ncaModel == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
