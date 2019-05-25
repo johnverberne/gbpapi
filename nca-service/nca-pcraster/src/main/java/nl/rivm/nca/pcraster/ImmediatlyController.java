@@ -35,4 +35,9 @@ public class ImmediatlyController extends BaseController implements ControllerIn
 		return assessmentResultlist;
 	}
 	
+	@Override
+	public String getDownloadFileUrl() {
+	  return "";
+	}
+
 }

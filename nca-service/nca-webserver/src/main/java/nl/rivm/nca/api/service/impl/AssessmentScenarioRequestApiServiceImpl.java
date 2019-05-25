@@ -69,7 +69,9 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		response.setKey(uuid);
 		scenario.getMeasures().forEach(measure -> {
 			try {
-				response.setEntries(singleCalculation(measure, warnings, errors, uuid));
+			  final ControllerInterface controller = initController(true);
+				response.setEntries(singleCalculation(controller, measure, warnings, errors, uuid));
+				response.setUrl(controller.getDownloadFileUrl());
 			} catch (IOException | ConfigurationException e) {
 				throw new RuntimeException(e);
 			} catch (InterruptedException e) {
@@ -80,17 +82,16 @@ public class AssessmentScenarioRequestApiServiceImpl extends AssessmentScenarioR
 		return response;
 	}
 
-	private List<AssessmentResultResponse> singleCalculation(AssessmentRequest ar, List<ValidationMessage> warnings,
+	private List<AssessmentResultResponse> singleCalculation(ControllerInterface controller , AssessmentRequest ar, List<ValidationMessage> warnings,
 			List<ValidationMessage> errors, final String uuid)
 			throws IOException, ConfigurationException, InterruptedException {
 		List<AssessmentResultResponse> response = new ArrayList<>();
-		response.addAll(assessmentRun(ar, uuid));
+		response.addAll(assessmentRun(controller, ar, uuid));
 		return response;
 	}
 
-	private List<AssessmentResultResponse> assessmentRun(AssessmentRequest ar, final String uuid)
+	private List<AssessmentResultResponse> assessmentRun(ControllerInterface controller, AssessmentRequest ar, final String uuid)
 			throws IOException, ConfigurationException, InterruptedException {
-		final ControllerInterface controller = initController(true);
 		List<AssessmentResultResponse> results = new ArrayList<>();
 		results.addAll(controller.run(uuid, ar));
 		return results;

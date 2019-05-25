@@ -302,6 +302,9 @@ definitions:
       key:
         type: string
         description: A unique key for the geoserver results layers.
+      url:
+        type: string
+        description: A url to zipped file containing all generated file for the run including a log file and json of the scenario
   AssessmentResultResponse:
     type: object
     required:

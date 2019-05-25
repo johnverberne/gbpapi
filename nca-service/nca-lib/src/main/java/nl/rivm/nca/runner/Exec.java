@@ -68,8 +68,8 @@ public final class Exec {
    */
   public void run(final String runId, final File currentWorkingDirectory) throws IOException, InterruptedException {
     run(currentWorkingDirectory,
-        new StreamGobbler(ERROR_LOGGING_PREFIX, executeParameters.getExecuteableFilename() + "-" + runId),
-        new StreamGobbler(ERROR_LOGGING_PREFIX, "") {
+        new StreamGobbler(ERROR_LOGGING_PREFIX, executeParameters.getExecuteableFilename() + "-" + runId, jobLogger),
+        new StreamGobbler(ERROR_LOGGING_PREFIX, "", jobLogger) {
           @Override
           public void run() {
             // We ignore the stdout as it doesn't contain useful information

@@ -65,6 +65,8 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   protected static final String DIFF = "diff";
   protected static final String NKMODEL_SCENARIO_EXPORT = "nkmodel_scenarion.json";
   protected static final int EXTEND_DISTANCE_METERS = 1000;
+  
+  private String downloadFileUrl;
 
   public NkModel2Controller(File path, boolean directFile) throws IOException, InterruptedException {
     super(path, directFile);
@@ -73,7 +75,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   @Override
   public List<AssessmentResultResponse> run(String correlationId, AssessmentRequest assessmentRequest)
       throws IOException, ConfigurationException, InterruptedException {
-
+    long startMeasure;
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
 
     //create jobLogger for the job
@@ -84,9 +86,9 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     jobLogger.info("Start at :" + start);
 
     // write input json to temp directory
+
     createScenarionFile(workingPath, assessmentRequest);
-
-
+ 
     LOGGER.info("AssessmentRequest {}", assessmentRequest.toString());
     LOGGER.info("extend {}", assessmentRequest.getExtent());
     LOGGER.info("extend x {}, y {}, maxx {}, maxy {}",
@@ -100,6 +102,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
         ", maxx " + assessmentRequest.getExtent().get(1).get(0) +
         ", maxy " + assessmentRequest.getExtent().get(1).get(1));
 
+    startMeasure = System.currentTimeMillis();
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
@@ -116,28 +119,30 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
     cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
     cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
+    jobLogger.info("Time to prepaire files :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
-    long startMeasure = System.currentTimeMillis();
+    // create map files from input with extend
+    startMeasure = System.currentTimeMillis();
     prePrepocessSenarioMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX, jobLogger);
-    jobLogger.info("Durration of PrepocessSenarioMap :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
+    jobLogger.info("Duration of PrepocessSenarioMap :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
     // create ini files for scenario and baseline
+    startMeasure = System.currentTimeMillis();
     final File projectFileScenario = ProjectIniFile.generateIniFile(scenarioPath.getAbsolutePath(), scenarioOutputPath.getAbsolutePath());
     final File projectFileBaseLine = ProjectIniFile.generateIniFile(baseLinePath.getAbsolutePath(), baseLineOutputPath.getAbsolutePath());
-
     LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
-    startMeasure = System.currentTimeMillis();
     runPcRaster2(correlationId, assessmentRequest.getEcoSystemService(), projectFileScenario, projectFileBaseLine, scenarioOutputPath,
         baseLineOutputPath, diffPath, jobLogger);
-    jobLogger.info("Durration of PCRaster models :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
+    jobLogger.info("Durration of PCRaster models :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
+    // convert to geotiff and publish to geo server
+    startMeasure = System.currentTimeMillis();
     convertOutput(diffPath);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath);
-    startMeasure = System.currentTimeMillis();
     publishFiles(correlationId, diffPath);
-    jobLogger.info("Durration of publisching to GEO Server :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
+    jobLogger.info("Durration of publisching to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
-    // close logger
+    // close joblogger
     jobLogger.info("List<AssessmentResultResponse>");
     jobLogger.info(Json.pretty(assessmentResultlist));
     long end = System.currentTimeMillis();
@@ -146,14 +151,20 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     jobLoggerFile.close();
 
     // create zip file in server environment for download 
+    startMeasure = System.currentTimeMillis();
     String fileName = zipResult(correlationId, workingPath);
-    String downloadFileUrl = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_URL) + "/" + fileName;
-    LOGGER.info("download resultset {}", downloadFileUrl);
+    setDownloadFileUrl(System.getenv(EnvironmentConstants.NCA_DOWNLOAD_URL) + "/" + fileName);
+    LOGGER.info("Duration of zipping temp output diretory : {} ", (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
+    LOGGER.info("download resultset {}", getDownloadFileUrl());
 
     // cleanup
     cleanUp(workingPath, false);
-
     return assessmentResultlist;
+  }
+  
+  @Override
+  public String getDownloadFileUrl() {
+    return downloadFileUrl;
   }
 
   private void createScenarionFile(File workingPath, AssessmentRequest assessmentRequest) {
@@ -192,6 +203,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(record.getMillis());
         return record.getLevel()
+            + " "
             + logTime.format(cal.getTime())
             + " || "
             + record.getSourceClassName().substring(
@@ -200,7 +212,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
             + "."
             + record.getSourceMethodName()
             + "() : "
-            + record.getMessage() + "\n";
+            + record.getMessage() + "\n\n";
       }
 
     });
@@ -219,7 +231,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
       File fileToZip = new File(workingPath.getAbsolutePath());
       ZipDirectory.zipFile(fileToZip, fileToZip.getName(), zipOut);
       zipOut.close();
-
+      LOGGER.info("download resultset writen to {}", downloadPath + "/" + fileName);
     } catch (IOException e) {
       // eat error
       LOGGER.error("Problem with zipping content {}", e.getLocalizedMessage());
@@ -270,5 +282,9 @@ public class NkModel2Controller extends BaseController implements ControllerInte
       }
     }
   }
-
+  
+  public void setDownloadFileUrl(String url) {
+    this.downloadFileUrl = url;
+  }
+  
 }

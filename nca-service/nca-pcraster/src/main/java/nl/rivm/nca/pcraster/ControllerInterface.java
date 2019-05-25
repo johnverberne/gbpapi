@@ -16,4 +16,6 @@ public interface ControllerInterface {
 	
 	public Envelope2D calculateExtend(File geoTiffFile) throws IOException;
 	
+	public String getDownloadFileUrl();
+	
 }
