@@ -36,16 +36,16 @@ import nl.rivm.nca.shared.domain.user.ScenarioUser;
 public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessmentRequestApiService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImmediatlyAssessmentRequestApiServiceImpl.class);
-  
-	private final ApiServiceContext context;
-	
-	public ImmediatlyAssessmentRequestApiServiceImpl() {
-		this(new ApiServiceContext());
-	}
 
-	ImmediatlyAssessmentRequestApiServiceImpl(final ApiServiceContext context) {
-		this.context = context;
-	}
+  private final ApiServiceContext context;
+
+  public ImmediatlyAssessmentRequestApiServiceImpl() {
+    this(new ApiServiceContext());
+  }
+
+  ImmediatlyAssessmentRequestApiServiceImpl(final ApiServiceContext context) {
+    this.context = context;
+  }
 
   @Override
   public Response postImmediatlyAssessmentRequest(String apiKey, AssessmentRequest assessmentRequest, SecurityContext securityContext)
@@ -66,13 +66,13 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
 
     } else {
       final String uuid = UUID.randomUUID().toString();
-      try  (final Connection connection = context.getPMF().getConnection()) {
-    	ScenarioUser user = UserRepository.getUserByApiKey(connection, apiKey);
+      try (final Connection connection = context.getPMF().getConnection()) {
+        ScenarioUser user = UserRepository.getUserByApiKey(connection, apiKey);
         Calculation calc = CalculationRepository.insertCalculation(connection, new Calculation(), uuid, user, ar.getName());
-    	  
+
         response.setKey(uuid);
         List<AssessmentResultResponse> modelResults = assessmentRun(ar, warnings, uuid);
-        CalculationRepository.insertCalculationResults(connection,calc.getCalculationId(),uuid,modelResults);
+        CalculationRepository.insertCalculationResults(connection, calc.getCalculationId(), uuid, modelResults);
         response.setAssessmentResults(modelResults);
         response.setSuccessful(true);
 
@@ -84,7 +84,7 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
         response.setErrors(errors);
         LOGGER.info("error in call {}", e.getMessage());
         response.setSuccessful(false);
-	}
+      }
     }
     return response;
   }
@@ -97,12 +97,13 @@ public class ImmediatlyAssessmentRequestApiServiceImpl extends ImmediatlyAssessm
     models.add("air_regulation");
     //models.add("cooling_in_urban_areas");
     //models.add("energy_savings_by_shelter_trees");
-    
+
     List<AssessmentResultResponse> results = new ArrayList<AssessmentResultResponse>();
-		for (String model : models) {
-			ModelEnum runModel = ModelEnum.NKMODEL;
-			results.addAll(controller.run(uuid, singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT,runModel )));
-		}
+    for (String model : models) {
+      ModelEnum runModel = ModelEnum.NKMODEL;
+      results.addAll(
+          controller.run(uuid, singleRun.singleRun(ar.getName(), model, "/opt/nkmodel/nkmodel_scenario_trees/", SingleRun.GEOTIFF_EXT, runModel)));
+    }
     return results;
   }
 

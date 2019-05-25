@@ -2,15 +2,20 @@ package nl.rivm.nca.pcraster;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
@@ -23,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import io.swagger.util.Json;
 import nl.rivm.nca.api.domain.AssessmentRequest;
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
+import nl.rivm.nca.api.domain.AssessmentScenarioRequest;
 import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 
@@ -44,10 +50,7 @@ import nl.rivm.nca.api.domain.LayerObject;
 
 public class NkModel2Controller extends BaseController implements ControllerInterface {
 
-  
-
   private static final String JOBLOGGER_TXT = "joblogger.txt";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModel2Controller.class);
 
   private static final String XYZ_EXT = "xyz";
@@ -60,6 +63,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   protected static final String SCENARIO = "scenario";
   protected static final String SCENARIO_OUTPUTS = "scenario/outputs";
   protected static final String DIFF = "diff";
+  protected static final String NKMODEL_SCENARIO_EXPORT = "nkmodel_scenarion.json";
   protected static final int EXTEND_DISTANCE_METERS = 1000;
 
   public NkModel2Controller(File path, boolean directFile) throws IOException, InterruptedException {
@@ -78,6 +82,10 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     long start = System.currentTimeMillis();
     jobLogger.entering(NkModel2Controller.class.toString(), "run");
     jobLogger.info("Start at :" + start);
+
+    // write input json to temp directory
+    createScenarionFile(workingPath, assessmentRequest);
+
 
     LOGGER.info("AssessmentRequest {}", assessmentRequest.toString());
     LOGGER.info("extend {}", assessmentRequest.getExtent());
@@ -108,19 +116,26 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
     cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
     cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
+
+    long startMeasure = System.currentTimeMillis();
     prePrepocessSenarioMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX, jobLogger);
+    jobLogger.info("Durration of PrepocessSenarioMap :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
 
     // create ini files for scenario and baseline
     final File projectFileScenario = ProjectIniFile.generateIniFile(scenarioPath.getAbsolutePath(), scenarioOutputPath.getAbsolutePath());
     final File projectFileBaseLine = ProjectIniFile.generateIniFile(baseLinePath.getAbsolutePath(), baseLineOutputPath.getAbsolutePath());
 
     LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
+    startMeasure = System.currentTimeMillis();
     runPcRaster2(correlationId, assessmentRequest.getEcoSystemService(), projectFileScenario, projectFileBaseLine, scenarioOutputPath,
         baseLineOutputPath, diffPath, jobLogger);
+    jobLogger.info("Durration of PCRaster models :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
 
     convertOutput(diffPath);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath);
+    startMeasure = System.currentTimeMillis();
     publishFiles(correlationId, diffPath);
+    jobLogger.info("Durration of publisching to GEO Server :" + (startMeasure - System.currentTimeMillis()) / 1000F + " seconds");
 
     // close logger
     jobLogger.info("List<AssessmentResultResponse>");
@@ -141,11 +156,54 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     return assessmentResultlist;
   }
 
+  private void createScenarionFile(File workingPath, AssessmentRequest assessmentRequest) {
+    FileWriter fileWriter = null;
+    
+    // convert to make it possible to import again
+    AssessmentScenarioRequest request = new AssessmentScenarioRequest();
+    request.addMeasuresItem(assessmentRequest);
+    
+    try {
+      fileWriter = new FileWriter(workingPath + "/" + NKMODEL_SCENARIO_EXPORT);
+      fileWriter.write(Json.pretty(request));
+      
+    } catch (IOException e) {
+      LOGGER.warn("Writing to the file failure " + e.getMessage());
+    } finally {
+      if (fileWriter != null) {
+        try {
+          fileWriter.close();
+        } catch (IOException e) {
+          LOGGER.warn("Closing the file failure");
+        }
+      }
+    }
+
+  }
+
   private java.util.logging.Logger createJobLogger(FileHandler jobLoggerFile) {
     java.util.logging.Logger jobLogger = java.util.logging.Logger.getLogger("JobLogger");
     jobLogger.setLevel(Level.ALL);
-    //jobLoggerFile.setLevel(Level.WARNING);
-    jobLoggerFile.setFormatter(new SimpleFormatter());
+    jobLoggerFile.setFormatter(new Formatter() {
+
+      @Override
+      public String format(LogRecord record) {
+        SimpleDateFormat logTime = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(record.getMillis());
+        return record.getLevel()
+            + logTime.format(cal.getTime())
+            + " || "
+            + record.getSourceClassName().substring(
+                record.getSourceClassName().lastIndexOf(".") + 1,
+                record.getSourceClassName().length())
+            + "."
+            + record.getSourceMethodName()
+            + "() : "
+            + record.getMessage() + "\n";
+      }
+
+    });
     jobLogger.addHandler(jobLoggerFile);
     return jobLogger;
   }
