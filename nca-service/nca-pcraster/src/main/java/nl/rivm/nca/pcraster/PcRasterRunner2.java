@@ -30,6 +30,7 @@ class PcRasterRunner2 {
 		LOGGER.debug("Execute: ({}) with parameters: {}", RUNNER, args);
 		jobLogger.info("Execute: (" + RUNNER + ") with parameters: " + args );
 		jobLogger.info(String.format("Execute (%s) with parameters: %s", RUNNER, Arrays.toString(args)));
+		exec.setJobLogger(jobLogger);
 		exec.run(correlationId, new File(projectFileScenario.getParent()));
 	}
 }
