@@ -27,6 +27,7 @@ import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.rivm.nca.api.domain.AssessmentRequest;
@@ -183,7 +184,7 @@ public abstract class BaseController implements ControllerInterface {
             String body = "";
             while ((i = fr.read()) != -1)
               body += (char) i;
-
+            mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
             returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId,

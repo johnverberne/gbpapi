@@ -338,11 +338,11 @@ definitions:
       legendrgbmax:
         type: string
       legendmin:   
-        type: integer
-        format: int32
+        type: number
+        format: double
       legendmax:
-         type: integer
-         format: int32
+         type: number
+         format: double
       geobox:
          $ref: '#/definitions/GeoBox'
   GeoBox:
@@ -598,3 +598,4 @@ definitions:
       - MASK
       - CROP
       - TREE_HEIGHT
+      - WINDFORCE
