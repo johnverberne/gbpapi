@@ -34,9 +34,10 @@ public class RasterLayers {
     arLayers.put(Layer.TREES, "bomenkaart");
     arLayers.put(Layer.SHRUBS, "struikenkaart");
     arLayers.put(Layer.GRASS, "graskaart");
-    arLayers.put(Layer.MASK, "mask");
-    arLayers.put(Layer.CROP, "gewas");
+    arLayers.put(Layer.MASK, "Mask"); // reference to a file that is in uppercase
+    arLayers.put(Layer.CROP, "Gewas");
     arLayers.put(Layer.TREE_HEIGHT, "boomhoogte");
+    arLayers.put(Layer.WINDFORCE, "windkaart");
     
     layers.put("air_regulation", arLayers);
 

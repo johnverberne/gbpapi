@@ -13,27 +13,32 @@ public class EnvironmentConstants {
   public static final String NCA_MODEL = "NCA_MODEL";
 
   /*
-   * username for geoserver
+   * Directory with runner shell | batch files.
+   */
+  public static final String NCA_RUNNER = "NCA_RUNNER";
+  
+  /*
+   * username for geoserver.
    */
   public static final String GEOSERVER_USER = "GEOSERVER_USER";
   
   /*
-   * password username for geoserver
+   * password username for geoserver.
    */
   public static final String GEOSERVER_PASSWORD = "GEOSERVER_PASSWORD";
   
   /*
-   * url endpoint for geoserver to publisch result layers
+   * url endpoint for geoserver to publisch result layers.
    */
   public static final String GEOSERVER_URL = "GEOSERVER_URL";
   
   /*
-   * location for the frontend application to get the output of the scenario run
+   * location for the frontend application to get the output of the scenario run.
    */
   public static final String NCA_DOWNLOAD_URL = "NCA_DOWNLOAD_URL";
   
   /*
-   * location for the frontend application to write output for download
+   * location for the frontend application to write output for download.
    */
   public static final String NCA_DOWNLOAD_PATH = "NCA_DOWNLOAD_PATH";
 }

@@ -33,4 +33,8 @@ class PcRasterRunner2 {
 		exec.setJobLogger(jobLogger);
 		exec.run(correlationId, new File(projectFileScenario.getParent()));
 	}
+	
+	public static String getRunnerFileName() {
+	  return OSUtils.isWindows() ? NCA_WIN : NCA;
+	}
 }

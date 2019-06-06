@@ -12,14 +12,17 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
@@ -65,7 +68,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   protected static final String DIFF = "diff";
   protected static final String NKMODEL_SCENARIO_EXPORT = "nkmodel_scenarion.json";
   protected static final int EXTEND_DISTANCE_METERS = 1000;
-  
+
   private String downloadFileUrl;
 
   public NkModel2Controller(File path, boolean directFile) throws IOException, InterruptedException {
@@ -85,10 +88,10 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     jobLogger.entering(NkModel2Controller.class.toString(), "run");
     jobLogger.info("Start at :" + start);
 
-    // write input json to temp directory
-
+    // write input json to temp directory and copy runner files
     createScenarionFile(workingPath, assessmentRequest);
- 
+    copyRunnerFiles(workingPath, jobLogger);
+
     LOGGER.info("AssessmentRequest {}", assessmentRequest.toString());
     LOGGER.info("extend {}", assessmentRequest.getExtent());
     LOGGER.info("extend x {}, y {}, maxx {}, maxy {}",
@@ -161,7 +164,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     cleanUp(workingPath, false);
     return assessmentResultlist;
   }
-  
+
   @Override
   public String getDownloadFileUrl() {
     return downloadFileUrl;
@@ -169,15 +172,15 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
   private void createScenarionFile(File workingPath, AssessmentRequest assessmentRequest) {
     FileWriter fileWriter = null;
-    
+
     // convert to make it possible to import again
     AssessmentScenarioRequest request = new AssessmentScenarioRequest();
     request.addMeasuresItem(assessmentRequest);
-    
+
     try {
       fileWriter = new FileWriter(workingPath + "/" + NKMODEL_SCENARIO_EXPORT);
       fileWriter.write(Json.pretty(request));
-      
+
     } catch (IOException e) {
       LOGGER.warn("Writing to the file failure " + e.getMessage());
     } finally {
@@ -192,8 +195,27 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
   }
 
+  private void copyRunnerFiles(File workingPath, java.util.logging.Logger jobLogger) {
+    try {
+      // write batch files to temp directory
+      FileUtils.copyFile(new File("/opt/nkmodel/nca2.sh"), new File(workingPath.getAbsolutePath() + "/" + "nca2.sh"));
+      FileUtils.copyFile(new File("/opt/nkmodel/nca_preprocess_scenario_map.sh"), new File(workingPath.getAbsolutePath() + "/"  + "nca_preprocess_scenario_map.sh"));
+    } catch (IOException e) {
+      // eat error
+      LOGGER.error("Problem with copy runner files {}", e.getLocalizedMessage());
+      jobLogger.info("roblem with copy runner files " + e.getLocalizedMessage());
+    }
+
+  }
+
   private java.util.logging.Logger createJobLogger(FileHandler jobLoggerFile) {
     java.util.logging.Logger jobLogger = java.util.logging.Logger.getLogger("JobLogger");
+    // suppress the logging output to the console
+    //java.util.logging.Logger jobLogger = Logger.*jobLogger*("");
+//    Handler[] handlers = jobLogger.getHandlers();
+//    if (handlers[0] instanceof ConsoleHandler) {
+//      jobLogger.removeHandler(handlers[0]);
+//    }
     jobLogger.setLevel(Level.ALL);
     jobLoggerFile.setFormatter(new Formatter() {
 
@@ -282,9 +304,9 @@ public class NkModel2Controller extends BaseController implements ControllerInte
       }
     }
   }
-  
+
   public void setDownloadFileUrl(String url) {
     this.downloadFileUrl = url;
   }
-  
+
 }
