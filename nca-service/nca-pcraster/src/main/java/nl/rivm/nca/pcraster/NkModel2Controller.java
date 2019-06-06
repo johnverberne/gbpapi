@@ -211,10 +211,10 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   private java.util.logging.Logger createJobLogger(FileHandler jobLoggerFile) {
     java.util.logging.Logger jobLogger = java.util.logging.Logger.getLogger("JobLogger");
     // suppress the logging output to the console
-    //java.util.logging.Logger jobLogger = Logger.*jobLogger*("");
-//    Handler[] handlers = jobLogger.getHandlers();
+//    java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
+//    Handler[] handlers = rootLogger.getHandlers();
 //    if (handlers[0] instanceof ConsoleHandler) {
-//      jobLogger.removeHandler(handlers[0]);
+//      rootLogger.removeHandler(handlers[0]);
 //    }
     jobLogger.setLevel(Level.ALL);
     jobLoggerFile.setFormatter(new Formatter() {
