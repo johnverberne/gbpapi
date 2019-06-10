@@ -15,3 +15,13 @@ Keuzenlijst van landgebruik uitgebreid;
 Resultaten pagina toont geen eenheden achter de waardes;
 resultaten pagina lijnt alle resultaten inclusief kolom titel rechts uit;
 Update van de iconenen.
+
+28-5-2019
+Er is vandaag een update upgevoerd en het GBP systeem is weer online. 
+Je kunt nu na het berekenen van een scenario ook een download vinden op http://84.107.68.251:8080/downloads/ van je berekening. Met daarin een log bestand van hoe de berekening is verlopen. Dit hebben we nodig om het systeem goed door te kunnen testen.
+
+1-6-2019
+patches uitgevoerd op de natuurenkapitaalmodelen bestanden: raster.py, Verhard.tab, mapdescrptions.ini;
+raster bestanden werken nu met orginele bestandsnamen, houd rekening met hoofdletters;
+resultaten van berekening worden nu uit json gehaald met resultaten code, er is nog geen vertaling;
+aanroepen van de modellen is uitgebreid naar 3 rekenmodellen air_regulation, cooling_in_urban_areas, green_space_and_health;
