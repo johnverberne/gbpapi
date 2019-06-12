@@ -8,3 +8,9 @@ To build the Docker file the following needs to be done:
 
 The `nca.sh` script passes the NatuurlijkKapitaalModellen folder as virtual folder. This makes it possible to modify the script code without having to rebuild the Docker container.
 
+
+How to build the docker container, we use the docker description file Dockerfile
+
+docker build -t nca-docker .
+docker images
+docker run -it --rm nca-docker /bin/bash

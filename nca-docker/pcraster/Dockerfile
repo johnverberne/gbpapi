@@ -1,16 +1,19 @@
-FROM python:2.7
+FROM python:3.6
 
-ARG pcraster=pcraster-4.1.0_x86-64
+ARG pcraster=pcraster-4.2.1_x86_64
 
 COPY ${pcraster}.tar.gz /tmp/${pcraster}.tar.gz
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y python-numpy lsb libjpeg62 && \
-    cd /opt && \
-    tar zxf /tmp/${pcraster}.tar.gz && \
-    rm /tmp/${pcraster}.tar.gz && \
-    apt-get install -y gdal-bin python-gdal ### python3-gdal
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y python3-numpy lsb libjpeg62 gdal-bin python3-gdal \
+    && cd /opt \
+    && tar zxf /tmp/${pcraster}.tar.gz \
+    && rm /tmp/${pcraster}.tar.gz \
+    # Configure pcraster lib directory to be used globally
+    && echo "/opt/${pcraster}/lib" > /etc/ld.so.conf.d/pcraster.conf \
+    # Update config to detect new library files
+    && ldconfig
 
 ENV PATH=/opt/${pcraster}/bin:$PATH
 ENV PYTHONPATH=/opt/${pcraster}/python:$PYTHONPATH
