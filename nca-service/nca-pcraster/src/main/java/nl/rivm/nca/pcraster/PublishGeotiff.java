@@ -32,13 +32,15 @@ public class PublishGeotiff {
     encodedAuth = new String(Base64.getEncoder().encodeToString(geoCreds.getBytes()));
   }
 
-  public int publish(String workspaceName, String storeName, File file, String name) throws MalformedURLException, IOException {
+  public int publish(String workspaceName, String storeName, File file, String name, java.util.logging.Logger jobLogger) 
+      throws MalformedURLException, IOException {
     //storeName += name;
     final String url = geoserverUrl + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName
         + "/file.geotiff?configure=first&coverageName=" + storeName + "_" + name;
     final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
     
     LOGGER.debug("Publisch to geoserver {}", url);
+    jobLogger.info("Publisch to geoserver :" + url);
     
     try {
       con.setRequestMethod("PUT");

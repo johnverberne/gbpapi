@@ -140,16 +140,16 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
     // convert to geotiff and publish to geo server
     startMeasure = System.currentTimeMillis();
-    convertOutput(diffPath);
+    convertOutput(diffPath, jobLogger);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath);
-    publishFiles(correlationId, diffPath);
-    jobLogger.info("Durration of publisching to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
+    publishFiles(correlationId, diffPath, jobLogger);
+    jobLogger.info("Durration of publishing to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
     // close joblogger
     jobLogger.info("List<AssessmentResultResponse>");
     jobLogger.info(Json.pretty(assessmentResultlist));
     long end = System.currentTimeMillis();
-    jobLogger.info("Execute time " + (end - start) / 1000F + " seconds");
+    jobLogger.info("Total execute time " + (end - start) / 1000F + " seconds");
     jobLogger.removeHandler(jobLoggerFile);
     jobLoggerFile.close();
 

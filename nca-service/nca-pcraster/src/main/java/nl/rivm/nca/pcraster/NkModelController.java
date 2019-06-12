@@ -43,9 +43,9 @@ public class NkModelController extends BaseController implements ControllerInter
 
     LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
     runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile, projectFile, outputPath);
-    convertOutput(outputPath);
+    convertOutput(outputPath, null);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, outputPath);
-    publishFiles(correlationId, outputPath);
+    publishFiles(correlationId, outputPath, null);
     cleanUp(workingPath, false);
     return assessmentResultlist;
   }

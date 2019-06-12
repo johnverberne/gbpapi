@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.sql.rowset.Joinable;
+
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.coverage.grid.GridCoverage2D;
@@ -57,7 +59,7 @@ public abstract class BaseController implements ControllerInterface {
   public BaseController(File path, boolean directFile) throws IOException, InterruptedException {
     rasterLayers = RasterLayers.loadRasterLayers(path);
     this.directFile = directFile;
-    publishGeotiff = new PublishGeotiff(System.getenv(EnvironmentConstants.GEOSERVER_URL), 
+    publishGeotiff = new PublishGeotiff(System.getenv(EnvironmentConstants.GEOSERVER_URL),
         System.getenv(EnvironmentConstants.GEOSERVER_USER), System.getenv(EnvironmentConstants.GEOSERVER_PASSWORD));
     // python via docker dan geen test draaien pcRasterRunner.sanityCheck();
   }
@@ -153,12 +155,12 @@ public abstract class BaseController implements ControllerInterface {
     return mapFile;
   }
 
-  protected void convertOutput(File outputPath) throws IOException {
+  protected void convertOutput(File outputPath, java.util.logging.Logger jobLogger) throws IOException {
     Files.list(outputPath.toPath()).filter(f -> MAP_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
           try {
             Geotiff2PcRaster.pcRaster2GeoTiff(f.toFile(), new File(
-                FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT));
+                FilenameUtils.removeExtension(f.toFile().getAbsolutePath()) + GEOTIFF_DOT_EXT), jobLogger);
           } catch (final IOException e) {
             throw new RuntimeException(e);
           }
@@ -191,17 +193,17 @@ public abstract class BaseController implements ControllerInterface {
                 result.toString());
 
           } catch (final Exception e) {
-            LOGGER.warn("Reading and parsing of json failed {}", e);
-            // eat
-            //throw new RuntimeException(e);
+            // eat error
+            LOGGER.warn("Reading and parsing of json failed {}", e.getMessage());
           }
         });
     return returnList;
   }
 
-  protected boolean publishFiles(final String correlationId, File outputPath) throws IOException {
+  protected boolean publishFiles(final String correlationId, File outputPath, java.util.logging.Logger jobLogger) throws IOException {
     boolean successfull = true;
     LOGGER.info("Scan {} for {}", outputPath.getPath(), GEOTIFF_EXT);
+    jobLogger.info("Scan " + outputPath.getPath() + " for :" + GEOTIFF_EXT);
     Files.list(outputPath.toPath())
         .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName().toLowerCase())))
         .forEach(f -> LOGGER.info(f.toFile().getName().toLowerCase()));
@@ -210,11 +212,11 @@ public abstract class BaseController implements ControllerInterface {
         .filter(f -> GEOTIFF_EXT.equals(FilenameUtils.getExtension(f.toFile().getName().toLowerCase()))).forEach(f -> {
           try {
             publishGeotiff.publish(WORKSPACE_NAME, correlationId, f.toFile(),
-                FilenameUtils.removeExtension(f.toFile().getName()));
+                FilenameUtils.removeExtension(f.toFile().getName()), jobLogger);
           } catch (final IOException e) {
             // rewrite to throw an warning and eat error
             LOGGER.warn("Geoserver publication failed {}", e.getMessage());
-            // throw new RuntimeException(e);
+            jobLogger.info("Geoserver publication failed :" + e.getMessage());
           }
         });
     return successfull;

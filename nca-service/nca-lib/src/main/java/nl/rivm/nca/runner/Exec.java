@@ -70,19 +70,7 @@ public final class Exec {
   public void run(final String runId, final File currentWorkingDirectory) throws IOException, InterruptedException {
     run(currentWorkingDirectory,
         new StreamGobbler(OUTPUT_LOGGING_PREFIX, executeParameters.getExecuteableFilename() + "-" + runId, jobLogger),
-        new StreamGobbler(OUTPUT_LOGGING_PREFIX, "", jobLogger) {
-          @Override
-          public void run() {
-            // We ignore the stdout as it doesn't contain useful information
-            try (final BufferedInputStream br = new BufferedInputStream(getInputStream())) {
-              while (br.read() != -1) {
-                // read and ignore till the end of the stream has been reached
-              }
-            } catch (final IOException ioe) {
-              LOGGER.error("Error while reading stdout while running external.", ioe);
-            }
-          }
-        });
+        new StreamGobbler(OUTPUT_LOGGING_PREFIX, "", jobLogger));  //log all stdout
   }
 
   /**
