@@ -64,7 +64,7 @@ export class OpenlayersComponent implements AfterViewInit {
   private readonly GRID_SIZE = 10.0;
 
   // PDOK data:
-  // Geldigheidsgebied van het tiling schema in RD-coördinaten:
+  // Geldigheidsgebied van het tiling schema in RD-coï¿½rdinaten:
   private projectionExtent = [-285401.92, 22598.08, 595401.9199999999, 903401.9199999999];
   // Resoluties (pixels per meter) van de zoomniveaus:
   private resolutions = [3440.640, 1720.320, 860.160, 430.080, 215.040, 107.520, 53.760, 26.880, 13.440, 6.720, 3.360, 1.680, 0.840, 0.420, 0.210];
@@ -207,7 +207,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_TEEB_Minder_gezondheidskosten_door_afvang_fijn_stof-relative_change',
+    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_potUHI-actual_change',
       'TILED': false});
     this.resultLayer.setVisible(resultSubject.show);
   }
