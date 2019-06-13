@@ -25,3 +25,8 @@ patches uitgevoerd op de natuurenkapitaalmodelen bestanden: raster.py, Verhard.t
 raster bestanden werken nu met orginele bestandsnamen, houd rekening met hoofdletters;
 resultaten van berekening worden nu uit json gehaald met resultaten code, er is nog geen vertaling;
 aanroepen van de modellen is uitgebreid naar 3 rekenmodellen air_regulation, cooling_in_urban_areas, green_space_and_health;
+
+13-6-2019
+modelen omgeving opgetrokken naar python 3.6 en pcraster versie 4.2.1;
+logging van de taak nog verder uitgebreid;
+resultaten kaartlaag gewijzigd naar potUHI-actual_change;
