@@ -35,7 +35,7 @@ public class PublishGeotiff {
   public int publish(String workspaceName, String storeName, File file, String name, java.util.logging.Logger jobLogger) 
       throws MalformedURLException, IOException {
     //storeName += name;
-    final String url = geoserverUrl + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName
+    final String url = geoserverUrl + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName + "_" + name 
         + "/file.geotiff?configure=first&coverageName=" + storeName + "_" + name;
     final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
     
