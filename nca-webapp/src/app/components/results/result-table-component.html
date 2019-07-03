@@ -19,6 +19,11 @@
         <td *ngFor="let scenarioResult of scenarioResults(result.code)" 
           title="({{scenarioResult.units | translate}}))"
           class="result-type-value-item">{{scenarioResult.sum | number:'1.0-0':'nl'}}</td>
+        <td>
+            <button type="button" class="btn" (click)="onLayerClick(result.name)">
+                <svg-icon src="assets/img/main-menu-maplayers.svg"></svg-icon>
+              </button>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -67,8 +67,8 @@ export class MapService {
     return this.showResultsSubject.asObservable();
   }
 
-  public showResults(show: boolean, key: string) {
-    this.showResultsSubject.next({show, key});
+  public showResults(show: boolean, key: string, layer: string) {
+    this.showResultsSubject.next({show, key, layer});
   }
 
   public onRemoveCells(): Observable<FeatureModel> {

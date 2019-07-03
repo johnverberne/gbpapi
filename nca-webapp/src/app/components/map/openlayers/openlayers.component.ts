@@ -148,7 +148,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.resultSource = new TileWMS({
       url: `${environment.GEOSERVER_ENDPOINT}/result/wms`,
-      params: { 'LAYERS': '', 'TILED': false },
+      params: { 'LAYERS': '', 'TILED': false, 'STYLES': 'resulttiff' },
       serverType: 'geoserver',
       transition: 0,
     });
@@ -207,8 +207,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_potUHI-actual_change',
-      'TILED': false});
+    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_' +  resultSubject.layer.replace(/ /g , '_'), 'TILED': false});
     this.resultLayer.setVisible(resultSubject.show);
   }
 
