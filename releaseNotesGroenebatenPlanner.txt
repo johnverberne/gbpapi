@@ -30,3 +30,16 @@ aanroepen van de modellen is uitgebreid naar 3 rekenmodellen air_regulation, coo
 modelen omgeving opgetrokken naar python 3.6 en pcraster versie 4.2.1;
 logging van de taak nog verder uitgebreid;
 resultaten kaartlaag gewijzigd naar potUHI-actual_change;
+
+3-7-2019
+iconen aan resultaten tabel toegevoegd die de achterliggende kaart openen voor alle resultaten;
+probleem gefixed dat alle kaarten individueel gepublisheerd worden en opvraagbaar zijn geworden;
+stylesheet opgenomen voor alle resultaat lagen;
+omschrijving tijdelijk gelijk aan bestandnaam;
+
+6-7-2019
+json resultaat is uitgebreid met 3 velden, 2 uit het model en 1 voor resultaat kaarten: tablevalue, tableop, wmsname;
+omschrijving uit het model weer opgenomen in resultaat tabel;
+resultaat waarde tablevalue opgenomen met 2 cijvers achter de komma;
+
+

@@ -207,7 +207,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_' +  resultSubject.layer.replace(/ /g , '_'), 'TILED': false});
+    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_' +  resultSubject.layer, 'TILED': false});
     this.resultLayer.setVisible(resultSubject.show);
   }
 

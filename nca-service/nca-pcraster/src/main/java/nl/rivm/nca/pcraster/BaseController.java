@@ -188,7 +188,7 @@ public abstract class BaseController implements ControllerInterface {
               body += (char) i;
             mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
-            result.setName(f.toFile().getName().replaceAll(".json", "").replaceAll("_", " ")); // also used to map to geotiff
+            result.setWmsname(f.toFile().getName().replaceAll(".json", ""));
             returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId,
                 result.toString());

@@ -315,8 +315,12 @@ definitions:
         format: int32
       name:
         type: string
+      wmsname:
+        type: string
       model:
         type: string  
+      tableop:
+        type: string
       min:
         type: number
         format: double
@@ -324,6 +328,9 @@ definitions:
         type: number
         format: double
       sum:
+        type: number
+        format: double
+      tablevalue:
         type: number
         format: double
       avg:
