@@ -11,9 +11,9 @@
           <sld:RasterSymbolizer>
             <sld:ColorMap type="ramp">
               <sld:ColorMapEntry quantity="-0.2" label="-0.2" color="#ca0020"/>
-              <sld:ColorMapEntry quantity="-0.1" label="-0.1" color="#df5251"/>
-              <sld:ColorMapEntry quantity="-0.06" label="-0.06" color="#f4a582"/>
-              <sld:ColorMapEntry quantity="-0.03" label="-0.03" color="#d4d25d"/>
+              <sld:ColorMapEntry quantity="-0.01" label="-0.1" color="#df5251"/>
+              <sld:ColorMapEntry quantity="-0.006" label="-0.06" color="#f4a582"/>
+              <sld:ColorMapEntry quantity="-0.003" label="-0.03" color="#d4d25d"/>
               <sld:ColorMapEntry quantity="0" label="0" color="#b3ff39"/>
               <sld:ColorMapEntry quantity="1" label="1" color="#a3e28c"/>
               <sld:ColorMapEntry quantity="5" label="5" color="#92c5de"/>

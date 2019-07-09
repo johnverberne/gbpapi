@@ -15,10 +15,9 @@ class PcRasterRunner2 {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PcRasterRunner2.class);
   
-    // TODO we want a version in the executed string parsed from the api
-	private static final String PYTHON = "python";
-	private static final String NCA = "/opt/nkmodel/nca2.sh"; //{NKMODEL_PATH}/bin/nca.sh
-	private static final String NCA_WIN = "/opt/nkmodel/nca2.bat"; //{NKMODEL_PATH}/bin/nca.bat
+  // TODO we want a version in the executed string parsed from the api
+	private static final String NCA = "/opt/nkmodel/nca2.sh"; //{NKMODEL_PATH}/nca.sh
+	private static final String NCA_WIN = "d:/opt/nkmodel/nca2.bat"; //{NKMODEL_PATH}/nca.bat
 
 	public void runPcRaster(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine, File workingPathScenario, File workingFileBaseLine, File projectFileDiff, java.util.logging.Logger jobLogger )
 			throws IOException, InterruptedException {

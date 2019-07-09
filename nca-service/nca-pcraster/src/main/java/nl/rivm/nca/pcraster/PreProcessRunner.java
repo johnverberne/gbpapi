@@ -15,8 +15,8 @@ class PreProcessRunner {
   private static final Logger LOGGER = LoggerFactory.getLogger(PreProcessRunner.class);
 
   // TODO we want a version in the executed string parsed from the api
-  private static final String NCA_PREPROCESS = "/opt/nkmodel/nca_preprocess_scenario_map.sh"; // {NKMODEL_PATH}/bin/nca_preprocess_scenario_map.sh
-  private static final String NCA_WIN_PREPROCESS = "/opt/nkmodel/nca_preprocess_scenario_map.bat"; // {NKMODEL_PATH}/nca_preprocess_scenario_map.bat
+  private static final String NCA_PREPROCESS = "/opt/nkmodel/nca_preprocess_scenario_map.sh"; // {NKMODEL_PATH}/nca_preprocess_scenario_map.sh
+  private static final String NCA_WIN_PREPROCESS = "d:/opt/nkmodel/nca_preprocess_scenario_map.bat"; // {NKMODEL_PATH}/nca_preprocess_scenario_map.bat
 
   /**
    * create a new map (edit_map) file from current map file mutated with the

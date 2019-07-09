@@ -2,54 +2,47 @@ package nl.rivm.nca.pcraster;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
+import nl.rivm.nca.runner.OSUtils;
 
 /**
  * Convert a geotiff image to a pcraster file.
  */
 public class Xyz2Geotiff {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+  private static final String GDAL_TRANSLATE = "gdal_translate";
+  private static final String GDAL_TRANSLATE_WIN = "d:/opt/nkmodel/nca_gdal_translate.bat";
+  private static final String RUNNER = OSUtils.isWindows() ? GDAL_TRANSLATE_WIN : GDAL_TRANSLATE;
 
-	private static final String GDAL_TRANSLATE = "gdal_translate";
-	private static final String COL2MAP = "col2map";
-	private static final String PCRCALC = "pcrcalc";
-	public static final String GEOTIFF_EXT = "tiff";
-	public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
-	private static final String XYZ_EXT = "XYZ";
-	private static final String XYZ_DOT_EXT = "." + XYZ_EXT;
+  public static final String GEOTIFF_EXT = "tiff";
+  public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
 
-	// gdal_translate -a_srs EPSG:28992 bomen.xyz bomen_xyz.tif
-	public static void xyz2geoTiff(File xyzFile, File tifFile) throws IOException {
-		final String[] args = { "-a_srs", "EPSG:28992", xyzFile.getAbsolutePath(), tifFile.getAbsolutePath() };
-		final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
-		final Exec exec = new Exec(execParams, "");
-		try {
-			exec.run(new File(xyzFile.getParent()));
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-			Thread.currentThread().interrupt();
-		}
-	}
+  // gdal_translate -a_srs EPSG:28992 bomen.xyz bomen_xyz.tif
+  public static void xyz2geoTiff(File xyzFile, File tifFile) throws IOException {
+    final String[] args = {"-a_srs", "EPSG:28992", xyzFile.getAbsolutePath(), tifFile.getAbsolutePath()};
+    final ExecParameters execParams = new ExecParameters(RUNNER, args);
+    final Exec exec = new Exec(execParams, "", false);
+    try {
+      exec.run(new File(xyzFile.getParent()));
+    } catch (final InterruptedException e) {
+      e.printStackTrace();
+      Thread.currentThread().interrupt();
+    }
+  }
 
-	public static void xyz2gmap(File xyzFile, File mapFile) throws IOException {
-		final String[] args = {xyzFile.getAbsolutePath(), mapFile.getAbsolutePath()};
-		final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
-		final Exec exec = new Exec(execParams, "");
-		
-		try {
-			exec.run(new File(xyzFile.getParent()));
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-			Thread.currentThread().interrupt();
-		}
-	}
+  public static void xyz2gmap(File xyzFile, File mapFile) throws IOException {
+    final String[] args = {xyzFile.getAbsolutePath(), mapFile.getAbsolutePath()};
+    final ExecParameters execParams = new ExecParameters(RUNNER, args);
+    final Exec exec = new Exec(execParams, "", false);
+
+    try {
+      exec.run(new File(xyzFile.getParent()));
+    } catch (final InterruptedException e) {
+      e.printStackTrace();
+      Thread.currentThread().interrupt();
+    }
+  }
 
 }

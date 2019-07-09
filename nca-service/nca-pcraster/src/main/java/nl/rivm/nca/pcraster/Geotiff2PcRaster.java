@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
+import nl.rivm.nca.runner.OSUtils;
 
 /**
  * Convert a geotiff image to a pcraster file.
@@ -12,6 +13,8 @@ import nl.rivm.nca.runner.ExecParameters;
 public class Geotiff2PcRaster {
 
 	private static final String GDAL_TRANSLATE = "gdal_translate";
+	private static final String GDAL_TRANSLATE_WIN = "d:/opt/nkmodel/nca_gdal_translate.bat";
+	private static final String RUNNER = OSUtils.isWindows() ? GDAL_TRANSLATE_WIN : GDAL_TRANSLATE;
 
 	// The source raster is a raster with land cover classes. This corresponds
 	// with the PCRaster nominal values scale. That information can be passed
@@ -21,8 +24,8 @@ public class Geotiff2PcRaster {
 	public static void geoTiff2PcRaster(File geotiffFile, File mapFile) throws IOException {
 		final String[] args = { "-of", "PCRaster", "-ot", "Float32" /* "Int32" */, "-mo",
 				"PCRASTER_VALUESCALE=VS_NOMINAL", "-b", "1", geotiffFile.getAbsolutePath(), mapFile.getAbsolutePath() };
-		final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
-		final Exec exec = new Exec(execParams, "");
+		final ExecParameters execParams = new ExecParameters(RUNNER, args);
+		final Exec exec = new Exec(execParams, "", false);
 		try {
 			exec.run(new File(geotiffFile.getParent()));
 		} catch (final InterruptedException e) {
@@ -33,8 +36,8 @@ public class Geotiff2PcRaster {
 
 	public static void pcRaster2GeoTiff(File mapFile, File geotiffFile, java.util.logging.Logger jobLogger) throws IOException {
 		final String[] args = { "-a_srs", "EPSG:28992", mapFile.getAbsolutePath(), geotiffFile.getAbsolutePath() };
-		final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
-		final Exec exec = new Exec(execParams, "");
+		final ExecParameters execParams = new ExecParameters(RUNNER, args);
+		final Exec exec = new Exec(execParams, "", false);
 		exec.setJobLogger(jobLogger);
 		try {
 			exec.run(new File(geotiffFile.getParent()));
