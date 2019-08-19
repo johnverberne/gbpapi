@@ -1,6 +1,7 @@
 @import 'variables.scss';
 .measure-component {
   overflow-y: auto;
+  overflow-x: hidden;
   padding-left: 10px;
   padding-right: 10px;
 
@@ -10,9 +11,18 @@
     .row {
       margin: 0;
     }
+    
+    .measure-top-row {
+      display: flex;
+      flex-wrap: nowrap;
+
+      .svg-delete{
+        width: 24px;
+      }
+    }
 
     .measure-name {
-      width: 260px;
+      width: 250px;
     }
   }
 }
@@ -40,10 +50,11 @@ input[type=number]::-webkit-outer-spin-button {
 .delete-download {
   padding: 0;
   height: 30px;
+  padding-left: 10px;
 }
 
 .measure-content {
-  width: 260px;
+  width: 250px;
   margin-left: 36px;
 
   .row {

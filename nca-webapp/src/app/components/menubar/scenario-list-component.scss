@@ -16,7 +16,7 @@
   }
 
   gbp-scenario {
-    height: calc(100% - 100px);
+    height: calc(100% - 90px);
   }
 }
 
@@ -26,6 +26,10 @@
 
 .download {
   margin-left: auto;
+}
+
+.delete-download {
+  height: 30px;
 }
 
 .nav-header {
@@ -55,6 +59,10 @@
     color: white;
     background-color: map-get($theme-colors, "primary");
   }
+}
+
+.svg-delete-download {
+  width: 24px;
 }
 
 .scenario-form {

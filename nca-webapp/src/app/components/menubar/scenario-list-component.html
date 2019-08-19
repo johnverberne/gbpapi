@@ -11,10 +11,10 @@
       <button *ngIf="projectService.currentProject.scenarios.length < MAX_SCENARIO_THRESHOLD" type="button"
         class="btn btn-secondary round-button-end pager-number" (click)="onAddScenarioClick()">+</button>
       <button type="button" class="btn download delete-download" disabled="true">
-        <svg-icon src="assets/img/ui-download.svg" [ngClass]="{'disabled': true}"></svg-icon>
+        <svg-icon src="assets/img/ui-download.svg" class="svg-delete-download" [ngClass]="{'disabled': true}"></svg-icon>
       </button>
       <button type="button" class="btn delete-download" (click)="onDeleteClick()">
-        <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
+        <svg-icon src="assets/img/ui-delete.svg" class="svg-delete-download" [ngClass]="{'disabled': false}"></svg-icon>
       </button>
     </div>
   </div>
