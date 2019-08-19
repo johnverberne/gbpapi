@@ -10,7 +10,7 @@
 
 .menu {
   position: fixed;
-  left: $nav-bar-width;
+  left: calc(#{$nav-bar-width} + #{1px});
   width: $menu-bar-width;
   top: 0;
   bottom: 0;
