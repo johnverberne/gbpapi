@@ -12,22 +12,35 @@
 @import "~material-design-icons-iconfont/dist/material-design-icons.css";
 
 
-.btn-primary, .btn-secondary {
-  font-size: 15px;
-  background-color: white;
-  border-width: 1px;
-  border-color: map-get($theme-colors, "primary");
-  color: map-get($theme-colors, "primary");
+.btn-primary {
+  font-size: 22px;
+  border-width: 0;
+  color: white; 
+  background-color:  map-get($theme-colors, "primary");
   &:hover {
-    color: white;
-    background-color: map-get($theme-colors, "primary");
-    border-color: map-get($theme-colors, "primary");
+    background-color: white;
+    color: map-get($theme-colors, "primary");
   }
   &:focus {}
   &:not(:disabled):not(.disabled):active {
-    color: white;
-    background-color: map-get($theme-colors, "primary");
-    border-color: map-get($theme-colors, "primary");
+    background-color: white;
+    color: map-get($theme-colors, "primary");
+  }
+}
+
+.btn-secondary {
+  font-size: 22px;
+  border-width: 0;
+  background-color: white;
+  color: map-get($theme-colors, "primary");
+  &:hover {
+    color: white; 
+    background-color:  map-get($theme-colors, "primary");
+  }
+  &:focus {}
+  &:not(:disabled):not(.disabled):active {
+    color: white; 
+    background-color:  map-get($theme-colors, "primary");
   }
 }
 
@@ -37,12 +50,20 @@
 
 .form-control {
   border: none;
+  height: 30px;
+  font-size: 15px;
+  font-family: 'RO-Sans-Text';
   &:focus {
     box-shadow: none;
   }
 }
 
 .btn {
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
   &:focus {
     box-shadow: none;
   }

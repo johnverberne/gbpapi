@@ -7,7 +7,7 @@
 }
 
 .scenario-component {
-  height: calc(100% - 100px);
+  height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -43,6 +43,7 @@
 .btn.pager-number {
   font-family: 'RO-Sans-Text';
   font-size: 14px;
+  height: 30px;
   font-weight: bold;
   color: map-get($theme-colors, "primary");
   border-color: map-get($theme-colors, "primary");

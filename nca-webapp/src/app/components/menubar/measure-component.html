@@ -9,11 +9,11 @@
             src="assets/img/ui-measure-closed.svg"></svg-icon>
         </button>
         <input type="text" id="name" formControlName="name" class="form-control col-sm-8">
-        <button type="button" class="btn delete-download col-sm-2" (click)="onDeleteClick(i)">
+        <button type="button" class="btn delete-download" (click)="onDeleteClick(i)">
           <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
         </button>
         <div id="collapseBasic" [collapse]="openMeasure !== i || !isOpen" class="col-sm-12 measure-panel">
-          <div class="offset-2 col-sm-10 measure-content">
+          <div class="offset-2 measure-content">
             <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
             <div>
               <div class="row col-sm-12">
@@ -78,7 +78,7 @@
             </div>
             <div class="row col-sm-12 measure-row input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">€</span>
+                <span class="input-group-text prepend">€</span>
               </div>
               <input type="number" min="0" formControlName="woz" class="form-control">
             </div>

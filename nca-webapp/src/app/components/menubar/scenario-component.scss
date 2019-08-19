@@ -65,12 +65,11 @@
 .measures {
   height: calc(100% - 120px);
   overflow-y: auto;
-  padding-top: 0.5rem;
+  padding-top: 10px;
 }
 
 .save-cancel {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 10px;
   .okay-button {
     margin-left: auto;
   }

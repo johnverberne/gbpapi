@@ -17,14 +17,27 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
+.delete-download {
+  padding: 0;
+  height: 30px;
+}
+
 .measure-content {
-  padding-left: 10px;
+  width: 260px;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .measure-row {
   padding-bottom: 0.5rem;
   .input-group {
     width: 80px;
+    height: 30px;
   }
 }
 
@@ -33,6 +46,11 @@ input[type=number]::-webkit-outer-spin-button {
   border: none;
   border-radius: unset;
   cursor: default;
+  height: 30px;
+  padding: 0 10px 0 0;
+  &.prepend {
+    padding-left: 10px;
+  }
 }
 
 .measure-label {
@@ -41,6 +59,10 @@ input[type=number]::-webkit-outer-spin-button {
   align-items: center;
   flex-grow: 2;
   background-color: $result-scenario-background;
+  height: 30px;
+  .sub-label {
+    margin-bottom: 0;
+  }
 }
 
 .add-measure {
