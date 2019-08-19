@@ -1,10 +1,30 @@
 @import 'variables.scss';
 .measure-component {
   overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .measure-section {
+    padding-bottom: 10px;
+
+    .row {
+      margin: 0;
+    }
+
+    .measure-name {
+      width: 260px;
+    }
+  }
 }
 
 .collapse-button {
   display: flex;
+  height: 24px;
+  width: 36px;
+  padding-left: 0;
+  .svg-collapse {
+    width: 24px;
+  }
 }
 
 .measure-panel {
@@ -24,12 +44,17 @@ input[type=number]::-webkit-outer-spin-button {
 
 .measure-content {
   width: 260px;
+  margin-left: 36px;
 
   .row {
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .control-label {
+    padding-top: 10px;
   }
 }
 

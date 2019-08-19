@@ -2,16 +2,18 @@
   <div formArrayName="measures">
     <div class="measure-section" *ngFor="let measure of measures.controls; let i=index" [formGroupName]="i">
       <div class="form-group row">
-        <button type="button" class="btn collapse-button col-sm-2" (click)="onOpenMeasure(i)">
-          <svg-icon [style.fill]="getColorForMeasure(measure)" class="svg-collapse" *ngIf="openMeasure === i && isOpen"
-            src="assets/img/ui-measure-open.svg"></svg-icon>
-          <svg-icon [style.fill]="getColorForMeasure(measure)" class="svg-collapse" *ngIf="openMeasure !== i || !isOpen"
-            src="assets/img/ui-measure-closed.svg"></svg-icon>
-        </button>
-        <input type="text" id="name" formControlName="name" class="form-control col-sm-8">
-        <button type="button" class="btn delete-download" (click)="onDeleteClick(i)">
-          <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
-        </button>
+        <div class="row">
+          <button type="button" class="btn collapse-button" (click)="onOpenMeasure(i)">
+            <svg-icon [style.fill]="getColorForMeasure(measure)" class="svg-collapse"
+              *ngIf="openMeasure === i && isOpen" src="assets/img/ui-measure-open.svg"></svg-icon>
+            <svg-icon [style.fill]="getColorForMeasure(measure)" class="svg-collapse"
+              *ngIf="openMeasure !== i || !isOpen" src="assets/img/ui-measure-closed.svg"></svg-icon>
+          </button>
+          <input type="text" id="name" formControlName="name" class="form-control measure-name">
+          <button type="button" class="btn delete-download" (click)="onDeleteClick(i)">
+            <svg-icon src="assets/img/ui-delete.svg" [ngClass]="{'disabled': false}"></svg-icon>
+          </button>
+        </div>
         <div id="collapseBasic" [collapse]="openMeasure !== i || !isOpen" class="col-sm-12 measure-panel">
           <div class="offset-2 measure-content">
             <input type="text" id="id" formControlName="id" class="form-control col-sm-1" hidden>
@@ -89,7 +91,7 @@
   </div>
   <div *ngIf="measures.length !== 0 && measures.length < MAX_MEASURES_THRESHOLD">
     <button type="button" class="btn add-measure" (click)="onAddMeasureClick()">
-      <svg-icon [style.fill]="getAddMeasureColor()" src="assets/img/ui-map-plus.svg"></svg-icon>
+      <svg-icon [style.fill]="getAddMeasureColor()" src="assets/img/ui-measure-add.svg"></svg-icon>
     </button>
   </div>
   <div class="no-measure" *ngIf="measures.length === 0">
