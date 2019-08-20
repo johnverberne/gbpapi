@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { BaseDialogComponent } from '../modal/base-dialog-component';
 import { ModalComponent } from '../modal/modal-component';
-import { environment } from '../../../environments/environment.prod';
 
 @Component({
   templateUrl: 'calculation-dialog-component.html',
@@ -13,7 +12,6 @@ import { environment } from '../../../environments/environment.prod';
 })
 export class CalculationDialogComponent extends BaseDialogComponent {
 
-  public okayButton: boolean = true;
   public cancelButton: boolean = false;
 
   @ViewChild('dialog') public dialog: ModalComponent;
@@ -24,10 +22,6 @@ export class CalculationDialogComponent extends BaseDialogComponent {
 
   public getDialog(): ModalComponent {
     return this.dialog;
-  }
-
-  public newTab() {
-    window.open(environment.ENDPOINT + '/reference(main:map)', '_blank');
   }
 
 }
