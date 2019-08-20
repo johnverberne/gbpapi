@@ -12,6 +12,7 @@ import { CalculationEventService } from '../../services/calculation-event-serivc
 import { Router } from '@angular/router';
 import { GridCellModel } from '../../models/grid-cell-model';
 import { MessageEventService } from '../../services/message-event-service';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'gbp-scenario-list',
@@ -101,7 +102,7 @@ export class ScenarioListComponent implements OnInit {
                   scenario.url = result.assessmentResults[index].url;
                   scenario.key = result.assessmentResults[index].key;
                 });
-                this.router.navigate([{ outlets: { primary: 'result', main: 'table' }}]);
+                this.router.navigate([{ outlets: { primary: 'result', main: 'table' } }]);
               }
             }
           },
@@ -169,37 +170,52 @@ export class ScenarioListComponent implements OnInit {
   }
 
   private encodeCellData(layers: LayerModel[]) {
-    layers.forEach(layer => layer.data =  window.btoa(layer.data.join('\n')));
+    layers.forEach(layer => layer.data = window.btoa(layer.data.join('\n')));
   }
 
   private processCellData(measure: MeasureModel, model: string) {
     let data: string[];
-    let value = 0;
+    let value: number;
     switch (model) {
       case 'POPULATION': {
-        value = measure.geom.cells.length > 0 ? measure.inhabitants / measure.geom.cells.length : 0;
+        if (measure.inhabitants) {
+          value = measure.geom.cells.length > 0 ? measure.inhabitants / measure.geom.cells.length : null;
+        }
         break;
       }
       case 'TREES': {
-        value = measure.vegetation.high / 100;
+        if (measure.vegetation.high) {
+          value = measure.vegetation.high / 100;
+        }
         break;
       }
       case 'SHRUBS': {
-        value = measure.vegetation.middle / 100;
+        if (measure.vegetation.middle) {
+          value = measure.vegetation.middle / 100;
+        }
         break;
       }
       case 'GRASS': {
-        value = measure.vegetation.low / 100;
+        if (measure.vegetation.low) {
+          value = measure.vegetation.low / 100;
+        }
         break;
       }
       case 'WOZ': {
-        value = measure.woz;
+        if (measure.woz) {
+          value = measure.woz;
+        }
         break;
       }
       case 'LAND_COVER': {
-        value = measure.landuse;
+        if (measure.landuse) {
+          value = measure.landuse;
+        }
         break;
       }
+    }
+    if (isNullOrUndefined(value)) {
+      return;
     }
     measure.geom.cells.sort(this.compare);
     data = measure.geom.cells.map(cells => {
