@@ -4,10 +4,8 @@
 
 export const environment = {
   production: false,
-  // ENDPOINT: 'http://localhost:8080/api/1',
-  // GEOSERVER_ENDPOINT: 'http://localhost:8080/geoserver-gbp'
-  ENDPOINT: 'http://84.107.68.251:8080/api/1',
-  GEOSERVER_ENDPOINT: 'http://84.107.68.251:8080/geoserver-gbp'
+  ENDPOINT: 'http://localhost:8080/api/1',
+  GEOSERVER_ENDPOINT: 'http://localhost:8080/geoserver-gbp'
 };
 
 /*
