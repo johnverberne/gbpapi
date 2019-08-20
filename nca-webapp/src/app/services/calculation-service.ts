@@ -15,11 +15,7 @@ export class CalculationService extends BaseService {
     return super.post('assessmentRequest', request);
   }
 
-  public startImmediateCalculation(request: AssessmentRequestModel): Observable<any> {
-    return super.post('immediatlyAssessmentRequest?apiKey=0000-0000-0000-0001', request);
-  }
-
-  public startImmediateScenarioCalculation(request: ScenarioRequestModel[]): Observable<any> {
+  public startScenarioCalculation(request: ScenarioRequestModel[]): Observable<any> {
     return super.post('assessmentScenarioRequest?apiKey=0000-0000-0000-0001', request);
   }
 
