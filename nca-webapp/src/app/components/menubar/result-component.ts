@@ -8,6 +8,7 @@ import { ResultType } from '../../models/enums/result-type';
 import { MapService } from '../../services/map-service';
 import { LandUseType } from '../../models/enums/landuse-type';
 import { EnumUtils } from '../../shared/enum-utils';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'gbp-result',
@@ -61,7 +62,7 @@ export class ResultComponent implements OnInit {
   }
 
   public exportClick() {
-    this.messageEventService.sendMessage('WIP');
+    return `${environment.ENDPOINT}/${this.scenario.url}`;
   }
 
   public onScenarioClick(index: number) {

@@ -98,6 +98,7 @@ export class ScenarioListComponent implements OnInit {
               if (result.successful && result.assessmentResults) {
                 this.scenarios.forEach((scenario, index) => {
                   scenario.results = result.assessmentResults[index].entries;
+                  scenario.url = result.assessmentResults[index].url;
                   scenario.key = result.assessmentResults[index].key;
                 });
                 this.router.navigate([{ outlets: { primary: 'result', main: 'table' }}]);

@@ -4,8 +4,7 @@
   <div class="sub-header">
     <div class="pager" *ngIf="scenarios.length > 1">
       <div *ngFor="let scenario of scenarios; let i = index">
-        <button type="button" class="btn btn-secondary pager-number" 
-          [ngClass]="{'active': i === currentScenarioIndex, 
+        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex, 
           'round-button-one-item': i===0 && scenarios.length === 1,
           'round-button-start': i===0 && scenarios.length > 1,
           'round-button-middle': i!==0 && i < MAX_SCENARIO_THRESHOLD - 1,
@@ -51,12 +50,10 @@
       </div>
     </div>
     <div class="row save-cancel">
-      <button type="button" class="btn btn-secondary export" (click)="exportClick()" autofocus>{{
-      'BUTTON_EXPORT' | translate }}</button>
+      <a href="{{exportClick()}}" class="btn btn-secondary export">{{ 'BUTTON_EXPORT' | translate }}</a>
     </div>
   </div>
 </div>
 <div class="resultbar" [ngClass]="{'open-menu':openMenu}">
   <gbp-resultbar></gbp-resultbar>
 </div>
-  
