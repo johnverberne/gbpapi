@@ -84,7 +84,7 @@ export class ScenarioListComponent implements OnInit {
         modelData = model;
         const request = this.createScenarioRequest(modelData);
         this.calculationEventService.calculationStarted();
-        this.calculationService.startImmediateScenarioCalculation(request).subscribe(
+        this.calculationService.startScenarioCalculation(request).subscribe(
           (result) => {
             this.calculationEventService.calculationFinished();
             if (result) {
@@ -116,24 +116,40 @@ export class ScenarioListComponent implements OnInit {
     const request = [];
     this.scenarios.forEach(scenario => {
       const scenarioRequest = new ScenarioRequestModel();
+      const layers: LayerModel[] = [];
+      const measureRequest = new AssessmentRequestModel();
+      measureRequest.name = scenario.scenarioName;
+      measureRequest.model = 'NKMODEL2';
+      measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
       scenario.measures.forEach(measure => {
-        const measureRequest = new AssessmentRequestModel();
-        measureRequest.name = scenario.scenarioName + ' - ' + measure.measureName;
-        measureRequest.model = 'NKMODEL2';
-        measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
         this.defineExtent(measure, measureRequest);
         modelData.entries.forEach(model => {
-          const layer = new LayerModel();
-          layer.classType = model;
-          layer.dataType = 'XYZ';
-          layer.data = this.processCellData(measure, model);
-          measureRequest.layers.push(layer);
+          const layer = this.getLayer(layers, model);
+          layer.data.push(...this.processCellData(measure, model));
         });
+
         scenarioRequest.measures.push(measureRequest);
       });
+      this.encodeCellData(layers);
+      measureRequest.layers = layers;
+      scenarioRequest.measures.push(measureRequest);
       request.push(scenarioRequest);
     });
     return request;
+  }
+
+  private getLayer(layers: any[], model: string): LayerModel {
+    const index = layers.findIndex(layer => layer.classType === model);
+    if (index === -1) {
+      const layer = new LayerModel();
+      layer.classType = model;
+      layer.dataType = 'XYZ';
+      layer.data = [];
+      const length = layers.push(layer);
+      return layers[length - 1];
+    } else {
+      return layers[index];
+    }
   }
 
   private defineExtent(measure: MeasureModel, measureRequest: AssessmentRequestModel) {
@@ -149,6 +165,10 @@ export class ScenarioListComponent implements OnInit {
   public areScenariosValid() {
     const scenarios = this.scenarios.filter(scenario => scenario.measures && scenario.measures.length > 0);
     return scenarios.length === this.scenarios.length;
+  }
+
+  private encodeCellData(layers: LayerModel[]) {
+    layers.forEach(layer => layer.data =  window.btoa(layer.data.join('\n')));
   }
 
   private processCellData(measure: MeasureModel, model: string) {
@@ -184,10 +204,7 @@ export class ScenarioListComponent implements OnInit {
     data = measure.geom.cells.map(cells => {
       return cells.coords[0] + ' ' + cells.coords[1] + ' ' + value;
     });
-
-
-    const encodedData = window.btoa(data.join('\n'));
-    return encodedData;
+    return data;
   }
 
   private ensureOneScenarioExists() {
