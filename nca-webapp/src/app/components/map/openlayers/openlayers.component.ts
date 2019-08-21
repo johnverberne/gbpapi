@@ -25,7 +25,6 @@ import { getTopLeft } from 'ol/extent';
 import { WMTS } from 'ol/source';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { DrawType } from '../../../models/enums/draw-type';
-import { click } from 'ol/events/condition';
 
 @Component({
   selector: 'gbp-openlayers',
