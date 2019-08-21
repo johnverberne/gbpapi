@@ -35,7 +35,7 @@ export class SidebarComponent implements OnInit {
   public onMenuClick(event: string) {
     if (this.activeMenu !== event) {
       this.menuService.mainMenuChange();
-      if (event === 'LAYERS' || event === 'SETTINGS') {
+      if (event === 'SETTINGS') { // event === 'LAYERS' ||
         this.messageService.sendMessage('WIP');
         this.router.navigate(['dummy']);
       } else {

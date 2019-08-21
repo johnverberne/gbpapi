@@ -33,6 +33,7 @@ import { MenuEventService } from './services/menu-event-service';
 import { MapService } from './services/map-service';
 import { ScenarioComponent } from './components/menubar/scenario-component';
 import { ResultTableComponent } from './components/results/result-table-component';
+import { ResultLayersComponent } from './components/results/result-layers-component';
 import { registerLocaleData } from '@angular/common';
 import { CalculationEventService } from './services/calculation-event-serivce';
 import { CalculationDialogComponent } from './shared/confirm-dialog/calculation-dialog-component';
@@ -61,6 +62,7 @@ registerLocaleData(localeNl, 'nl');
     ResultComponent,
     ResultBarComponent,
     ResultTableComponent,
+    ResultLayersComponent,
     CalculationDialogComponent
   ],
   imports: [

@@ -13,17 +13,18 @@ import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
 import { bbox } from 'ol/loadingstrategy';
-import { Select, DragBox } from 'ol/interaction';
-import { platformModifierKeyOnly } from 'ol/events/condition';
+import { Select, DragBox, Draw } from 'ol/interaction';
+import { platformModifierKeyOnly, click } from 'ol/events/condition';
 import { Coordinate } from 'ol/coordinate';
 import { GridCellModel } from '../../../models/grid-cell-model';
 import { Style, Stroke, Fill } from 'ol/style';
 import proj4 from 'proj4';
-import {register as proj4register } from 'ol/proj/proj4';
+import { register as proj4register } from 'ol/proj/proj4';
 import { ResultSubject } from '../../../models/result-subject';
 import { getTopLeft } from 'ol/extent';
 import { WMTS } from 'ol/source';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { DrawType } from '../../../models/enums/draw-type';
 import { click } from 'ol/events/condition';
 
 @Component({
@@ -46,6 +47,9 @@ export class OpenlayersComponent implements AfterViewInit {
   private lceuLayer: TileLayer;
   private resultLayer: TileLayer;
   private resultSource: TileWMS;
+  private draw: Draw;
+  private currentDrawStyle: DrawType;
+  private currentGeom: FeatureModel;
 
   private targetProjection = new Projection({
     code: 'EPSG:28992'
@@ -113,14 +117,14 @@ export class OpenlayersComponent implements AfterViewInit {
         format: 'image/png',
         projection: this.targetProjection,
         tileGrid: new WMTSTileGrid({
-            origin: getTopLeft(this.projectionExtent),
-            resolutions: this.resolutions,
-            matrixIds: this.matrixIds
+          origin: getTopLeft(this.projectionExtent),
+          resolutions: this.resolutions,
+          matrixIds: this.matrixIds
         }),
         style: 'default',
         wrapX: false
-    }),
-    opacity: 0.4
+      }),
+      opacity: 0.4
     });
 
     this.bagVector = new VectorSource({
@@ -170,6 +174,8 @@ export class OpenlayersComponent implements AfterViewInit {
     this.selectedGridLayer = new VectorLayer({
       source: this.selectedGridSource
     });
+
+    this.currentDrawStyle = DrawType.SINGLE;
   }
 
   public ngAfterViewInit() {
@@ -186,6 +192,14 @@ export class OpenlayersComponent implements AfterViewInit {
       layers: [this.pdokLayer, this.lceuLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
+  }
+
+  public onDrawModeChange(mode: DrawType) {
+    this.currentDrawStyle = mode;
+    this.map.removeInteraction(this.select);
+    this.map.removeInteraction(this.dragBox);
+    this.map.removeInteraction(this.draw);
+    this.enableDrawMode();
   }
 
   private getStyle(styleName: string) {
@@ -207,7 +221,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultSource.updateParams({'LAYERS': resultSubject.key + '_' +  resultSubject.layer, 'TILED': false, 'ENV': 'max=100;min=-100'});
+    this.resultSource.updateParams({ 'LAYERS': resultSubject.key + '_' + resultSubject.layer, 'TILED': false, 'ENV': 'max=100;min=-100' });
     this.resultLayer.setVisible(resultSubject.show);
   }
 
@@ -238,21 +252,46 @@ export class OpenlayersComponent implements AfterViewInit {
   }
 
   private enableGetGrid(geom: FeatureModel) {
+    this.currentGeom = geom;
     if (!this.gridLayer10.getVisible()) {
       this.gridLayer10.setVisible(true);
     }
-    this.select = new Select({
-      layers: [this.gridLayer10],
-      style: this.gridStyle,
-      condition: click,
-      multi: false
-    });
-    this.map.addInteraction(this.select);
-    this.select.on('select', (e) => {
-      const feature: Feature = e.selected[0];
-      this.addOrRemoveFeature(feature, geom);
-    });
+    this.enableDrawMode();
+  }
 
+  private enableDrawMode() {
+    if (this.currentDrawStyle === DrawType.SINGLE) {
+      this.addSingleDrawInteraction();
+    }
+    if (this.currentDrawStyle === DrawType.BOX) {
+      this.addBoxDrawInteraction();
+    }
+    if (this.currentDrawStyle === DrawType.POLYGON) {
+      this.addPolygonDrawInteraction();
+    }
+  }
+
+  private addPolygonDrawInteraction() {
+    this.draw = new Draw({
+      type: 'Polygon',
+      condition: platformModifierKeyOnly
+    });
+    this.map.addInteraction(this.draw);
+    this.draw.on('drawend', (event) => {
+      const geometry = event.feature.getGeometry();
+      const extent = geometry.getExtent();
+      const drawCoords = geometry.getCoordinates()[0];
+      const selectedFeatures: Feature[] = [];
+      this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
+        if (this.pointInPolygon(feature.getGeometry(), drawCoords)) {
+          selectedFeatures.push(feature);
+        }
+      });
+      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
+    });
+  }
+
+  private addBoxDrawInteraction() {
     this.dragBox = new DragBox({
       condition: platformModifierKeyOnly
     });
@@ -266,13 +305,42 @@ export class OpenlayersComponent implements AfterViewInit {
           selectedFeatures.push(feature);
         }
       });
-      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature, geom));
+      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
     });
   }
 
-  private addOrRemoveFeature(feature: Feature, geom: FeatureModel) {
+  private addSingleDrawInteraction() {
+    this.select = new Select({
+      layers: [this.gridLayer10],
+      style: this.gridStyle,
+      condition: click,
+      multi: false
+    });
+    this.map.addInteraction(this.select);
+    this.select.on('select', (e) => {
+      const feature: Feature = e.selected[0];
+      this.addOrRemoveFeature(feature);
+    });
+  }
+
+  private pointInPolygon(point: any, vs: any) {
+    const x = point.getExtent()[0], y = point.getExtent()[1];
+    let inside = false;
+    for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+      const xi = vs[i][0], yi = vs[i][1];
+      const xj = vs[j][0], yj = vs[j][1];
+      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  private addOrRemoveFeature(feature: Feature) {
+    const geom = this.currentGeom;
     const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
-    if (selected) {
+    if ((this.currentDrawStyle !== DrawType.POLYGON && this.currentDrawStyle !== DrawType.BOX) && selected) {
       if (selected.get('measureId') === geom.id) {
         this.removeSelectedFeature(selected, geom);
       } else {
@@ -319,5 +387,6 @@ export class OpenlayersComponent implements AfterViewInit {
     this.gridLayer10.setVisible(false);
     this.map.removeInteraction(this.select);
     this.map.removeInteraction(this.dragBox);
+    this.map.removeInteraction(this.draw);
   }
 }

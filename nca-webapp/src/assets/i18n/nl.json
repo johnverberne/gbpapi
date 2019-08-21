@@ -63,5 +63,12 @@
   "NUMBER_PER_TILE": "Aantal in gebied",
   "WARNING_LARGE_EXTENT_CALCULATION": "Het gedefinieerde gebied waarover gerekend gaat worden is erg groot, dit kan even duren.",
   "WOZ": "Gem. WOZ-waarde",
-  "WIP": "Deze functie is nog niet geïmplementeerd"
+  "WIP": "Deze functie is nog niet geïmplementeerd",
+  "DRAW_TYPE_TITLE": "Kies een tekenmodus",
+  "BOX_SELECT": "Rechthoek, gebruik CTRL",
+  "POLYGON_SELECT": "Polygoon, gebruik SHIFT",
+  "SINGLE_SELECT": "Los klikken",
+  "BOX_SELECT_INFO": "Selecteer grids middels een rechthoekige selectie (houdt CTRL ingedrukt)",
+  "POLYGON_SELECT_INFO": "Selecteer grids middels vrij tekenen (houdt SHIFT ingedrukt)",
+  "SINGLE_SELECT_INFO": "Selecteer grids middels muisklik op een gridcel"
 }
