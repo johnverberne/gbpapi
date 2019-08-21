@@ -30,7 +30,7 @@ public class ImmediatlyController extends BaseController implements ControllerIn
 		final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(), outputPath.getAbsolutePath());
 		LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
 		runPcRaster(correlationId, assessmentRequest.getEcoSystemService(), projectFile, projectFile, outputPath);
-		List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, outputPath);
+		List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, outputPath, null);
 		cleanUp(workingPath, false);
 		return assessmentResultlist;
 	}

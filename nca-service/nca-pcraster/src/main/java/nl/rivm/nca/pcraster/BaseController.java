@@ -167,13 +167,16 @@ public abstract class BaseController implements ControllerInterface {
    * @param outputPath
    * @throws IOException
    */
-  protected List<AssessmentResultResponse> importJsonResult(String correlationId, File outputPath)
+  protected List<AssessmentResultResponse> importJsonResult(String correlationId, File outputPath, java.util.logging.Logger jobLogger)
       throws IOException {
     List<AssessmentResultResponse> returnList = new ArrayList<AssessmentResultResponse>();
     Files.list(outputPath.toPath()).filter(f -> JSON_EXT.equals(FilenameUtils.getExtension(f.toFile().getName())))
         .forEach(f -> {
           try {
             LOGGER.info("read result file {} {}", f.toFile().getAbsolutePath(), f.getFileName());
+            if (jobLogger != null) {
+              jobLogger.info("Read json result path: " + f.toFile().getAbsolutePath() + " file: " + f.getFileName());
+            }
             @SuppressWarnings("resource")
             FileReader fr = new FileReader(f.toFile().getAbsolutePath());
             int i;
@@ -186,6 +189,9 @@ public abstract class BaseController implements ControllerInterface {
             returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId,
                 result.toString());
+            if (jobLogger != null) {
+              jobLogger.info("Content of result file " + result.toString());
+            }
 
           } catch (final Exception e) {
             // eat error
