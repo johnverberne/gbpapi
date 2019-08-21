@@ -5,7 +5,7 @@
       <sld:FeatureTypeConstraint/>
     </sld:LayerFeatureConstraints>
     <sld:UserStyle>
-      <sld:Name>TEEB_Afvang_van_PM10_door_groen-actual_change</sld:Name>
+      <sld:Name></sld:Name>
       <sld:FeatureTypeStyle>
         <sld:Rule>
           <sld:RasterSymbolizer>
@@ -14,17 +14,11 @@
                 <sld:SourceChannelName>1</sld:SourceChannelName>
               </sld:GrayChannel>
             </sld:ChannelSelection>
-            <sld:ColorMap type="ramp">
-              <sld:ColorMapEntry quantity="-4" label="-4" color="#ca0020"/>
-              <sld:ColorMapEntry quantity="-3" label="-3" color="#df5251"/>
-              <sld:ColorMapEntry quantity="-2" label="-2" color="#f4a582"/>
-              <sld:ColorMapEntry quantity="-1" label="-1" color="#d4d25d"/>
-              <sld:ColorMapEntry quantity="0" label="0" color="#b3ff39"/>
-              <sld:ColorMapEntry quantity="1" label="1" color="#a3e28c"/>
-              <sld:ColorMapEntry quantity="2" label="2" color="#92c5de"/>
-              <sld:ColorMapEntry quantity="3" label="3" color="#4b9bc7"/>
-              <sld:ColorMapEntry quantity="4" label="4" color="#0571b0"/>
-            </sld:ColorMap>
+		    <sld:ColorMap type="ramp">
+		      <sld:ColorMapEntry color="${env('legendrgbmin','0xca0020')}" quantity="${env('legendmin',-10)}" label="min" opacity="${env('opacitymin',1)}"/>
+		      <sld:ColorMapEntry color="${env('legendrgbzero','0xb3ff39')}" quantity="0" label="0" opacity="${env('opacityzero',0.4)}"/> 
+		      <sld:ColorMapEntry color="${env('legendrgbmax','0x0571b0')}" quantity="${env('legendmax',10)}" label="max" opacity="${env('opacitymax',1)}"/>      
+		    </sld:ColorMap>
           </sld:RasterSymbolizer>
         </sld:Rule>
       </sld:FeatureTypeStyle>
