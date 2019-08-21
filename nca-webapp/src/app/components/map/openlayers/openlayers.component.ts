@@ -20,11 +20,11 @@ import { GridCellModel } from '../../../models/grid-cell-model';
 import { Style, Stroke, Fill } from 'ol/style';
 import proj4 from 'proj4';
 import {register as proj4register } from 'ol/proj/proj4';
-import { transform } from 'ol/proj';
 import { ResultSubject } from '../../../models/result-subject';
 import { getTopLeft } from 'ol/extent';
 import { WMTS } from 'ol/source';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { click } from 'ol/events/condition';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -244,6 +244,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.select = new Select({
       layers: [this.gridLayer10],
       style: this.gridStyle,
+      condition: click,
       multi: false
     });
     this.map.addInteraction(this.select);
