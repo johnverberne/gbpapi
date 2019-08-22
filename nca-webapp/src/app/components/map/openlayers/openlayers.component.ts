@@ -358,12 +358,17 @@ export class OpenlayersComponent implements AfterViewInit {
   private addOrRemoveFeature(feature: Feature) {
     const geom = this.currentGeom;
     const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
-    if ((this.currentDrawStyle !== DrawType.POLYGON && this.currentDrawStyle !== DrawType.BOX) && selected) {
-      if (selected.get('measureId') === geom.id) {
-        this.removeSelectedFeature(selected, geom);
-      } else {
+    if (selected) {
+      if (this.currentDrawStyle === DrawType.POLYGON || this.currentDrawStyle === DrawType.BOX) {
         this.removeSelectedFeature(selected, geom);
         this.addSelectedFeature(feature, geom);
+      } else {
+        if (selected.get('measureId') === geom.id) {
+          this.removeSelectedFeature(selected, geom);
+        } else {
+          this.removeSelectedFeature(selected, geom);
+          this.addSelectedFeature(feature, geom);
+        }
       }
     } else {
       this.addSelectedFeature(feature, geom);
