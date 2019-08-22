@@ -37,13 +37,11 @@ public abstract class BaseController implements ControllerInterface {
 
   public static final String GEOTIFF_EXT = "tiff";
   public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;
-
   private static final String MAP_EXT = "map";
   protected static final String MAP_DOT_EXT = '.' + MAP_EXT;
   private static final String JSON_EXT = "json";
   private static final String WORKSPACE_NAME = "result";
   protected static final String OUTPUTS = "outputs";
-
   protected final RasterLayers rasterLayers;
   private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
   private final PublishGeotiff publishGeotiff;
@@ -53,8 +51,9 @@ public abstract class BaseController implements ControllerInterface {
   public BaseController(File path, boolean directFile) throws IOException, InterruptedException {
     rasterLayers = RasterLayers.loadRasterLayers(path);
     this.directFile = directFile;
-    publishGeotiff = new PublishGeotiff(System.getenv(EnvironmentConstants.GEOSERVER_URL),
-        System.getenv(EnvironmentConstants.GEOSERVER_USER), System.getenv(EnvironmentConstants.GEOSERVER_PASSWORD));
+    publishGeotiff = new PublishGeotiff(EnvironmentEnum.GEOSERVER_URL.getEnv(),
+        System.getenv(EnvironmentEnum.GEOSERVER_USER.toString()),
+        System.getenv(EnvironmentEnum.GEOSERVER_PASSWORD.toString()));
     // python via docker dan geen test draaien pcRasterRunner.sanityCheck();
   }
 

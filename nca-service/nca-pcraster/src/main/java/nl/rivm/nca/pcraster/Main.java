@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.configuration2.SystemConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +32,12 @@ public class Main {
 	private final ControllerInterface controller;
 
 	public Main(boolean directFile) throws IOException, InterruptedException {
-		final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
-		if (ncaModel == null) {
+		final String ncaModelRaster = EnvironmentEnum.NCA_MODEL_RASTER.getEnv();
+		if (ncaModelRaster == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
 		}
-		//support multi model based on NCA_MODEL
-		//controller = new NkModelController(new File(ncaModel), directFile);
-		controller = new NkModel2Controller(new File(ncaModel), directFile);
+		controller = new NkModel2Controller(new File(ncaModelRaster), directFile);
 	}
 
 	public static void main(final String[] args) throws IOException, TimeoutException, InterruptedException {
@@ -83,6 +80,7 @@ public class Main {
 		final String uuid = UUID.randomUUID().toString();
 		final SingleRun singleRun = new SingleRun();
 		runAssessment(uuid, singleRun.singleRun(args[0], args[1], args[2], args[3], 
+		 
 		    args[3].toLowerCase().contains("xyz") ? ModelEnum.NKMODEL2 : ModelEnum.NKMODEL)); 
 	}
 
