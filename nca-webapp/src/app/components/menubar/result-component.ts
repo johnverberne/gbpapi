@@ -62,7 +62,7 @@ export class ResultComponent implements OnInit {
   }
 
   public exportClick() {
-    return `${environment.EXPORT_ENDPOINT}/${this.scenario.url}`;
+    return `${this.scenario.url}`;
   }
 
   public onScenarioClick(index: number) {

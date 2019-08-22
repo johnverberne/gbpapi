@@ -9,7 +9,7 @@ import { ResultComponent } from './components/menubar/result-component';
 import { ResultGuard } from './guards/result-guard';
 import { MapComponent } from './components/map/map-component';
 import { ResultTableComponent } from './components/results/result-table-component';
-import { ResultLayersComponent } from './components/results/result-layers-component';
+import { ResultLayersComponent } from './components/menubar/result-layers-component';
 
 const routes: Routes = [
   {

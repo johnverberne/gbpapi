@@ -3,7 +3,8 @@
   <div class="nav-header">
     <div class="pager">
       <div *ngFor="let scenario of scenarios; let i = index">
-        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex, 'round-button-start': i===0,
+        <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex,
+          'round-button-start': i===0,
           'round-button-middle': i!==0 && i < MAX_SCENARIO_THRESHOLD - 1,
           'round-button-end': i===MAX_SCENARIO_THRESHOLD - 1}"
           (click)="onScenarioClick(scenario, i)">{{i + 1}}</button>

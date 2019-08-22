@@ -13,4 +13,5 @@ export class AssessmentResultModel {
   legendmin: number;
   legendmax: number;
   geobox: any;
+  wmsname: string;
 }

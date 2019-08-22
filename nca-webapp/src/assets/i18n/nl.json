@@ -13,7 +13,7 @@
   "BUTTON_OK": "Doorgaan",
   "BUTTON_SAVE": "Bewaar",
   "BUTTON_CANCEL": "Annuleer",
-  "CALCULATION_RUNNING": "Als de berekening klaar is, verschijnen direct de resultaten. In de tussentijd kunt aan de ingevoerde gegevens niets wijzigen. Wilt u een ander scenario starten, open dan een nieuw venster met de Groene Baten Planner.",
+  "CALCULATION_RUNNING": "Als de berekening klaar is, verschijnen direct de resultaten. In de tussentijd kunt u aan de ingevoerde gegevens niets wijzigen. Wilt u een ander scenario starten, open dan een nieuw venster met de Groene Baten Planner.",
   "DEFAULT_REFERENCE": "Huidige situatie",
   "CALCULATION_DIALOG_HEADER": "Groene baten worden berekend",
   "DOMAIN": "Domein",
@@ -22,6 +22,7 @@
   "REFERENCE": "Referentie",
   "REFERENCE_DESCIPTION": "Start een berekening met het vastleggen hierboven van de referentiesituatie waartegen u wilt rekenen. Open het kaartlagenpaneel als u de huidige situatie wilt raadplegen.",
   "RESULT": "Resultaat",
+  "RESULT_TYPE": "Resultaat type",
   "LANDUSE": "Landgebruik",
   "LANDUSE_DECIDUOUS_FOREST": "Loofbos",
   "LANDUSE_CONIFEROUS_FOREST": "Naaldbos",
@@ -70,5 +71,11 @@
   "SINGLE_SELECT": "Los klikken",
   "BOX_SELECT_INFO": "Selecteer grids middels een rechthoekige selectie (houdt CTRL ingedrukt)",
   "POLYGON_SELECT_INFO": "Selecteer grids middels vrij tekenen (houdt SHIFT ingedrukt)",
-  "SINGLE_SELECT_INFO": "Selecteer grids middels muisklik op een gridcel"
+  "SINGLE_SELECT_INFO": "Selecteer grids middels muisklik op een gridcel",
+  "LAYERS_HEADER": "Kaartlagen",
+  "LAYERS_BACKGROUND": "Achtergrond kaartlagen",
+  "LAYERS_RESULT": "Resultaat kaartlagen",
+  "PDOK": "PDOK achtergrondkaart",
+  "LCEU": "Landgebruikkaart 10x10 grid",
+  "BAG": "Basisregistratie Adressen en Gebouwen"
 }

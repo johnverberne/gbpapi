@@ -15,8 +15,8 @@
       <svg-icon src="assets/img/main-menu-result.svg" [ngClass]="{'active': activeMenu === 'RESULT', 'disabled': !projectService.hasResults()}"></svg-icon>
       {{'BUTTON_RESULT' | translate}}
     </button>
-    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onMenuClick('LAYERS')" [disabled]="!projectService.hasResults()">
-      <svg-icon src="assets/img/main-menu-maplayers.svg" [ngClass]="{'active': activeMenu === 'LAYERS', 'disabled': !projectService.hasResults()}"></svg-icon>
+    <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'LAYERS'}" (click)="onMenuClick('LAYERS')">
+      <svg-icon src="assets/img/main-menu-maplayers.svg" [ngClass]="{'active': activeMenu === 'LAYERS'}"></svg-icon>
       {{'BUTTON_MAPLAYERS' | translate}}
     </button>
     <button type="button" class="btn" [ngClass]="{'active': activeMenu === 'SETTINGS'}" (click)="onMenuClick('SETTINGS')">

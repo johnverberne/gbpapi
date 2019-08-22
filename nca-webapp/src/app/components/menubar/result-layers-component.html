@@ -1,0 +1,56 @@
+<div class="layers-component">
+  <div class="header">{{'LAYERS_HEADER' | translate}}</div>
+
+  <div class="sub-header">{{'LAYERS_BACKGROUND' | translate}}</div>
+  <div class="layer-list">
+    <div class="check-row">
+      <input class="checkbox" type="checkbox" checked id="pdok" (change)="onLayerClick('PDOK', $event)">
+      <label class="form-check-label" for="pdok">
+        {{'PDOK' | translate}}
+      </label>
+    </div>
+    <div class="check-row">
+      <input class="checkbox" type="checkbox" checked id="lceu" (change)="onLayerClick('LCEU', $event)">
+      <label class="form-check-label" for="lceu">
+        {{'LCEU' | translate}}
+      </label>
+    </div>
+    <div class="check-row">
+      <input class="checkbox" type="checkbox" id="bag" (change)="onLayerClick('BAG', $event)">
+      <label class="form-check-label" for="bag">
+        {{'BAG' | translate}}
+      </label>
+    </div>
+  </div>
+  <ng-container *ngIf="projectService.hasResults()">
+    <div class="sub-header">{{'LAYERS_RESULT' | translate}}</div>
+    <div class="layer-list">
+      <div class="pager" *ngIf="scenarios.length > 1">
+        <div class="sub-header pre-label-scenario">{{'SCENARIO' | translate}}</div>
+        <div *ngFor="let scenario of scenarios; let i = index">
+          <button type="button" class="btn btn-secondary pager-number" [ngClass]="{'active': i === currentScenarioIndex,
+            'round-button-start': i=== 0,
+            'round-button-middle': i!== 0 && i < scenarios.length - 1,
+            'round-button-end': i=== scenarios.length - 1}" (click)="onScenarioClick(i)">{{i + 1}}</button>
+        </div>
+      </div>
+      <div class="result-type">
+        <div class="sub-header pre-label-result-type">{{'RESULT_TYPE' | translate}}</div>
+        <button type="button" class="btn btn-secondary round-button-start result-type-button"
+          [ngClass]="{'active': resultType === 'PHYSICAL'}"
+          (click)="onResultTypeClick('PHYSICAL')">{{ 'PHYSICAL' | translate }}</button>
+        <button type="button" class="btn btn-secondary round-button-end result-type-button"
+          [ngClass]="{'active': resultType === 'MONETARY'}"
+          (click)="onResultTypeClick('MONETARY')">{{ 'MONETARY' | translate }}</button>
+      </div>
+      <div *ngFor="let result of resultLayers">
+        <div class="check-row">
+          <input class="checkbox" type="checkbox" (change)="showResult(result.wmsname, $event)">
+          <label class="form-check-label">
+            {{result.name}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

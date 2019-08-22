@@ -25,6 +25,7 @@ import { getTopLeft } from 'ol/extent';
 import { WMTS } from 'ol/source';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { DrawType } from '../../../models/enums/draw-type';
+import { LayerSubject } from '../../../models/layer-subject';
 
 @Component({
   selector: 'gbp-openlayers',
@@ -90,6 +91,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.onClearMap().subscribe(() => this.clearMap());
     this.mapService.onShowFeatures().subscribe((geom) => this.showFeatures(geom));
     this.mapService.onShowResults().subscribe((resultSubject) => this.showResults(resultSubject));
+    this.mapService.onShowLayer().subscribe((layerSubject) => this.showLayer(layerSubject));
 
     this.gridSource10 = new VectorSource({
       url: (extent) => `${environment.GEOSERVER_ENDPOINT}/ows?service=WFS&` +
@@ -136,7 +138,8 @@ export class OpenlayersComponent implements AfterViewInit {
     });
 
     this.bagLayer = new VectorLayer({
-      source: this.bagVector
+      source: this.bagVector,
+      visible: false
     });
 
     this.lceuLayer = new TileLayer({
@@ -188,7 +191,7 @@ export class OpenlayersComponent implements AfterViewInit {
 
     this.map = new OlMap({
       target: 'map',
-      layers: [this.pdokLayer, this.lceuLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
+      layers: [this.pdokLayer, this.lceuLayer, this.bagLayer, this.resultLayer, this.gridLayer10, this.selectedGridLayer],
       view: this.view
     });
   }
@@ -238,6 +241,22 @@ export class OpenlayersComponent implements AfterViewInit {
       });
       this.selectedGridSource.addFeatures(features);
     }
+  }
+
+  private showLayer(layerSubject: LayerSubject) {
+    let layerInstance;
+    switch (layerSubject.layer) {
+      case 'PDOK':
+        layerInstance = this.pdokLayer;
+        break;
+      case 'LCEU':
+        layerInstance = this.lceuLayer;
+        break;
+      case 'BAG':
+        layerInstance = this.bagLayer;
+        break;
+    }
+    layerInstance.setVisible(layerSubject.show);
   }
 
   private createMapCell(cell: GridCellModel): Polygon {
