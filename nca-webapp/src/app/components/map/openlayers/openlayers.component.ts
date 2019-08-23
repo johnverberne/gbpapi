@@ -223,7 +223,13 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private showResults(resultSubject: ResultSubject) {
     this.gridLayer10.setVisible(false);
-    this.resultSource.updateParams({ 'LAYERS': resultSubject.key + '_' + resultSubject.layer, 'TILED': false, 'ENV': 'max=100;min=-100' });
+    const props = resultSubject.layer.results;
+    this.resultSource.updateParams({
+      'LAYERS': resultSubject.layer.key + '_' + resultSubject.layer.results.wmsname,
+      'TILED': false,
+      'ENV': `legendrgbmin:${props.legendrgbmin};legendmin:${props.legendmin};
+      legendrgbmax:${props.legendrgbmax};legendmax:${props.legendmax}`
+    });
     this.resultLayer.setVisible(resultSubject.show);
   }
 

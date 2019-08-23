@@ -9,6 +9,7 @@ import { MapService } from '../../services/map-service';
 import { LandUseType } from '../../models/enums/landuse-type';
 import { EnumUtils } from '../../shared/enum-utils';
 import { environment } from '../../../environments/environment';
+import { LayerResultModel } from '../../models/layer-result-model';
 
 @Component({
   selector: 'gbp-result',
@@ -73,7 +74,11 @@ export class ResultComponent implements OnInit {
 
   private drawResults() {
     this.mapService.clearMap();
-    this.mapService.showResults(true, this.scenario.key, 'potUHI-actual_change');
+    const layer = new LayerResultModel();
+    layer.key = this.scenario.key;
+    layer.url = this.scenario.url;
+    layer.results = this.scenario.results[0];
+    this.mapService.showResults(true, layer );
   }
 
 }

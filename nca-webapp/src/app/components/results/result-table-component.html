@@ -18,11 +18,11 @@
         <th scope="row">{{result.code.toString()}}:{{result.name | translate}}</th>
         <td *ngFor="let scenarioResult of scenarioResults(result.code)" title="({{scenarioResult.units | translate}}))"
           class="result-type-value-item">{{scenarioResult.tablevalue | number:'1.2-2':'nl'}}</td>
-        <td>
+        <!-- <td>
           <button type="button" class="btn" (click)="onLayerClick(result.wmsname)">
             <svg-icon src="assets/img/main-menu-maplayers.svg"></svg-icon>
           </button>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>

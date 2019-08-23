@@ -35,7 +35,7 @@ import { ScenarioComponent } from './components/menubar/scenario-component';
 import { ResultTableComponent } from './components/results/result-table-component';
 import { ResultLayersComponent } from './components/menubar/result-layers-component';
 import { registerLocaleData } from '@angular/common';
-import { CalculationEventService } from './services/calculation-event-serivce';
+import { CalculationEventService } from './services/calculation-event-service';
 import { CalculationDialogComponent } from './shared/confirm-dialog/calculation-dialog-component';
 
 export function createTranslateLoader(http: HttpClient) {

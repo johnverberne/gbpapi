@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { MapService } from '../../services/map-service';
 import { CurrentProjectService } from '../../services/current-project-service';
 import { ResultType } from '../../models/enums/result-type';
+import { LayerResultModel } from '../../models/layer-result-model';
+import { AssessmentResultModel } from '../../models/assessment-result-model';
 
 @Component({
   selector: 'gbp-result-layers',
@@ -36,8 +38,12 @@ export class ResultLayersComponent {
     return this.scenarios[this.currentScenarioIndex].results.filter((result) => result.class.toUpperCase() === this.resultType);
   }
 
-  public showResult(layer: string, event) {
-    this.mapService.showResults(event.currentTarget.checked, this.scenarios[this.currentScenarioIndex].key, layer);
+  public showResult(result: AssessmentResultModel, event) {
+    const layer = new LayerResultModel();
+    layer.key = this.scenarios[this.currentScenarioIndex].key;
+    layer.url = this.scenarios[this.currentScenarioIndex].url;
+    layer.results = result;
+    this.mapService.showResults(event.currentTarget.checked, layer);
   }
 
   public onResultTypeClick(resultType: string) {

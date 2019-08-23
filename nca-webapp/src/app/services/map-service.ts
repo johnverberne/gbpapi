@@ -3,6 +3,7 @@ import { Subject, Observable } from 'rxjs';
 import { FeatureModel } from '../models/feature-model';
 import { ResultSubject } from '../models/result-subject';
 import { LayerSubject } from '../models/layer-subject';
+import { LayerResultModel } from '../models/layer-result-model';
 
 @Injectable()
 export class MapService {
@@ -69,8 +70,8 @@ export class MapService {
     return this.showResultsSubject.asObservable();
   }
 
-  public showResults(show: boolean, key: string, layer: string) {
-    this.showResultsSubject.next({show, key, layer});
+  public showResults(show: boolean, layer: LayerResultModel) {
+    this.showResultsSubject.next({show, layer});
   }
 
   public onRemoveCells(): Observable<FeatureModel> {

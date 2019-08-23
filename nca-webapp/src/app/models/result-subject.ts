@@ -1,5 +1,6 @@
+import { LayerResultModel } from './layer-result-model';
+
 export interface ResultSubject {
   show: boolean;
-  key: string;
-  layer: string;
+  layer: LayerResultModel;
 }

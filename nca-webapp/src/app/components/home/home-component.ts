@@ -4,7 +4,7 @@ import { MessageEventService } from '../../services/message-event-service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog-component';
 import { DialogHostDirective } from '../../directives/dialog-host-directive';
 import { Router } from '@angular/router';
-import { CalculationEventService } from '../../services/calculation-event-serivce';
+import { CalculationEventService } from '../../services/calculation-event-service';
 import { CalculationDialogComponent } from '../../shared/confirm-dialog/calculation-dialog-component';
 
 @Component({

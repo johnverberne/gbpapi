@@ -52,12 +52,12 @@ export class ResultTableComponent {
     this.resultType = ResultType[resultType];
   }
 
-  public onLayerClick(layer: string) {
-    this.router.navigate([{ outlets: { main: 'map' } }]);
-    setTimeout(() => {
-      this.mapService.clearMap();
-      this.mapService.showResults(true, this.scenarioKey(), layer);
-    }, 500);
-  }
+  // public onLayerClick(layer: string) {
+  //   this.router.navigate([{ outlets: { main: 'map' } }]);
+  //   setTimeout(() => {
+  //     this.mapService.clearMap();
+  //     this.mapService.showResults(true, this.scenarioKey(), layer);
+  //   }, 500);
+  // }
 
 }

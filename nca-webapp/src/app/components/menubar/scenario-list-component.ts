@@ -8,7 +8,7 @@ import { AssessmentRequestModel } from '../../models/assessment-request-model';
 import { ScenarioRequestModel } from '../../models/scenario-request-model';
 import { LayerModel } from '../../models/layer-model';
 import { MeasureModel } from '../../models/measure-model';
-import { CalculationEventService } from '../../services/calculation-event-serivce';
+import { CalculationEventService } from '../../services/calculation-event-service';
 import { Router } from '@angular/router';
 import { GridCellModel } from '../../models/grid-cell-model';
 import { MessageEventService } from '../../services/message-event-service';
