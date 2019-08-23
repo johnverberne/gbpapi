@@ -15,6 +15,7 @@ export class ResultLayersComponent {
 
   public currentScenarioIndex: number = 0;
   public resultType: ResultType = ResultType.PHYSICAL;
+  private showMeasure: boolean = false;
 
   constructor(private mapService: MapService, public projectService: CurrentProjectService) {
   }
@@ -32,6 +33,7 @@ export class ResultLayersComponent {
   public onScenarioClick(index: number) {
     this.mapService.clearMap();
     this.currentScenarioIndex = index;
+    this.drawMeasures();
   }
 
   public get resultLayers() {
@@ -44,6 +46,19 @@ export class ResultLayersComponent {
     layer.url = this.scenarios[this.currentScenarioIndex].url;
     layer.results = result;
     this.mapService.showResults(event.currentTarget.checked, layer);
+  }
+
+  public showMeasures(event) {
+    this.showMeasure = event.currentTarget.checked;
+    this.drawMeasures();
+  }
+
+  private drawMeasures() {
+    if (this.showMeasure) {
+      this.scenarios[this.currentScenarioIndex].measures.forEach((measure) => this.mapService.showFeatures(measure.geom));
+    } else {
+      this.scenarios[this.currentScenarioIndex].measures.forEach((measure) => this.mapService.removeCells(measure.geom));
+    }
   }
 
   public onResultTypeClick(resultType: string) {

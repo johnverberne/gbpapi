@@ -43,6 +43,12 @@
           [ngClass]="{'active': resultType === 'MONETARY'}"
           (click)="onResultTypeClick('MONETARY')">{{ 'MONETARY' | translate }}</button>
       </div>
+      <div class="check-row">
+        <input class="checkbox" type="checkbox" (change)="showMeasures($event)">
+        <label class="form-check-label">
+          {{'MEASURE' | translate}}
+        </label>
+      </div>
       <div *ngFor="let result of resultLayers">
         <div class="check-row">
           <input class="checkbox" type="checkbox" (change)="showResult(result, $event)">
