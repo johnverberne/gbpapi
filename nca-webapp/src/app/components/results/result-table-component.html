@@ -17,7 +17,7 @@
       <tr *ngFor="let result of results">
         <th scope="row">{{result.code.toString()}}:{{result.name}}</th>
         <td *ngFor="let scenarioResult of scenarioResults(result.code)" title="{{scenarioResult.units | translate}}"
-          class="result-type-value-item">{{scenarioResult.sum | number:'1.2-2':'nl'}}</td>
+          class="result-type-value-item">{{scenarioResult.tablevalue | number:'1.2-2':'nl'}}</td>
       </tr>
     </tbody>
   </table>
