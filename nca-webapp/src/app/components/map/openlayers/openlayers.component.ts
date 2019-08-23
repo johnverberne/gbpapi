@@ -68,10 +68,11 @@ export class OpenlayersComponent implements AfterViewInit {
   private readonly GRID_SIZE = 10.0;
 
   // PDOK data:
-  // Geldigheidsgebied van het tiling schema in RD-co�rdinaten:
+  // Geldigheidsgebied van het tiling schema in RD-coordinaten:
   private projectionExtent = [-285401.92, 22598.08, 595401.9199999999, 903401.9199999999];
   // Resoluties (pixels per meter) van de zoomniveaus:
-  private resolutions = [3440.640, 1720.320, 860.160, 430.080, 215.040, 107.520, 53.760, 26.880, 13.440, 6.720, 3.360, 1.680, 0.840, 0.420, 0.210];
+  private resolutions = [3440.640, 1720.320, 860.160, 430.080, 215.040, 107.520, 53.760, 26.880, 13.440, 6.720, 3.360, 1.680,
+    0.840, 0.420, 0.210];
   // Er zijn 15 (0 tot 14) zoomniveaus beschikbaar van de WMTS-service voor de BRT-Achtergrondkaart:
   private matrixIds = new Array(15);
 
