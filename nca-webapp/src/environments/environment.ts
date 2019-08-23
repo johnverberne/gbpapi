@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   ENDPOINT: 'http://localhost:8080/api/1',
-  EXPORT_ENDPOINT: 'http://localhost:8080',
   GEOSERVER_ENDPOINT: 'http://localhost:8080/geoserver-gbp'
 };
 
