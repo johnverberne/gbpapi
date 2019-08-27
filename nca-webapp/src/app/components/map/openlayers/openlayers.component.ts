@@ -42,7 +42,7 @@ export class OpenlayersComponent implements AfterViewInit {
   private gridSource10: VectorSource;
   private bagVector: VectorSource;
   private selectedGridLayer: VectorLayer;
-  private gridLayer10: VectorLayer;
+  public gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
   private lceuLayer: TileLayer;
   private resultLayer: TileLayer;
@@ -228,8 +228,8 @@ export class OpenlayersComponent implements AfterViewInit {
     this.resultSource.updateParams({
       'LAYERS': resultSubject.layer.key + '_' + resultSubject.layer.results.wmsname,
       'TILED': false,
-      'ENV': `legendrgbmin:${props.legendrgbmin};legendmin:${props.legendmin};
-      legendrgbmax:${props.legendrgbmax};legendmax:${props.legendmax}`
+      'ENV': `legendrgbmin:0x${props.legendrgbmin};legendmin:${props.legendmin};
+      legendrgbmax:0x${props.legendrgbmax};legendmax:${props.legendmax}`
     });
     this.resultLayer.setVisible(resultSubject.show);
   }
