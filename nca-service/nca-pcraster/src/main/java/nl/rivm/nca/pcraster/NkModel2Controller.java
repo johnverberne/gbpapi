@@ -198,10 +198,8 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   private void copyRunnerFiles(File workingPath, java.util.logging.Logger jobLogger) {
     try {
       for (RunnerEnum runner : RunnerEnum.values()) {
-        if (runner != RunnerEnum.GDAL_TRANSLATE) {
           String script = runner.getRunner();
           FileUtils.copyFile(new File(script), new File(workingPath.getAbsolutePath() + script.substring(script.lastIndexOf("/"))));
-        }
       }
 
     } catch (IOException e) {
