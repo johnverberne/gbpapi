@@ -88,8 +88,14 @@ export class ResultLayersComponent {
   }
 
   public onResultTypeClick(resultType: string) {
-    this.mapService.clearMap();
-    this.activeLayer = undefined;
+    if (!isNullOrUndefined(this.activeLayer)) {
+      const layer = new LayerResultModel();
+      layer.key = this.scenarios[this.currentScenarioIndex].key;
+      layer.url = this.scenarios[this.currentScenarioIndex].url;
+      layer.results = this.resultLayers[this.activeLayer];
+      this.mapService.showResults(false, layer);
+      this.activeLayer = undefined;
+    }
     this.resultType = ResultType[resultType];
   }
 
