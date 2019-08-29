@@ -16,7 +16,7 @@
             </sld:ChannelSelection>
 		    <sld:ColorMap type="ramp">
 		      <sld:ColorMapEntry color="${env('legendrgbmin','0xca0020')}" quantity="${env('legendmin',-10)}" label="min" opacity="${env('opacitymin',1)}"/>
-		      <sld:ColorMapEntry color="${env('legendrgbzero','0xb3ff39')}" quantity="0" label="0" opacity="${env('opacityzero',0.4)}"/> 
+		      <sld:ColorMapEntry color="${env('legendrgbcenter','0xb3ff39')}" quantity="${(env('legendmin',0) + env('legendmax',0)) / 2}" label="0" opacity="${env('opacitycenter',1)}"/> 
 		      <sld:ColorMapEntry color="${env('legendrgbmax','0x0571b0')}" quantity="${env('legendmax',10)}" label="max" opacity="${env('opacitymax',1)}"/>      
 		    </sld:ColorMap>
           </sld:RasterSymbolizer>
