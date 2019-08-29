@@ -14,8 +14,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.rivm.nca.runner.Exec;
-
 /**
  * Pushes a geotiff image to geoserver. The workspace it stores the image in must already exist for this to work.
  */

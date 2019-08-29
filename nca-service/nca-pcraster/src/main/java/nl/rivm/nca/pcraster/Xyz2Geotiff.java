@@ -12,9 +12,7 @@ import nl.rivm.nca.runner.OSUtils;
  */
 public class Xyz2Geotiff {
 
-  private static final String GDAL_TRANSLATE = "gdal_translate";
-  private static final String GDAL_TRANSLATE_WIN = "d:/opt/nkmodel/nca_gdal_translate.bat";
-  private static final String RUNNER = OSUtils.isWindows() ? GDAL_TRANSLATE_WIN : GDAL_TRANSLATE;
+  private static final String RUNNER = RunnerEnum.GDAL_TRANSLATE.getRunner();
 
   public static final String GEOTIFF_EXT = "tiff";
   public static final String GEOTIFF_DOT_EXT = '.' + GEOTIFF_EXT;

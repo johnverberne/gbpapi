@@ -1,8 +1,5 @@
 package nl.rivm.nca.api.service.impl;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,21 +7,14 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.rivm.nca.api.domain.Layer;
-import nl.rivm.nca.api.domain.ModelDataResponse;
 import nl.rivm.nca.api.domain.ModelEnvironmentResponse;
-import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.ModelEnvironmentApiService;
-import nl.rivm.nca.api.service.ModeldataApiService;
 import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.domain.ApiServiceContext;
-import nl.rivm.nca.api.service.util.WarningUtil;
-import nl.rivm.nca.pcraster.EnvironmentConstants;
-import nl.rivm.nca.pcraster.RasterLayers;
+import nl.rivm.nca.pcraster.EnvironmentEnum;
 
 public class ModelEnvironmentApiServiceImpl extends ModelEnvironmentApiService {
 
@@ -45,19 +35,19 @@ public class ModelEnvironmentApiServiceImpl extends ModelEnvironmentApiService {
     ModelEnvironmentResponse response = new ModelEnvironmentResponse();
     List<String> envList = new ArrayList<>();
     //    try  (final Connection connection = context.getPMF().getConnection()) {
-    //      envList.add("database " + connection.toString());
-    //      //    }
+    //    envList.add("database " + connection.toString());
+    //    }
     envList.add("database");
-    envList.add("database not tested!");
+    envList.add("connection to database not tested!");
     envList.add("nca appliation");
-    envList.add("GEOSERVER_URL : " + System.getenv(EnvironmentConstants.GEOSERVER_URL));
-    envList.add("GEOSERVER_USER  : " + System.getenv(EnvironmentConstants.GEOSERVER_USER));
-    envList.add("NCA_MODEL : " + System.getenv(EnvironmentConstants.NCA_MODEL));
+    envList.add("GEOSERVER_URL : " + EnvironmentEnum.GEOSERVER_URL.getEnv());
+    envList.add("GEOSERVER_USER  : " + EnvironmentEnum.GEOSERVER_USER.getEnv());
+    envList.add("NCA_MODEL_RASTER : " + EnvironmentEnum.NCA_MODEL_RASTER.getEnv());
+    envList.add("NCA_MODEL_RUNNER : " + EnvironmentEnum.NCA_MODEL_RUNNER.getEnv());
     envList.add("all enviroments");
-    StringBuilder sb = new StringBuilder();
     Map<String, String> env = System.getenv();
     for (String key : env.keySet()) {
-      String value = env.get(key);
+      // hide secrets
       envList.add(key + ": " + (key.toLowerCase().contains("pass") ? "*secret*" : env.get(key)));
     }
     response.setEntries(envList);

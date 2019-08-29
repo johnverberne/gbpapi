@@ -23,7 +23,7 @@ import nl.rivm.nca.api.service.NotFoundException;
 import nl.rivm.nca.api.service.domain.ApiServiceContext;
 import nl.rivm.nca.api.service.util.WarningUtil;
 import nl.rivm.nca.pcraster.ControllerInterface;
-import nl.rivm.nca.pcraster.EnvironmentConstants;
+import nl.rivm.nca.pcraster.EnvironmentEnum;
 import nl.rivm.nca.pcraster.NkModel2Controller;
 import nl.rivm.nca.pcraster.NkModelController;
 
@@ -92,7 +92,7 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 		*/
 		LOGGER.info("API requestname '{}' exceute model '{}' request.", ar.getName(), ar.getEcoSystemService());
 		List<AssessmentResultResponse> result = controller.run(uuid, ar);
-		// write to database
+		// todo write to database
 		
 		warnings.add(WarningUtil.ValidationInfoMessage("Task executed uuid:" + uuid));
 	}
@@ -101,16 +101,15 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
 			throws IOException, InterruptedException {
 		// get the environment for the supplied model.
 		ControllerInterface controller;
-		//final String ncaModel = System.getenv("NCA_MODEL_" + modelEnum.toString().toUpperCase());
-		final String ncaModel = System.getenv(EnvironmentConstants.NCA_MODEL);
-		if (ncaModel == null) {
+		final String ncaModelRaster = EnvironmentEnum.NCA_MODEL_RASTER.getEnv();
+		if (ncaModelRaster == null) {
 			throw new IllegalArgumentException(
 					"Environment variable 'NCA_MODEL' not set. This should point to the raster data");
 		} else {
 			if (modelEnum == ModelEnum.NKMODEL) {
-				controller = new NkModelController(new File(ncaModel), directFile);
+				controller = new NkModelController(new File(ncaModelRaster), directFile);
 			} else {
-				controller = new NkModel2Controller(new File(ncaModel), directFile);
+				controller = new NkModel2Controller(new File(ncaModelRaster), directFile);
 			}
 		}
 		return controller;

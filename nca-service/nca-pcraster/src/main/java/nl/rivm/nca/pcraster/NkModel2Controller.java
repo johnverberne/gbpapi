@@ -156,7 +156,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     // create zip file in server environment for download 
     startMeasure = System.currentTimeMillis();
     String fileName = zipResult(correlationId, workingPath);
-    setDownloadFileUrl(System.getenv(EnvironmentConstants.NCA_DOWNLOAD_URL) + "/" + fileName);
+    setDownloadFileUrl(EnvironmentEnum.NCA_DOWNLOAD_URL.getEnv() + "/" + fileName);
     LOGGER.info("Duration of zipping temp output diretory : {} ", (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
     LOGGER.info("download resultset {}", getDownloadFileUrl());
 
@@ -197,9 +197,11 @@ public class NkModel2Controller extends BaseController implements ControllerInte
 
   private void copyRunnerFiles(File workingPath, java.util.logging.Logger jobLogger) {
     try {
-      // write batch files to temp directory
-      FileUtils.copyFile(new File("/opt/nkmodel/nca2.sh"), new File(workingPath.getAbsolutePath() + "/" + "nca2.sh"));
-      FileUtils.copyFile(new File("/opt/nkmodel/nca_preprocess_scenario_map.sh"), new File(workingPath.getAbsolutePath() + "/"  + "nca_preprocess_scenario_map.sh"));
+      for (RunnerEnum runner : RunnerEnum.values()) {
+        String script = runner.getRunner();
+        FileUtils.copyFile(new File(script), new File(workingPath.getAbsolutePath() + script.substring(script.lastIndexOf("/"))));
+      }
+
     } catch (IOException e) {
       // eat error
       LOGGER.error("Problem with copy runner files {}", e.getLocalizedMessage());
@@ -211,11 +213,11 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   private java.util.logging.Logger createJobLogger(FileHandler jobLoggerFile) {
     java.util.logging.Logger jobLogger = java.util.logging.Logger.getLogger("JobLogger");
     // suppress the logging output to the console
-//    java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
-//    Handler[] handlers = rootLogger.getHandlers();
-//    if (handlers[0] instanceof ConsoleHandler) {
-//      rootLogger.removeHandler(handlers[0]);
-//    }
+    //    java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
+    //    Handler[] handlers = rootLogger.getHandlers();
+    //    if (handlers[0] instanceof ConsoleHandler) {
+    //      rootLogger.removeHandler(handlers[0]);
+    //    }
     jobLogger.setLevel(Level.ALL);
     jobLoggerFile.setFormatter(new Formatter() {
 
@@ -243,7 +245,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   }
 
   private String zipResult(String correlationId, File workingPath) {
-    String downloadPath = System.getenv(EnvironmentConstants.NCA_DOWNLOAD_PATH);
+    String downloadPath = EnvironmentEnum.NCA_DOWNLOAD_PATH.getEnv();
     String fileName = "" + correlationId + ".zip";
     FileOutputStream fos;
     ZipOutputStream zipOut = null;

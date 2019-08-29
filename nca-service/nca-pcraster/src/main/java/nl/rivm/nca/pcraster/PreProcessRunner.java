@@ -8,16 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
-import nl.rivm.nca.runner.OSUtils;
 
 class PreProcessRunner {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PreProcessRunner.class);
 
-  // TODO we want a version in the executed string parsed from the api
-  private static final String NCA_PREPROCESS = "/opt/nkmodel/nca_preprocess_scenario_map.sh"; // {NKMODEL_PATH}/nca_preprocess_scenario_map.sh
-  private static final String NCA_WIN_PREPROCESS = "d:/opt/nkmodel/nca_preprocess_scenario_map.bat"; // {NKMODEL_PATH}/nca_preprocess_scenario_map.bat
-
+  final static String RUNNER = RunnerEnum.GDAL_TRANSLATE.getRunner();
+  
   /**
    * create a new map (edit_map) file from current map file mutated with the
    * values from xyz file.
@@ -31,7 +28,6 @@ class PreProcessRunner {
    */
   public void runPreProcessor(String correlationId, File xyzFile, File mapFile, String PREFIX, java.util.logging.Logger jobLogger)
       throws IOException, InterruptedException {
-    final String RUNNER = OSUtils.isWindows() ? NCA_WIN_PREPROCESS : NCA_PREPROCESS;
     String xyzFilePath = xyzFile.getAbsolutePath();
     String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, "");
     // new file will be created in batch file

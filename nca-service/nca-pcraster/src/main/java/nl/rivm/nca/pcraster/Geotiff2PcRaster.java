@@ -5,16 +5,13 @@ import java.io.IOException;
 
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
-import nl.rivm.nca.runner.OSUtils;
 
 /**
  * Convert a geotiff image to a pcraster file.
  */
 public class Geotiff2PcRaster {
 
-	private static final String GDAL_TRANSLATE = "gdal_translate";
-	private static final String GDAL_TRANSLATE_WIN = "d:/opt/nkmodel/nca_gdal_translate.bat";
-	private static final String RUNNER = OSUtils.isWindows() ? GDAL_TRANSLATE_WIN : GDAL_TRANSLATE;
+	private static final String RUNNER = RunnerEnum.GDAL_TRANSLATE.getRunner();
 
 	// The source raster is a raster with land cover classes. This corresponds
 	// with the PCRaster nominal values scale. That information can be passed

@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.sql.rowset.Joinable;
-
 import org.geotools.geometry.Envelope2D;
 
 import nl.rivm.nca.runner.Exec;
@@ -17,7 +15,7 @@ import nl.rivm.nca.runner.ExecParameters;
  */
 public class CookieCut {
 
-  private static final String GDAL_TRANSLATE = "gdal_translate";
+  private static final String RUNNER = RunnerEnum.GDAL_TRANSLATE.getRunner();
 
   public CookieCut(String ncmPath) {
   }
@@ -32,7 +30,7 @@ public class CookieCut {
     final String[] args = {"-q", "-of", "PCRaster", method,
         s(b.getMinX()), s(b.getMaxY()), s(b.getMaxX()), s(b.getMinY()),
         source.getAbsolutePath(), destination.getAbsolutePath()};
-    final ExecParameters execParams = new ExecParameters(GDAL_TRANSLATE, args);
+    final ExecParameters execParams = new ExecParameters(RUNNER, args);
     final Exec exec = new Exec(execParams, "");
     exec.setJobLogger(jobLogger);
     exec.run(new File(destination.getParent()));
