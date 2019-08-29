@@ -77,5 +77,6 @@
   "LAYERS_RESULT": "Resultaat kaartlagen",
   "PDOK": "PDOK achtergrondkaart",
   "LCEU": "Landgebruikkaart 10x10 grid",
-  "BAG": "Basisregistratie Adressen en Gebouwen"
+  "BAG": "Basisregistratie Adressen en Gebouwen",
+  "ZOOM_TO_DRAW": "Zoom verder in om te tekenen"
 }

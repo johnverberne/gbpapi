@@ -199,10 +199,12 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public onDrawModeChange(mode: DrawType) {
     this.currentDrawStyle = mode;
-    this.map.removeInteraction(this.select);
-    this.map.removeInteraction(this.dragBox);
-    this.map.removeInteraction(this.draw);
+    this.removeInteractions();
     this.enableDrawMode();
+  }
+
+  public drawingAndVisibleGrid() {
+    return this.gridLayer10.getVisible() && (this.gridLayer10.getMaxResolution() > this.view.getResolution());
   }
 
   private getStyle(styleName: string) {
@@ -303,16 +305,18 @@ export class OpenlayersComponent implements AfterViewInit {
     });
     this.map.addInteraction(this.draw);
     this.draw.on('drawend', (event) => {
-      const geometry = event.feature.getGeometry();
-      const extent = geometry.getExtent();
-      const drawCoords = geometry.getCoordinates()[0];
-      const selectedFeatures: Feature[] = [];
-      this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
-        if (this.pointInPolygon(feature.getGeometry(), drawCoords)) {
-          selectedFeatures.push(feature);
-        }
-      });
-      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
+      if (this.drawingAndVisibleGrid()) {
+        const geometry = event.feature.getGeometry();
+        const extent = geometry.getExtent();
+        const drawCoords = geometry.getCoordinates()[0];
+        const selectedFeatures: Feature[] = [];
+        this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
+          if (this.pointInPolygon(feature.getGeometry(), drawCoords)) {
+            selectedFeatures.push(feature);
+          }
+        });
+        selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
+      }
     });
   }
 
@@ -322,15 +326,17 @@ export class OpenlayersComponent implements AfterViewInit {
     });
     this.map.addInteraction(this.dragBox);
     this.dragBox.on('boxend', () => {
-      const extent = this.dragBox.getGeometry().getExtent();
-      const selectedFeatures: Feature[] = [];
-      this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
-        // Temporary fix to overcome double/triple selected identical cells
-        if (selectedFeatures.findIndex(element => feature.getId() === element.getId()) === -1) {
-          selectedFeatures.push(feature);
-        }
-      });
-      selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
+      if (this.drawingAndVisibleGrid()) {
+        const extent = this.dragBox.getGeometry().getExtent();
+        const selectedFeatures: Feature[] = [];
+        this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
+          // Temporary fix to overcome double/triple selected identical cells
+          if (selectedFeatures.findIndex(element => feature.getId() === element.getId()) === -1) {
+            selectedFeatures.push(feature);
+          }
+        });
+        selectedFeatures.forEach(feature => this.addOrRemoveFeature(feature));
+      }
     });
   }
 
@@ -343,8 +349,10 @@ export class OpenlayersComponent implements AfterViewInit {
     });
     this.map.addInteraction(this.select);
     this.select.on('select', (e) => {
-      const feature: Feature = e.selected[0];
-      this.addOrRemoveFeature(feature);
+      if (this.drawingAndVisibleGrid()) {
+        const feature: Feature = e.selected[0];
+        this.addOrRemoveFeature(feature);
+      }
     });
   }
 
@@ -415,6 +423,10 @@ export class OpenlayersComponent implements AfterViewInit {
 
   private disableSelectGrid() {
     this.gridLayer10.setVisible(false);
+    this.removeInteractions();
+  }
+
+  private removeInteractions() {
     this.map.removeInteraction(this.select);
     this.map.removeInteraction(this.dragBox);
     this.map.removeInteraction(this.draw);
