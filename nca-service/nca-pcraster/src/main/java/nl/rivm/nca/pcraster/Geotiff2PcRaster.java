@@ -32,7 +32,7 @@ public class Geotiff2PcRaster {
 	}
 
 	public static void pcRaster2GeoTiff(File mapFile, File geotiffFile, java.util.logging.Logger jobLogger) throws IOException {
-		final String[] args = { "-a_srs", "EPSG:28992", "-a_nodata", "0", mapFile.getAbsolutePath(), geotiffFile.getAbsolutePath() };
+		final String[] args = { "-a_srs", "EPSG:28992", mapFile.getAbsolutePath(), geotiffFile.getAbsolutePath() };
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
 		final Exec exec = new Exec(execParams, "", false);
 		exec.setJobLogger(jobLogger);

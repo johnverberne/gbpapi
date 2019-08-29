@@ -13,7 +13,7 @@ class PreProcessRunner {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PreProcessRunner.class);
 
-  final static String RUNNER = RunnerEnum.GDAL_TRANSLATE.getRunner();
+  final static String RUNNER = RunnerEnum.NCA_PREPROCESS.getRunner();
   
   /**
    * create a new map (edit_map) file from current map file mutated with the

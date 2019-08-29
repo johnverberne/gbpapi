@@ -143,7 +143,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
     convertOutput(diffPath, jobLogger);
     List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath, jobLogger);
     publishFiles(correlationId, diffPath, jobLogger);
-    jobLogger.info("Durration of publishing to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
+    jobLogger.info("Duration of publishing to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
     // close joblogger
     jobLogger.info("List<AssessmentResultResponse>");
@@ -198,8 +198,10 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   private void copyRunnerFiles(File workingPath, java.util.logging.Logger jobLogger) {
     try {
       for (RunnerEnum runner : RunnerEnum.values()) {
-        String script = runner.getRunner();
-        FileUtils.copyFile(new File(script), new File(workingPath.getAbsolutePath() + script.substring(script.lastIndexOf("/"))));
+        if (runner != RunnerEnum.GDAL_TRANSLATE) {
+          String script = runner.getRunner();
+          FileUtils.copyFile(new File(script), new File(workingPath.getAbsolutePath() + script.substring(script.lastIndexOf("/"))));
+        }
       }
 
     } catch (IOException e) {
@@ -226,7 +228,8 @@ public class NkModel2Controller extends BaseController implements ControllerInte
         SimpleDateFormat logTime = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(record.getMillis());
-        return record.getLevel()
+        return 
+            /*record.getLevel()
             + " "
             + logTime.format(cal.getTime())
             + " || "
@@ -237,6 +240,8 @@ public class NkModel2Controller extends BaseController implements ControllerInte
             + record.getSourceMethodName()
             + "() : "
             + record.getMessage() + "\n\n";
+            */
+            record.getMessage() + "\n\n";
       }
 
     });

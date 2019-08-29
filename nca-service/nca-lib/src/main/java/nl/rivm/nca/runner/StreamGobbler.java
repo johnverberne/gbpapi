@@ -96,12 +96,16 @@ public class StreamGobbler extends Thread {
     if (line.indexOf("ERROR") > -1) {
       LOGGER.error("{}:{}>{}", parentId, type, line);
       if (jobLogger != null) {
-        jobLogger.info(parentId + ":" + type + ">" + line);
+        //jobLogger.info(parentId + ":" + type + ">" + line);
+        jobLogger.info(type + " > " + line);
+        
       }
     } else {
       LOGGER.info("{}:{}>{}", parentId, type, line);
       if (jobLogger != null) {
-        jobLogger.info(parentId + ":" + type + ">" + line);
+        //jobLogger.info(parentId + ":" + type + ">" + line);
+        jobLogger.info(line);
+        
       }
     }
   }
