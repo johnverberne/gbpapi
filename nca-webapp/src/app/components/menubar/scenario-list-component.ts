@@ -124,13 +124,13 @@ export class ScenarioListComponent implements OnInit {
       measureRequest.model = 'NKMODEL2';
       measureRequest.eco_system_service = 'AIR_REGULATION'.toLowerCase();
       scenario.measures.forEach(measure => {
-        this.defineExtent(measure, measureRequest);
         modelData.entries.forEach(model => {
           const layer = this.getLayer(layers, model);
           layer.data.push(...this.processCellData(measure, model));
         });
       });
       this.encodeCellData(layers);
+      this.defineExtent(scenario, measureRequest);
       measureRequest.layers = layers;
       scenarioRequest.measures.push(measureRequest);
       request.push(scenarioRequest);
@@ -152,12 +152,16 @@ export class ScenarioListComponent implements OnInit {
     }
   }
 
-  private defineExtent(measure: MeasureModel, measureRequest: AssessmentRequestModel) {
-    measure.geom.cells.sort(this.compare);
-    let start = measure.geom.cells[0].coords;
-    start = start.map(coord => coord - 1000);
-    let end = measure.geom.cells[measure.geom.cells.length - 1].coords;
-    end = end.map(coord => coord + 1000);
+  private defineExtent(scenario: ScenarioModel, measureRequest: AssessmentRequestModel) {
+    const cells: GridCellModel[] = [];
+    scenario.measures.forEach(measure => {
+      cells.push(...measure.geom.cells);
+    });
+    const allX = cells.map(cell => cell.coords[0]);
+    const allY = cells.map(cell => cell.coords[1]);
+
+    const start = [Math.min(...allX) - 1000, Math.min(...allY) - 1000];
+    const end = [Math.max(...allX) + 1000, Math.max(...allY) + 1000];
     measureRequest.extent.push(start);
     measureRequest.extent.push(end);
   }
