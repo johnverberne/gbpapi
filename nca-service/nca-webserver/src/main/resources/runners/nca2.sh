@@ -7,29 +7,36 @@
 export NKM_HOME=`dirname $(readlink -f $0)`/NatuurlijkKapitaalModellen
 # location of the nkmodel data
 export NCM_WORKSPACE=/opt/nkmodel
-echo $0 $1 $2 $3 $4 $5 $6
+echo 0:$0 1:$1 2:$2 3:$3 4:$4 5:$5 6:$6
 echo gdal-python
 
-#printf "Log the version from git"
-#git --git-dir=$NKM_HOME status
+echo Log the version from git
+git -C $NKM_HOME status
+git -C $NKM_HOME log -1
 
-printf "model air_regulation"
+echo log python version in docker container
+docker run --rm nca-docker python --version
+
+echo run model air_regulation on scenario data $2
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/air_regulation.py $2
+echo run model air_regulation on baseline data $3
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/air_regulation.py $3
 
-printf "model cooling_in_urban_areas"
+echo run model cooling_in_urban_areas on scenario $2
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/cooling_in_urban_areas.py $2
+echo run model cooling_in_urban_areas on baseline $3
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/cooling_in_urban_areas.py $3
 
-#printf "model green_space_and_health"
-echo model green_space_and_health
+echo run model green_space_and_health scenario $2
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/green_space_and_health.py $2
+echo run model green_space_and_health baseline $3
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/source/script/green_space_and_health.py $3
 
-#printf "determine the difference between baseline and scenario results"
+echo determine the difference between baseline and scenario results $4 $5 $6
+#python -c "print 'determine the difference between baseline and scenario results'"
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/environment/script/ncm_diff.py $4 $5 $6
 
-#printf "create json from diff results maps"
+echo create json result from diff results maps $6
+#python -c "print 'create json from diff results maps'"
 docker run --rm -v /tmp:/tmp -v $NKM_HOME:/opt/nkmodel/NatuurlijkKapitaalModellen -v $NCM_WORKSPACE:/opt/nkmodel nca-docker python /opt/nkmodel/NatuurlijkKapitaalModellen/environment/script/ncm_rasterdescriptions.py $6 /opt/nkmodel/NatuurlijkKapitaalModellen/environment/script/mapdescriptions.ini
-
 
