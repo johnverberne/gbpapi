@@ -59,7 +59,7 @@ export class ScenarioComponent implements OnChanges {
       this.scenarioModel.scenarioName = this.scenarioForm.get('name').value;
       const measures = this.gbpMeasures.saveMeasures();
       if (measures && measures.length > 0) {
-        this.scenarioModel.measures = this.gbpMeasures.saveMeasures();
+        this.scenarioModel.measures = measures;
         this.checkMeasureExtent();
         console.log(JSON.stringify(this.projectService.currentProject as ProjectModel));
       }

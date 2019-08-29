@@ -129,8 +129,6 @@ export class ScenarioListComponent implements OnInit {
           const layer = this.getLayer(layers, model);
           layer.data.push(...this.processCellData(measure, model));
         });
-
-        scenarioRequest.measures.push(measureRequest);
       });
       this.encodeCellData(layers);
       measureRequest.layers = layers;
