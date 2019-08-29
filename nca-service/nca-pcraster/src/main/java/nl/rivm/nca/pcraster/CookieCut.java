@@ -31,7 +31,7 @@ public class CookieCut {
         s(b.getMinX()), s(b.getMaxY()), s(b.getMaxX()), s(b.getMinY()),
         source.getAbsolutePath(), destination.getAbsolutePath()};
     final ExecParameters execParams = new ExecParameters(RUNNER, args);
-    final Exec exec = new Exec(execParams, "");
+    final Exec exec = new Exec(execParams, "", false);
     exec.setJobLogger(jobLogger);
     exec.run(new File(destination.getParent()));
   }
