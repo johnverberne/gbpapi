@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MapService } from '../../services/map-service';
 import { CurrentProjectService } from '../../services/current-project-service';
 import { ResultType } from '../../models/enums/result-type';
 import { LayerResultModel } from '../../models/layer-result-model';
 import { AssessmentResultModel } from '../../models/assessment-result-model';
 import { isNullOrUndefined } from 'util';
+import { MenuEventService } from '../../services/menu-event-service';
 
 @Component({
   selector: 'gbp-result-layers',
@@ -19,7 +20,12 @@ export class ResultLayersComponent {
   public activeLayer: number;
   public showMeasure: boolean = false;
 
-  constructor(private mapService: MapService, public projectService: CurrentProjectService) {
+  constructor(private mapService: MapService, public projectService: CurrentProjectService,
+    private menuEventService: MenuEventService) {
+  }
+
+  public isOpen() {
+    return this.menuEventService.isOpen;
   }
 
   public onLayerClick(layer, event) {

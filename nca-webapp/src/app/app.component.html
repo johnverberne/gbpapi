@@ -1,6 +1,6 @@
 <main>
     <router-outlet></router-outlet>
-    <div class="main" [ngClass]="{'result':isResultPage(), 'open-menu':openMenu}">
+    <div class="main" [ngClass]="{'result':isResultPage(), 'open-menu':isOpen()}">
         <router-outlet name="main"></router-outlet>
     </div>
 </main>

@@ -5,18 +5,15 @@ import { ResultType } from '../models/enums/result-type';
 @Injectable()
 export class MenuEventService {
 
-  private menuBarCollapseSubject: Subject<boolean> = new Subject();
+  public isOpen: boolean = true;
+
   private scenarioChangeSubject: Subject<number> = new Subject();
   private mainMenuChangeSubject: Subject<void> = new Subject();
   private resultTypeChangeSubject: Subject<ResultType> = new Subject();
   private showResultMapSubject: Subject<void> = new Subject();
 
-  public onMenuCollapse(): Observable<boolean> {
-    return this.menuBarCollapseSubject.asObservable();
-  }
-
-  public menuCollapse(collapse: boolean) {
-    this.menuBarCollapseSubject.next(collapse);
+  public menuCollapse() {
+    this.isOpen = !this.isOpen;
   }
 
   public onScenarioChange(): Observable<number> {

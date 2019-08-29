@@ -10,26 +10,29 @@ import { Router } from '@angular/router';
 })
 export class ResultBarComponent {
 
-  public isOpen: boolean = true;
-
   constructor(private menuEventService: MenuEventService,
     private messageService: MessageEventService,
     private router: Router) {
   }
 
+  public isOpen() {
+    return this.menuEventService.isOpen;
+  }
+
   public onCollapseClick() {
-    this.isOpen = !this.isOpen;
-    this.menuEventService.menuCollapse(this.isOpen);
+    this.menuEventService.menuCollapse();
   }
 
   public onMenuClick(event: string) {
     if (this.currentAuxRoute !== event) {
-      this.router.navigate([{ outlets: { main: event.toLowerCase() } }]);
       if (event === 'GRAPH') {
         this.messageService.sendMessage('WIP');
       }
       if (event === 'MAP') {
         this.router.navigate([{ outlets: { primary: 'layers', main: 'map' } }]);
+      }
+      if (event === 'TABLE') {
+        this.router.navigate([{ outlets: { primary: 'result', main: 'table' } }]);
       }
     }
   }

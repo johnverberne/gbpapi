@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { MenuEventService } from './services/menu-event-service';
+import { CurrentProjectService } from './services/current-project-service';
 
 @Component({
   selector: 'gbp-root',
@@ -10,24 +11,26 @@ import { MenuEventService } from './services/menu-event-service';
 })
 export class AppComponent {
   public title = 'gbp';
-  public openMenu: boolean = true;
 
   constructor(
     private translate: TranslateService,
     public router: Router,
-    private menuEventService: MenuEventService
+    private menuEventService: MenuEventService,
+    private projectService: CurrentProjectService
   ) {
     // this language will be used as a fallback when a
     // translation isn't found in the current language
     translate.setDefaultLang('nl');
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use('nl');
-    this.menuEventService.onMenuCollapse().subscribe((collapse) => {
-      this.openMenu = collapse;
-    });
+  }
+
+  public isOpen() {
+    return this.menuEventService.isOpen;
   }
 
   public isResultPage() {
-    return this.router.url.split('(')[0] === '/result';
+    return this.router.url.split('(')[0] === '/result' ||
+    (this.router.url.split('(')[0] === '/layers' && this.projectService.hasResults());
   }
 }

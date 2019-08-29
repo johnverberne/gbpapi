@@ -8,15 +8,13 @@ import { ResultType } from '../../models/enums/result-type';
 import { MapService } from '../../services/map-service';
 import { LandUseType } from '../../models/enums/landuse-type';
 import { EnumUtils } from '../../shared/enum-utils';
-import { environment } from '../../../environments/environment';
-import { LayerResultModel } from '../../models/layer-result-model';
 
 @Component({
   selector: 'gbp-result',
   templateUrl: './result-component.html',
   styleUrls: ['./menubar-component.scss', './result-component.scss']
 })
-export class ResultComponent implements OnInit {
+export class ResultComponent {
 
   public MAX_SCENARIO_THRESHOLD: number = 4;
   public openMenu: boolean = true;
@@ -27,17 +25,12 @@ export class ResultComponent implements OnInit {
   constructor(public projectService: CurrentProjectService,
     public router: Router,
     private menuEventService: MenuEventService,
-    private messageEventService: MessageEventService,
     private mapService: MapService) {
       this.landUseValues = EnumUtils.toMap(LandUseType);
-      this.menuEventService.onMenuCollapse().subscribe((collapse) => {
-        this.openMenu = collapse;
-      });
-      this.menuEventService.onShowResultMap().subscribe(() => this.drawResults());
   }
 
-  public ngOnInit() {
-    this.drawResults();
+  public isOpen() {
+    return this.menuEventService.isOpen;
   }
 
   public get measures() {
@@ -69,16 +62,7 @@ export class ResultComponent implements OnInit {
   public onScenarioClick(index: number) {
     this.currentScenarioIndex = index;
     this.menuEventService.scenarioChange(index);
-    this.drawResults();
-  }
-
-  private drawResults() {
-    this.mapService.clearMap();
-    const layer = new LayerResultModel();
-    layer.key = this.scenario.key;
-    layer.url = this.scenario.url;
-    layer.results = this.scenario.results[0];
-    this.mapService.showResults(true, layer );
+    // this.drawResults();
   }
 
 }

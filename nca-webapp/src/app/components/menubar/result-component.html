@@ -1,4 +1,4 @@
-<div class="result-component" [ngClass]="{'closed-menu':!openMenu}">
+<div class="result-component" [ngClass]="{'closed-menu':!isOpen()}">
   <div class="header">{{'RESULT' | translate}}</div>
 
   <div class="sub-header">
@@ -54,6 +54,6 @@
     </div>
   </div>
 </div>
-<div class="resultbar" [ngClass]="{'open-menu':openMenu}">
+<div class="resultbar" [ngClass]="{'open-menu':isOpen()}">
   <gbp-resultbar></gbp-resultbar>
 </div>
