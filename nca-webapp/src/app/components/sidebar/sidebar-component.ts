@@ -39,7 +39,11 @@ export class SidebarComponent implements OnInit {
         this.messageService.sendMessage('WIP');
         this.router.navigate(['dummy']);
       } else {
-        this.router.navigate([{ outlets: { primary: event.toLowerCase(), main: 'map' }}]);
+        if (event === 'RESULT') {
+          this.router.navigate([{ outlets: { primary: event.toLowerCase(), main: 'table' }}]);
+        } else {
+          this.router.navigate([{ outlets: { primary: event.toLowerCase(), main: 'map' }}]);
+        }
       }
     }
   }

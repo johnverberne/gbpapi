@@ -44,14 +44,14 @@
           (click)="onResultTypeClick('MONETARY')">{{ 'MONETARY' | translate }}</button>
       </div>
       <div class="check-row">
-        <input class="checkbox" type="checkbox" (change)="showMeasures($event)">
+        <input class="checkbox" type="checkbox" [checked]="showMeasure" (change)="showMeasures()">
         <label class="form-check-label">
           {{'MEASURE' | translate}}
         </label>
       </div>
-      <div *ngFor="let result of resultLayers">
-        <div class="check-row">
-          <input class="checkbox" type="checkbox" (change)="showResult(result, $event)">
+      <div *ngFor="let result of resultLayers; let i = index">
+        <div class="check-row" title="{{result.name}}" (change)="showResult(result, i, $event)">
+          <input class="checkbox" type="radio" [checked]="activeLayer === i">
           <label class="form-check-label">
             {{result.name}}
           </label>

@@ -29,9 +29,7 @@ export class ResultBarComponent {
         this.messageService.sendMessage('WIP');
       }
       if (event === 'MAP') {
-        setTimeout(() => {
-          this.menuEventService.showResultMap();
-        }, 500);
+        this.router.navigate([{ outlets: { primary: 'layers', main: 'map' } }]);
       }
     }
   }

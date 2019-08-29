@@ -31,7 +31,6 @@ const routes: Routes = [
       },
       {
         path: 'layers', component: ResultLayersComponent,
-        //canActivate: [ResultGuard],
       },
       {
         path: 'dummy', component: DummyComponent
