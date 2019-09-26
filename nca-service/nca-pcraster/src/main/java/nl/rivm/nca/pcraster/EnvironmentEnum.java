@@ -4,11 +4,13 @@ public enum EnvironmentEnum {
 
   /*
    * Directory with raster files.
+   * /opt/nkmodel/raster/nederland [unix]
    */
   NCA_MODEL_RASTER,
   /*
    * Directory with different runner shell and batch files.
-   * d:\nkmodel\nca_preprocess_scenarion_map [sh|bat]
+   * d:\opt\nkmodel [windowns]
+   * /opt/nkmodel [unix]
    */
   NCA_MODEL_RUNNER, GEOSERVER_USER, GEOSERVER_PASSWORD,
   /*
