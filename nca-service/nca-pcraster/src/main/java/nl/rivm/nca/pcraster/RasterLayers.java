@@ -26,6 +26,10 @@ public class RasterLayers {
     return layers;
   }
 
+  /**
+   * List of enum for map to charts that must be included in the model
+   * the name for the file is case sensitive 
+   */
   private static void hardCodeTmp(Map<String, Map<Layer, String>> layers) {
     final Map<Layer, String> arLayers = new HashMap<>();
     arLayers.put(Layer.LAND_COVER, "LCEU_ini");
@@ -38,6 +42,8 @@ public class RasterLayers {
     arLayers.put(Layer.CROP, "Gewas");
     arLayers.put(Layer.TREE_HEIGHT, "boomhoogte");
     arLayers.put(Layer.WINDFORCE, "windkaart");
+    arLayers.put(Layer.WOZ, "WOZ_buurt");
+    arLayers.put(Layer.WATER, "Meer_plas_zee");
     
     layers.put("air_regulation", arLayers);
 
