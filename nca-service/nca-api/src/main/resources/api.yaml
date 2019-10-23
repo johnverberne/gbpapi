@@ -565,3 +565,5 @@ definitions:
       - CROP
       - TREE_HEIGHT
       - WINDFORCE
+      - WATER
+      - WOZ
