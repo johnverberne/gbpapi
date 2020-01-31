@@ -34,8 +34,8 @@ public class CreateGridCellsZwolle {
 					GridSource source = new GridSource();
 					source.setX(Integer.parseInt(row[0]) + 66380);
 					source.setY(Integer.parseInt(row[1]) + 47610);
-					source.setXB(Integer.parseInt(row[2]) + 77220);
-					source.setYB(Integer.parseInt(row[3]) + 47620);
+					source.setXB(Integer.parseInt(row[2]) + 66380);
+					source.setYB(Integer.parseInt(row[3]) + 47610);
 					source.setSrid(Integer.parseInt(row[4]) + 756800);
 					list.add(source);
 					
@@ -44,8 +44,8 @@ public class CreateGridCellsZwolle {
 					        + source.getX() + " " + source.getY() + "," + source.getXB() + " "
 							+ source.getY() + "," + source.getXB() + " " + source.getYB() + "," + source.getX() + " "
 							+ source.getYB() + "," + source.getX() + " " + source.getY() + "))";
-					System.out.println(String.format("%.0f", source.getSrid()) + "\t" + poly);
-					writer.println(String.format("%.0f", source.getSrid())+ "\t" + poly); //tab column seperator
+					System.out.println(String.format("%d", source.getSrid()) + "\t" + poly);
+					writer.println(String.format("%d", source.getSrid())+ "\t" + poly); //tab column seperator
 //					if (count > 10) {
 //						break;
 //					}
