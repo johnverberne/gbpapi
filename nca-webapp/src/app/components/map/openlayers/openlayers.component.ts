@@ -8,7 +8,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import { MapService } from '../../../services/map-service';
 import { FeatureModel } from '../../../models/feature-model';
-import { Polygon } from 'ol/geom';
+import { Polygon, Geometry } from 'ol/geom';
 import { MeasureStyles } from './measure-styles';
 import { TileWMS } from 'ol/source';
 import { environment } from '../../../../environments/environment';
@@ -38,9 +38,9 @@ export class OpenlayersComponent implements AfterViewInit {
   private view: OlView;
   private dragBox: DragBox;
   private select: Select;
-  private selectedGridSource: VectorSource;
-  private gridSource10: VectorSource;
-  private bagVector: VectorSource;
+  private selectedGridSource: VectorSource<Geometry>;
+  private gridSource10: VectorSource<Geometry>;
+  private bagVector: VectorSource<Geometry>;
   private selectedGridLayer: VectorLayer;
   public gridLayer10: VectorLayer;
   private bagLayer: VectorLayer;
@@ -239,10 +239,10 @@ export class OpenlayersComponent implements AfterViewInit {
   }
 
   private showFeatures(geom: FeatureModel) {
-    const features: Feature[] = [];
+    const features: Feature<Geometry>[] = [];
     if (geom.cells.length > 0) {
       geom.cells.forEach((cell) => {
-        const feature: Feature = new Feature();
+        const feature: Feature<Geometry> = new Feature();
         const poly = this.createMapCell(cell);
         feature.setGeometry(poly);
         feature.set('measureId', geom.id);
@@ -311,7 +311,7 @@ export class OpenlayersComponent implements AfterViewInit {
         const geometry = event.feature.getGeometry();
         const extent = geometry.getExtent();
         const drawCoords = geometry.getCoordinates()[0];
-        const selectedFeatures: Feature[] = [];
+        const selectedFeatures: Feature<Geometry>[] = [];
         this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
           if (this.pointInPolygon(feature.getGeometry(), drawCoords)) {
             selectedFeatures.push(feature);
@@ -330,7 +330,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.dragBox.on('boxend', () => {
       if (this.drawingAndVisibleGrid()) {
         const extent = this.dragBox.getGeometry().getExtent();
-        const selectedFeatures: Feature[] = [];
+        const selectedFeatures: Feature<Geometry>[] = [];
         this.gridSource10.forEachFeatureIntersectingExtent(extent, (feature) => {
           // Temporary fix to overcome double/triple selected identical cells
           if (selectedFeatures.findIndex(element => feature.getId() === element.getId()) === -1) {
@@ -352,7 +352,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.map.addInteraction(this.select);
     this.select.on('select', (e) => {
       if (this.drawingAndVisibleGrid()) {
-        const feature: Feature = e.selected[0];
+        const feature: Feature<Geometry> = e.selected[0];
         this.addOrRemoveFeature(feature);
       }
     });
@@ -372,7 +372,7 @@ export class OpenlayersComponent implements AfterViewInit {
     return inside;
   }
 
-  private addOrRemoveFeature(feature: Feature) {
+  private addOrRemoveFeature(feature: Feature<Geometry>) {
     const geom = this.currentGeom;
     const selected = this.selectedGridSource.getFeatureById(feature.getProperties()['grid_id']);
     if (selected) {
@@ -392,9 +392,9 @@ export class OpenlayersComponent implements AfterViewInit {
     }
   }
 
-  private addSelectedFeature(feature: Feature, geom: FeatureModel) {
+  private addSelectedFeature(feature: Feature<Geometry>, geom: FeatureModel) {
     const style = this.getStyle(geom.styleName);
-    const newFeature: Feature = new Feature();
+    const newFeature: Feature<Geometry> = new Feature();
     newFeature.setGeometry(feature.getGeometry());
     newFeature.setStyle(style);
     newFeature.set('measureId', geom.id);
@@ -408,7 +408,7 @@ export class OpenlayersComponent implements AfterViewInit {
     this.mapService.featureDrawn();
   }
 
-  private removeSelectedFeature(feature: Feature, geom: FeatureModel) {
+  private removeSelectedFeature(feature: Feature<Geometry>, geom: FeatureModel) {
     this.selectedGridSource.removeFeature(feature);
     const measureId = feature.get('measureId');
     if (measureId === geom.id) {
