@@ -22,7 +22,7 @@ import nl.rivm.nca.api.domain.Layer;
  * 
  * 
  */
-public class NkModelController extends BaseController implements ControllerInterface {
+public class NkModelController extends BaseController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModelController.class);
 
@@ -53,6 +53,6 @@ public class NkModelController extends BaseController implements ControllerInter
   @Override
   public String getDownloadFileUrl() {
     return "";
-  };
+  }
 
 }

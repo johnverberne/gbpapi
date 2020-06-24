@@ -179,7 +179,6 @@
 				<module>nca-webserver</module>
 				<module>nca-geoserver-parent/nca-geoserver-base</module>
 				<module>nca-geoserver-parent/nca-geoserver-gbp</module>
-				<module>nca-database-parent/nca-database-gbp</module>
 			</modules>
 		</profile>
 		
@@ -200,6 +199,14 @@
             <module>nca-geoserver-parent/nca-geoserver-gbp</module>
           </modules>
         </profile>
+        
+       <profile>
+          <id>database</id>
+          <modules>
+            <module>nca-database-parent/nca-database-gbp</module>
+          </modules>
+        </profile>
+        
       
 	</profiles>
 

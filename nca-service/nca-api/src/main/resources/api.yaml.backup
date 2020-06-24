@@ -365,48 +365,7 @@ definitions:
         format: int32
       xmax:
         type: integer
-        format: int32
-  AssessmentTKSResultsResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          $ref: '#/definitions/AssessmentTKSResultResponse'
-      key:
-        type: string
-        description: A unique key for the geoserver results layers.
-  AssessmentTKSResultResponse:
-    type: object
-    required:
-      - code
-    properties:
-      code:
-        type: integer
-        format: int32
-      name:
-        type: string
-      model:
-        type: string  
-      min:
-        type: number
-        format: double
-      max:
-        type: number
-        format: double
-      sum:
-        type: number
-        format: double
-      tablevalue:
-        type: number
-        format: double
-      avg:
-        type: number 
-        format: double
-      units:
-        type: string
-      class:
-        type: string         
+        format: int32       
   AssessmentRequest:
     type: object
     required:
@@ -659,7 +618,7 @@ definitions:
           assessmentResults:
             type: array
             items:
-              $ref: '#/definitions/AssessmentTKSResultsResponse'
+              $ref: '#/definitions/AssessmentResultsResponse'
   
   FeatureCollection:
     type: object
@@ -693,7 +652,7 @@ definitions:
       name:
         type: string
       measure:
-          $ref: '#/definitions/Measure'
+        type: string
       areaWidth:
         type: string
       areaFadius:
@@ -702,24 +661,11 @@ definitions:
         type: number
       isProjectArea:
         type: boolean
-        
-  Measure:
-   type: string
-   description: |
-     Benodigde lagen voor het gekozen eco system service
-   enum:
-      - GREEN_ROOF
-      - EXTRA_TREES
-      - LAND_USE_TREES
-      - PROJECT
                           
   Geometry:
     type: object
     description: GeoJSon geometry
-    #discriminator:
-      #propertyName: type
-      #mapping:
-        #Polygon: '#/definitions/Polygon'
+    discriminator: type
     required:
       - type
     externalDocs:
@@ -735,12 +681,6 @@ definitions:
         - MultiLineString
         - MultiPolygon
         description: the geometry type
-      coordinates:
-        type: array
-        items:
-         type: array
-         items:
-           $ref: '#/definitions/Point2D'
   
   Point2D:
     type: array
@@ -835,3 +775,21 @@ definitions:
                 items:
                   $ref: '#/definitions/Point2D'
       
+  GeometryCollection:
+    type: object
+    description: GeoJSon geometry collection
+    required:
+     - type
+     - geometries
+    externalDocs:
+      url: http://geojson.org/geojson-spec.html#geometrycollection
+    properties:
+      type:
+        type: string
+        enum:
+        - GeometryCollection
+        description: 
+      geometries:
+          type: array
+          items:
+            $ref: '#/definitions/Geometry'

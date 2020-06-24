@@ -23,7 +23,13 @@ public enum RunnerEnum {
    * this script runs gdal_translate 
    * script runs a docker file to run gdal_translate
    */
-  GDAL_TRANSLATE("nca_gdal_translate");
+  GDAL_TRANSLATE("nca_gdal_translate"),
+  /*
+   * this script runs gdal_rasterize 
+   * will convert geojson to tiff
+   * script runs a docker file to run gdal_translate
+   */
+  GDAL_RASTERIZE("nca_gdal_rasterize");
 
   private final String script;
 

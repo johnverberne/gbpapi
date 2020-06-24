@@ -51,7 +51,7 @@ import nl.rivm.nca.api.domain.LayerObject;
  * Collect the results
  */
 
-public class NkModel2Controller extends BaseController implements ControllerInterface {
+public class NkModel2Controller extends BaseController {
 
   private static final String JOBLOGGER_TXT = "joblogger.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModel2Controller.class);
@@ -300,7 +300,7 @@ public class NkModel2Controller extends BaseController implements ControllerInte
   protected void prePrepocessSenarioMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix,
       java.util.logging.Logger jobLogger) {
     for (LayerObject layer : userLayers) {
-      File xyzFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + XYZ_DOT_EXT);
+      final File xyzFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + XYZ_DOT_EXT);
       final File mapFile = new File(FilenameUtils.removeExtension(xyzFile.getAbsolutePath()) + MAP_DOT_EXT);
       try {
         preProcessRunner.runPreProcessor("", xyzFile, mapFile, prefix, jobLogger);
