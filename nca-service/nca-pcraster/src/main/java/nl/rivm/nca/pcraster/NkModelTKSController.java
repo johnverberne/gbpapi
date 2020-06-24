@@ -54,17 +54,14 @@ public class NkModelTKSController {
   private static final String JOBLOGGER_TXT = "joblogger.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(NkModelTKSController.class);
 
-  private static final String GEOJSON_EXT = ".geojson";
+  private static final String GEOJSON_DOT_EXT = ".geojson";
   private static final String JSON_EXT = "json";
-  private static final String TIF_EXT = ".tif";
-  private static final String MAP_EXT = ".map";
+  private static final String TIF_DOT_EXT = ".tif";
+  private static final String MAP_DOT_EXT = ".map";
   private static final String MEASURE_FILENAME = "measure_";
-  private static final String WORKSPACE_NAME = "result";
   private static final String OUTPUTS = "outputs";
-  protected final RasterLayers rasterLayers;
-  private final PcRasterRunner pcRasterRunner = new PcRasterRunner();
+  private final RasterLayers rasterLayers;
   private final ObjectMapper mapper = new ObjectMapper();
-
   private final PcRasterRunner2 pcRasterRunner2 = new PcRasterRunner2();
   private final PreProcessRunner preProcessRunner = new PreProcessRunner();
   protected static final String PREFIX = "org_";
@@ -83,6 +80,13 @@ public class NkModelTKSController {
       throws IOException, ConfigurationException, InterruptedException {
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
     final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
+
+    //create jobLogger for the job
+    FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
+    java.util.logging.Logger jobLogger = createJobLogger(jobLoggerFile);
+    long start = System.currentTimeMillis();
+    jobLogger.entering(NkModel2Controller.class.toString(), "run");
+    jobLogger.info("Start at :" + start);
 
     LOGGER.debug("{}", features);
 
@@ -117,11 +121,11 @@ public class NkModelTKSController {
       jsonToSend = jsonToSend.replace("FEATURECOLLECTION", TypeEnum.FEATURECOLLECTION.toString());
       // TODO convert line and point to valid geojson
 
-      final String fileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_EXT;
+      final String fileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;
       //LOGGER.debug("file ({}) data {}", fileName, jsonToSend);
       //Write JSON file
-      LOGGER.debug("writing file ({})", workingPath + "\\" + fileName);
-      try (FileWriter file = new FileWriter(workingPath + "\\" + fileName)) {
+      LOGGER.debug("writing file ({})", workingPath + "/" + fileName);
+      try (FileWriter file = new FileWriter(workingPath + "/" + fileName)) {
         file.write(jsonToSend);
         file.flush();
         file.close(); // autoclose ?
@@ -147,25 +151,35 @@ public class NkModelTKSController {
      * 
      */
 
+    final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
+    final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
+
     File projectlayer = null;
     ArrayList<LayerObject> suppliedLayers = new ArrayList<LayerObject>();
     for (Map.Entry m : measures.entrySet()) {
-      final String inputfileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_EXT;
+      final String inputfileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;
       Measures availableMeasures = Measures.loadMeasureLayers(0d);
       LOGGER.debug("process measure {} {}", m.getKey());
       Map<Layer, Number> measureLayers = availableMeasures.getMeasureValue((Measure) m.getKey());
       LOGGER.debug("measure {} layer values {}", m.getKey(), measureLayers);
 
+      // create measureDirectory so we can output layer filenames
+      final File measureOutputPath = Files
+          .createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS + "/" + MEASURE_FILENAME + m.getKey().toString())).toFile();
+
       for (Map.Entry ml : measureLayers.entrySet()) {
         //LOGGER.debug(" key {} value {}", ml.getKey(), ml.getValue());
-        final String outputfileName = MEASURE_FILENAME + m.getKey().toString() + "_" + ml.getKey().toString();
+        //lookup filename for layer
+        String layerFileName = layerFiles.get(Layer.fromValue(ml.getKey().toString()));
+        final String outputfileName = layerFileName;
         LOGGER.debug("run_gdal_rasterize {} {} {}", ml.getValue(), inputfileName, outputfileName);
 
         final File geoJsonFile = new File(workingPath, inputfileName);
-        final File tiffFile = new File(outputPath, outputfileName + TIF_EXT);
-        final File mapFile = new File(outputPath, outputfileName + MAP_EXT);
+        final File tiffFile = new File(measureOutputPath, outputfileName + TIF_DOT_EXT);
+        //final File mapFile = new File(outputPath, outputfileName + MAP_DOT_EXT);
         GeoJson2Geotiff.geoJson2geoTiff(geoJsonFile, tiffFile, (double) ml.getValue());
-        Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFile);
+
+        //Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFile);
 
         // find project layout for the exstend and add collect other per 
         if (Measure.fromValue(m.getKey().toString()) == Measure.PROJECT) {
@@ -175,22 +189,20 @@ public class NkModelTKSController {
           LayerObject layer = new LayerObject();
           layer.setClassType(m.getKey().toString());
           suppliedLayers.add(layer);
+          // also write to scenario path
+          final File orgtiffFile = new File(scenarioPath, PREFIX + layerFileName + TIF_DOT_EXT);
+          GeoJson2Geotiff.geoJson2geoTiff(geoJsonFile, orgtiffFile, (double) ml.getValue());
         }
       }
-
     }
 
-    //create jobLogger for the job
-    FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
-    java.util.logging.Logger jobLogger = createJobLogger(jobLoggerFile);
-    long start = System.currentTimeMillis();
-    jobLogger.entering(NkModel2Controller.class.toString(), "run");
-    jobLogger.info("Start at :" + start);
+    // merge the map files with 
+
+    // copy created map files to scenario directory as layer filename
 
     // run the model for the measure but run it for every measure
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
-    final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
     final File scenarioOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO_OUTPUTS)).toFile();
     final File diffPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), DIFF)).toFile();
 
@@ -199,21 +211,16 @@ public class NkModelTKSController {
 
     if (!skip) {
 
-      final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
-
-      // TODO copy the converted GEOTIFF -> MAP files to workingPath they are not cookie cut.
-      // copyInputToWorkingMap(layerFiles, scenarioPath, suppliedLayers, PREFIX);
-
       final Envelope2D extend = new Envelope2D();
-      extend.include(134665, 453791);
-      extend.include(136625, 455841);
+      extend.include(85790, 444328);
+      extend.include(86091, 444885); 
 
-      //    final Envelope2D extend = calculateExtend(projectlayer);
+      // final Envelope2D extend = calculateExtend(projectlayer);
       cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, suppliedLayers, extend, jobLogger);
       cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, suppliedLayers, extend, jobLogger);
 
       // do not need this. or do we ...
-      // prePrepocessSenarioMap(layerFiles, scenarioPath, new ArrayList<LayerObject>(), PREFIX, jobLogger);
+      prePrepocessSenarioMap(layerFiles, scenarioPath, suppliedLayers, PREFIX, jobLogger);
 
       //final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(), outputPath.getAbsolutePath());
       final File projectFileScenario = ProjectIniFile.generateIniFile(scenarioPath.getAbsolutePath(), scenarioOutputPath.getAbsolutePath());
@@ -230,6 +237,19 @@ public class NkModelTKSController {
     }
 
     return assessmentResultlist;
+  }
+
+  protected void prePrepocessSenarioMap(Map<Layer, String> layerFiles, File workingPath, List<LayerObject> userLayers, String prefix,
+      java.util.logging.Logger jobLogger) {
+    for (LayerObject layer : userLayers) {
+      final File tiffFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + TIF_DOT_EXT);
+      final File mapFile = new File(FilenameUtils.removeExtension(tiffFile.getAbsolutePath()) + MAP_DOT_EXT);
+      try {
+        preProcessRunner.runPreProcessorTiffToMap("", tiffFile, mapFile, prefix, jobLogger);
+      } catch (final IOException | InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   protected void runPcRaster2(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine,
@@ -306,9 +326,6 @@ public class NkModelTKSController {
             mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AssessmentTKSResultResponse result = mapper.readValue(body, AssessmentTKSResultResponse.class);
-           //result.setWmsname(f.toFile().getName().replaceAll(".json", ""));
-            // convert to tks result 
-            //returnList.add(convertToTksResult(result));
             returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId, result.toString());
             if (jobLogger != null) {

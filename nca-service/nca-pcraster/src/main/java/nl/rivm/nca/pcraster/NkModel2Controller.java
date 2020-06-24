@@ -124,7 +124,7 @@ public class NkModel2Controller extends BaseController {
     cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, assessmentRequest.getLayers(), extend, jobLogger);
     jobLogger.info("Time to prepaire files :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
-    // PreprocessSenarioMap create map files from input with extend
+    // PreprocessSenarioMap create map files from input with extend adn map the input data on this file
     startMeasure = System.currentTimeMillis();
     prePrepocessSenarioMap(layerFiles, scenarioPath, assessmentRequest.getLayers(), PREFIX, jobLogger);
     jobLogger.info("Duration of PrepocessSenarioMap :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");

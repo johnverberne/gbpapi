@@ -43,6 +43,35 @@ class PreProcessRunner {
     exec.setJobLogger(jobLogger);
     exec.run(correlationId, new File(xyzFile.getParent()));
   }
+  
+  /**
+   * create a new map (edit_map) file from current map file mutated with the
+   * values from tiff file.
+   * 
+   * @param correlationId
+   * @param tiffFile 
+   * @param mapFile
+   * @param jobLogger 
+   * @throws IOException
+   * @throws InterruptedException
+   */
+  public void runPreProcessorTiffToMap(String correlationId, File tiffFile, File mapFile, String PREFIX, java.util.logging.Logger jobLogger)
+      throws IOException, InterruptedException {
+    String xyzFilePath = tiffFile.getAbsolutePath();
+    String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, "");
+    // new file will be created in batch file
+    String editMapFilePath = new File(mapFilePath.replace(".map", "_edit.map")).getAbsolutePath();
+    String newMapFilePath = new File(mapFilePath.replace(".map", "_new.map")).getAbsolutePath();
+    // parse as parameter string
+    String mapFileParameter = paramString(mapFilePath.replaceAll("\\/", "\\\\"));
+    String editMapFileParameter = paramString(editMapFilePath.replaceAll("\\/", "\\\\"));
+    String newMapFileParameter = paramString(newMapFilePath.replaceAll("\\/", "\\\\"));
+    final String[] args = {xyzFilePath, editMapFilePath, mapFilePath, editMapFileParameter, mapFileParameter, newMapFileParameter};
+    final ExecParameters execParams = new ExecParameters(RUNNER, args);
+    final Exec exec = new Exec(execParams, "", false); // run as batch file
+    exec.setJobLogger(jobLogger);
+    exec.run(correlationId, new File(tiffFile.getParent()));
+  }
 
   private String paramString(String parma) {
     return "\"" + parma + "\"";
