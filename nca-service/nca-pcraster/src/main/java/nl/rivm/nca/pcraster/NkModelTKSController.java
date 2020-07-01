@@ -183,11 +183,11 @@ public class NkModelTKSController {
 
         // find project layout for the exstend and add collect other per 
         if (Measure.fromValue(m.getKey().toString()) == Measure.PROJECT) {
-          projectlayer = tiffFile;
+          projectlayer = tiffFile; // want to use for exstend
         } else if (Measure.fromValue(m.getKey().toString()) == Measure.GREEN_ROOF) {
           // happy flow only green roof  
           LayerObject layer = new LayerObject();
-          layer.setClassType(m.getKey().toString());
+          layer.setClassType(ml.getKey().toString());
           suppliedLayers.add(layer);
           // also write to scenario path
           final File orgtiffFile = new File(scenarioPath, PREFIX + layerFileName + TIF_DOT_EXT);
@@ -212,6 +212,7 @@ public class NkModelTKSController {
     if (!skip) {
 
       final Envelope2D extend = new Envelope2D();
+      // hard coded
       extend.include(85790, 444328);
       extend.include(86091, 444885); 
 
@@ -219,7 +220,7 @@ public class NkModelTKSController {
       cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, suppliedLayers, extend, jobLogger);
       cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, suppliedLayers, extend, jobLogger);
 
-      // do not need this. or do we ...
+      // overlay the input tiff onto the cut scenario map to apply the change
       prePrepocessSenarioMap(layerFiles, scenarioPath, suppliedLayers, PREFIX, jobLogger);
 
       //final File projectFile = ProjectIniFile.generateIniFile(workingPath.getAbsolutePath(), outputPath.getAbsolutePath());
