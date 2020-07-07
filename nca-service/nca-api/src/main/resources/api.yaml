@@ -693,7 +693,9 @@ definitions:
       name:
         type: string
       measure:
-          $ref: '#/definitions/Measure'
+          $ref: '#/definitions/MeasureType'
+      measureId:
+          type: number
       areaWidth:
         type: string
       areaFadius:
@@ -703,16 +705,61 @@ definitions:
       isProjectArea:
         type: boolean
         
-  Measure:
+  MeasureType:
    type: string
    description: |
-     Benodigde lagen voor het gekozen eco system service
+     Soort maatregel 
    enum:
-      - GREEN_ROOF
-      - EXTRA_TREES
-      - LAND_USE_TREES
+      - STREETTREES
+      - URBANWETLANDS
+      - WADI
+      - FOUTAIN
+      - DEEPINFILTRATION
+      - DITCH
+      - GREENFACADE
+      - GREENROOFS
+      - SURFACESTORAGE
+      - DITSEWER
+      - INFILTRATIONFIELDS
+      - URBANFOREST
+      - PERMEABLESURFACE
+      - RAINBARREL
+      - WATERSQUARE
+      - GREENBLUEROOFS
+      - SMARTIRRIGATION
+      - SHADOW
       - PROJECT
-                          
+  
+  MeasureCollection:
+    type: object
+    properties:
+      measures:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
+    
+  Measure:
+    type: object
+    properties:
+      id:
+        type: number
+      code:
+        $ref: '#/definitions/MeasureType'
+      runmodel:
+        type: boolean
+      layers:
+        type: array
+        items:
+          $ref: '#/definitions/MeasureLayer'  
+          
+  MeasureLayer:
+    type: object 
+    properties:
+      layer:
+        $ref: '#/definitions/Layer'
+      value:
+        type: number
+                           
   Geometry:
     type: object
     description: GeoJSon geometry

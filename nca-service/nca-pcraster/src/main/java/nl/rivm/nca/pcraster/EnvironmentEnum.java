@@ -24,7 +24,11 @@ public enum EnvironmentEnum {
   /*
    * location for the frontend application to write output for download.
    */
-  NCA_DOWNLOAD_PATH;
+  NCA_DOWNLOAD_PATH,
+  /*
+   * json file with measure type and effected layer changes
+   */
+  NCA_TKS_MEASURES;
 
   public String getEnv() {
     return System.getenv(this.toString());
