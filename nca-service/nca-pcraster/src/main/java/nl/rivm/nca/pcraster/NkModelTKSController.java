@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -39,7 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import io.swagger.util.Json;
-import nl.rivm.nca.api.domain.AssessmentScenarioRequest;
 import nl.rivm.nca.api.domain.AssessmentTKSResultResponse;
 import nl.rivm.nca.api.domain.FeatureCollection;
 import nl.rivm.nca.api.domain.FeatureCollection.TypeEnum;
@@ -365,16 +363,22 @@ public class NkModelTKSController {
       Layer layer = (Layer) measureLayer.getKey();
       File tiffFile = (File) measureLayer.getValue();
       
-      final File mapFile = new File(tiffFile.getAbsoluteFile() + MAP_DOT_EXT);
-      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFile);
+//      final File mapFileMeasure = new File(tiffFile.getAbsolutePath().replace(".tif","") + MAP_DOT_EXT);
+//      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFileMeasure);
+
+
       
 //      //final File tiffFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + TIF_DOT_EXT);
 //      final File tiffFile = new File(measureFile.getAbsolutePath());
-//      //final File mapFile = new File(FilenameUtils.removeExtension(tiffFile.getAbsolutePath()) + MAP_DOT_EXT);
-//      //final File mapFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + MAP_DOT_EXT);
+        //final File mapFile = new File(FilenameUtils.removeExtension(tiffFile.getAbsolutePath()) + MAP_DOT_EXT);
 //      //final File mapFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.toString().toUpperCase())) + MAP_DOT_EXT);
 //      final File mapFile = new File(workingPath, prefix + layerFiles.get(layer.toString()) + MAP_DOT_EXT);
       
+        // create extra file
+        final File mapFile = new File(workingPath, prefix + layerFiles.get(layer) + MAP_DOT_EXT); // original to overwrite
+        final File editMapFilePath = new File(mapFile.getAbsolutePath().replace(".map", "_edit.map").replace("org_", ""));
+        Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, editMapFilePath);
+        
       try {
         preProcessRunner.runPreProcessorTiffToMap("", tiffFile, mapFile, prefix, jobLogger);
       } catch (final IOException | InterruptedException e) {

@@ -20,6 +20,10 @@ public enum RunnerEnum {
    */
   NCA_PREPROCESS("nca_preprocess_scenario_map"),
   /*
+   * this script runs a preprocess step to correct the input
+   */
+  NCA_TKS_PREPROCESS("nca_tks_preprocess_scenario_map"),
+  /*
    * this script runs gdal_translate 
    * script runs a docker file to run gdal_translate
    */

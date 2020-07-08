@@ -14,6 +14,7 @@ class PreProcessRunner {
   private static final Logger LOGGER = LoggerFactory.getLogger(PreProcessRunner.class);
 
   final static String RUNNER = RunnerEnum.NCA_PREPROCESS.getRunner();
+  final static String RUNNER_TKS = RunnerEnum.NCA_TKS_PREPROCESS.getRunner();
   
   /**
    * create a new map (edit_map) file from current map file mutated with the
@@ -67,7 +68,7 @@ class PreProcessRunner {
     String editMapFileParameter = paramString(editMapFilePath.replaceAll("\\/", "\\\\"));
     String newMapFileParameter = paramString(newMapFilePath.replaceAll("\\/", "\\\\"));
     final String[] args = {tifFilePath, editMapFilePath, mapFilePath, editMapFileParameter, mapFileParameter, newMapFileParameter};
-    final ExecParameters execParams = new ExecParameters(RUNNER, args);
+    final ExecParameters execParams = new ExecParameters(RUNNER_TKS, args);
     final Exec exec = new Exec(execParams, "", false); // run as batch file
     exec.setJobLogger(jobLogger);
     exec.run(correlationId, new File(tiffFile.getParent()));
