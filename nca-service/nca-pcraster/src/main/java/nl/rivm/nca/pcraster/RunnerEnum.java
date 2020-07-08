@@ -29,6 +29,11 @@ public enum RunnerEnum {
    */
   GDAL_TRANSLATE("nca_gdal_translate"),
   /*
+   * this script runs gdal_translate 
+   * script runs a docker file to run gdal_translate
+   */
+  OGR2OGR("nca_ogr2ogr"),
+  /*
    * this script runs gdal_rasterize 
    * will convert geojson to tiff
    * script runs a docker file to run gdal_translate

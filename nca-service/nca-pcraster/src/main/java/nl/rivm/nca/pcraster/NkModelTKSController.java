@@ -68,7 +68,7 @@ public class NkModelTKSController {
   private final RasterLayers rasterLayers;
   private final ObjectMapper mapper = new ObjectMapper();
   private final PcRasterRunner2 pcRasterRunner2 = new PcRasterRunner2();
-  private final PreProcessRunner preProcessRunner = new PreProcessRunner();
+  private final PreProcessTKSRunner preProcessRunner = new PreProcessTKSRunner();
   protected static final String PREFIX = "org_";
   protected static final String BASELINE = "baseline";
   protected static final String BASELINE_OUTPUTS = "baseline/outputs";
@@ -99,6 +99,9 @@ public class NkModelTKSController {
     MeasureCollection measuresLayers = loadTksMeasures(); 
     HashMap<MeasureType, ArrayList<Features>> measures = groupFeaturesOnMeasureAndExport(features, measuresLayers, workingPath);
   
+    // convert the geojson to correct crs
+    
+    
     final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
@@ -202,8 +205,14 @@ public class NkModelTKSController {
     Map<Layer, File> measureLayerFiles = new HashMap<Layer, File>();
     
     for (Map.Entry m : measures.entrySet()) {
-      final String inputfileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;      
       LOGGER.debug("process measure {} {}", m.getKey());
+      
+      final String inputfileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;      
+      final File geoJsonFile = new File(workingPath, inputfileName);
+      // convert geojson to correct crs overwrite the origin
+      GeoJson2CorrectCRS.geoJsonConvert(geoJsonFile, jobLogger);
+      
+      // find out howmany layers must be created for this measure
       List<MeasureLayer> measureLayers = new ArrayList<MeasureLayer>();
       Measure currentMeasure = null;
       for (Measure am : measuresLayers.getMeasures()) {
@@ -228,9 +237,9 @@ public class NkModelTKSController {
             jobLogger.info("run_gdal_rasterize: " + ml.getValue() + " " + inputfileName + " " + outputfileName);
             LOGGER.debug("run_gdal_rasterize {} {} {}", ml.getValue(), inputfileName, outputfileName);
 
-            final File geoJsonFile = new File(workingPath, inputfileName);
+            //final File geoJsonFile = new File(workingPath, inputfileName);
             
-            // show the output to check
+            // convert from geojson to geotiff
             final File tiffFile = new File(measureOutputPath, outputfileName + TIF_DOT_EXT);
             GeoJson2Geotiff.geoJson2geoTiff(geoJsonFile, tiffFile, ml.getValue(), jobLogger);
 
@@ -358,27 +367,24 @@ public class NkModelTKSController {
    */
   protected void prePrepocessSenarioMap(Map<Layer, String> layerFiles, File workingPath, Map<Layer, File> measureLayerFiles, String prefix,
       java.util.logging.Logger jobLogger) throws IOException {
-    
+
     for (Map.Entry measureLayer : measureLayerFiles.entrySet()) {
       Layer layer = (Layer) measureLayer.getKey();
       File tiffFile = (File) measureLayer.getValue();
-      
-//      final File mapFileMeasure = new File(tiffFile.getAbsolutePath().replace(".tif","") + MAP_DOT_EXT);
-//      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFileMeasure);
 
+      //      final File mapFileMeasure = new File(tiffFile.getAbsolutePath().replace(".tif","") + MAP_DOT_EXT);
+      //      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, mapFileMeasure);  
+      //      //final File tiffFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + TIF_DOT_EXT);
+      //      final File tiffFile = new File(measureFile.getAbsolutePath());
+      //      final File mapFile = new File(FilenameUtils.removeExtension(tiffFile.getAbsolutePath()) + MAP_DOT_EXT);
+      //      //final File mapFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.toString().toUpperCase())) + MAP_DOT_EXT);
+      //      final File mapFile = new File(workingPath, prefix + layerFiles.get(layer.toString()) + MAP_DOT_EXT);
 
-      
-//      //final File tiffFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.getClassType().toUpperCase())) + TIF_DOT_EXT);
-//      final File tiffFile = new File(measureFile.getAbsolutePath());
-        //final File mapFile = new File(FilenameUtils.removeExtension(tiffFile.getAbsolutePath()) + MAP_DOT_EXT);
-//      //final File mapFile = new File(workingPath, prefix + layerFiles.get(Layer.fromValue(layer.toString().toUpperCase())) + MAP_DOT_EXT);
-//      final File mapFile = new File(workingPath, prefix + layerFiles.get(layer.toString()) + MAP_DOT_EXT);
-      
-        // create extra file
-        final File mapFile = new File(workingPath, prefix + layerFiles.get(layer) + MAP_DOT_EXT); // original to overwrite
-        final File editMapFilePath = new File(mapFile.getAbsolutePath().replace(".map", "_edit.map").replace("org_", ""));
-        Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, editMapFilePath);
-        
+      // create extra file
+      final File mapFile = new File(workingPath, prefix + layerFiles.get(layer) + MAP_DOT_EXT); // original to overwrite
+      final File editMapFilePath = new File(mapFile.getAbsolutePath().replace(".map", "_edit.map").replace("org_", ""));
+      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, editMapFilePath);
+
       try {
         preProcessRunner.runPreProcessorTiffToMap("", tiffFile, mapFile, prefix, jobLogger);
       } catch (final IOException | InterruptedException e) {
