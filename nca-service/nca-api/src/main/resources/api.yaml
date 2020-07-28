@@ -761,12 +761,21 @@ definitions:
         type: number
                            
   Geometry:
+#     oneOf:
+#     - $ref: '#definitions/Point'
+#     - $ref: '#definitions/Polygon'
+#     
     type: object
     description: GeoJSon geometry
-    #discriminator:
-      #propertyName: type
-      #mapping:
-        #Polygon: '#/definitions/Polygon'
+    
+    discriminator: type
+    
+#     discriminator:
+#       propertyName: type
+#       mapping:
+#         Point: '#/definitions/Point'
+#         Polygon: '#/definitions/Polygon'
+        
     required:
       - type
     externalDocs:
@@ -782,12 +791,13 @@ definitions:
         - MultiLineString
         - MultiPolygon
         description: the geometry type
-      coordinates:
-        type: array
-        items:
-         type: array
-         items:
-           $ref: '#/definitions/Point2D'
+#       coordinates:
+#         type: array
+#         items:
+#          type: array
+#          items:
+#            $ref: '#/definitions/Point2D'
+#         x-nullable: true
   
   Point2D:
     type: array
