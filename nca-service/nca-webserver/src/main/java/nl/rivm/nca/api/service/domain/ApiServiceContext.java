@@ -20,36 +20,16 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.LocaleUtils;
 
-import nl.rivm.nca.db.PMF;
-import nl.rivm.nca.db.ServerPMF;
-
 public class ApiServiceContext {
 
   private final Locale locale;
-  private PMF pmf;
 
-  public ApiServiceContext()  {
+  public ApiServiceContext() {
     locale = LocaleUtils.toLocale("");
-	 
-  }
-
-  public ApiServiceContext(final PMF pmf) {
-    this();
-    this.pmf = pmf;
-
   }
 
   public Locale getLocale() {
     return locale;
-  }
-
-  public PMF getPMF() {
-    synchronized (this) {
-      if (pmf == null) {
-        pmf = ServerPMF.getInstance();
-      }
-      return pmf;
-    }
   }
 
 }

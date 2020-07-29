@@ -1,4 +1,4 @@
-package nl.rivm.nca.pcraster;
+package nl.rivm.nca.tks.pcraster;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,12 +7,13 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.rivm.nca.pcraster.RunnerEnum;
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
 
-class PcRasterRunner2{
+class PcRasterRunnerTKS {
   
-  private static final Logger LOGGER = LoggerFactory.getLogger(PcRasterRunner.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PcRasterRunnerTKS.class);
   private static final String RUNNER = RunnerEnum.NCA2.getRunner();
 
 	public void runPcRaster(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine, File workingPathScenario, File workingFileBaseLine, File projectFileDiff, java.util.logging.Logger jobLogger )

@@ -37,8 +37,8 @@ public class ModelEnvironmentApiServiceImpl extends ModelEnvironmentApiService {
     //    try  (final Connection connection = context.getPMF().getConnection()) {
     //    envList.add("database " + connection.toString());
     //    }
-    envList.add("database");
-    envList.add("connection to database not tested!");
+    //envList.add("database");
+    //envList.add("connection to database not tested!");
     envList.add("nca appliation");
     envList.add("GEOSERVER_URL : " + EnvironmentEnum.GEOSERVER_URL.getEnv());
     envList.add("GEOSERVER_USER  : " + EnvironmentEnum.GEOSERVER_USER.getEnv());

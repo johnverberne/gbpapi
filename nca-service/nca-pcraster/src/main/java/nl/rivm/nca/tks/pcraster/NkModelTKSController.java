@@ -1,4 +1,4 @@
-package nl.rivm.nca.pcraster;
+package nl.rivm.nca.tks.pcraster;
 
 import java.io.File;
 import java.io.FileReader;
@@ -49,10 +49,20 @@ import nl.rivm.nca.api.domain.MeasureCollection;
 import nl.rivm.nca.api.domain.MeasureLayer;
 import nl.rivm.nca.api.domain.MeasureType;
 
+import nl.rivm.nca.pcraster.CookieCut;
+import nl.rivm.nca.pcraster.EnvironmentEnum;
+import nl.rivm.nca.pcraster.GeoJson2CorrectCRS;
+import nl.rivm.nca.pcraster.GeoJson2Geotiff;
+import nl.rivm.nca.pcraster.Geotiff2PcRaster;
+import nl.rivm.nca.pcraster.ProjectIniFile;
+import nl.rivm.nca.pcraster.RasterLayers;
+import nl.rivm.nca.pcraster.RunnerEnum;
+import nl.rivm.nca.shared.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException.Reason;
+
 /*
- * Run the model with a TIFF Source file
- * 
- * 
+ * Run the model with a GEOJson input Source file
+ * Use external defined measures for the layers
  */
 public class NkModelTKSController {
 
@@ -68,7 +78,7 @@ public class NkModelTKSController {
   private static final String OUTPUTS = "outputs";
   private final RasterLayers rasterLayers;
   private final ObjectMapper mapper = new ObjectMapper();
-  private final PcRasterRunner2 pcRasterRunner2 = new PcRasterRunner2();
+  private final PcRasterRunnerTKS pcRasterRunner = new PcRasterRunnerTKS();
   private final PreProcessTKSRunner preProcessRunner = new PreProcessTKSRunner();
   protected static final String PREFIX = "org_";
   protected static final String BASELINE = "baseline";
@@ -79,15 +89,14 @@ public class NkModelTKSController {
   protected static final String NKMODEL_SCENARIO_EXPORT = "tks_scenarion.json";
 
 
-  public NkModelTKSController(File path, boolean directFile) throws IOException, InterruptedException {
+  public NkModelTKSController(File path) throws IOException, InterruptedException {
     rasterLayers = RasterLayers.loadRasterLayers(path);
   }
 
   public List<AssessmentTKSResultResponse> run(String correlationId, FeatureCollection features)
-      throws IOException, ConfigurationException, InterruptedException {
+      throws IOException, ConfigurationException, InterruptedException, AeriusException {
     final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
-    //final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
-   
+
     long start = System.currentTimeMillis();
     FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
     java.util.logging.Logger jobLogger = createJobLogger(jobLoggerFile, start);
@@ -103,7 +112,7 @@ public class NkModelTKSController {
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
     final Envelope2D extend = new Envelope2D();
-    // hard coded get from input geojson
+    // hard coded get from input geojson how ?
     extend.include(85790, 444328); // (134660,455850)
     extend.include(86091, 444885); // (136620,453800)  
     
@@ -112,6 +121,9 @@ public class NkModelTKSController {
     Map<Layer, File> measureLayerFiles = determineProjectAndMeasureLayers(layerFiles, projectlayer, suppliedLayers, measures, measuresLayers, extend, workingPath, scenarioPath, jobLogger);
   
     // do not run if suppliedLayers is empty 
+    if (suppliedLayers.isEmpty()) {
+      //throw new AeriusException(Reason.CALCULATION_NO_SOURCES);
+    }
     
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
@@ -338,7 +350,7 @@ public class NkModelTKSController {
   }
 
   private MeasureCollection loadTksMeasures() throws IOException {
-    final File measureModelsFile = new File(EnvironmentEnum.NCA_TKS_MEASURES.getEnv());
+    final File measureModelsFile = new File(EnvironmentEnum.NCA_MODEL_TKS_RUNNER .getEnv() + "/" + EnvironmentEnum.NCA_TKS_MEASURES.getEnv());
     @SuppressWarnings("resource")
     FileReader fr = new FileReader(measureModelsFile.getAbsolutePath());
     int i;
@@ -386,7 +398,7 @@ public class NkModelTKSController {
   protected void runPcRaster2(String correlationId, String ecoSystemService, File projectFileScenario, File projectFileBaseLine,
       File workingPathScenario, File workingPathBaseLine, File projectPathDiff, java.util.logging.Logger jobLogger)
       throws IOException, InterruptedException {
-    pcRasterRunner2.runPcRaster(correlationId, ecoSystemService, projectFileScenario, projectFileBaseLine, workingPathScenario, workingPathBaseLine,
+    pcRasterRunner.runPcRaster(correlationId, ecoSystemService, projectFileScenario, projectFileBaseLine, workingPathScenario, workingPathBaseLine,
         projectPathDiff, jobLogger);
   }
 

@@ -16,46 +16,7 @@ consumes:
 produces:
   - application/json
 paths:
-  /assessmentRequest:
-    post:
-      operationId: postAssessmentRequest
-      tags:
-        - assessmentRequest
-      description: |
-        TDB
-      parameters:
-        - name: apiKey
-          in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
-          required: true
-          type: string
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AssessmentRequest'
-      responses:
-        '200':
-          description: |
-            In case of normal behavior.
-          schema:
-            $ref: '#/definitions/AssessmentRequestResponse'
-        '400':
-          description: |
-            In case of user error - thing of missing fields.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '401':
-          description: API key is missing or invalid
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            In case of system error. Please contact the helpdesk if this error persists.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-        - apiKey: []
+ 
   /assessmentScenarioRequest:
     post:
       operationId: postAssessmentScenarioRequest
@@ -138,101 +99,9 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
         - apiKey: []        
-  /assessmentResult/{resultId}:
-    get:
-      operationId: getAssessmentResultById
-      tags:
-        - assessmentResult
-      description: |
-        Deze functie geeft een resultaten voor opgegeven apiKey en resultId.
-      parameters:
-        - name: apiKey
-          in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
-          required: true
-          type: string
-        - name: resultId
-          in: path
-          description: ID of Assessment Result
-          required: true
-          type: string
-      responses:
-        '200':
-          description: |
-            Bij een normale afhandeling van de API functie.
-          schema:
-            $ref: '#/definitions/AssessmentResultsResponse'
-        '400':
-          description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-  /generateAPIKey:
-    post:
-      operationId: postGenerateAPIKey
-      tags:
-        - user
-      description: |
-        Generate a new API-key. The API-key will be e-mailed to the given e-mail address.
-        This function can also be used to reset the API-key for a previous registered e-mail address.
-        A previous API-key will be invalidated.
-        The function returns via the field __successful__ if the request successed.
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/GenerateAPIKeyRequest'
-      responses:
-        '200':
-          description: |
-            In case of normal behavior.
-          schema:
-            $ref: '#/definitions/ValidateResponse'
-        '400':
-          description: |
-            In case of user error - thing of missing fields.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            In case of system error. Please contact the helpdesk if this error persists.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-  /status/jobs:
-    get:
-      operationId: getStatusJobs
-      tags:
-        - user
-      description: |
-        Deze functie geeft een statusoverzicht van de uitgevoerde taken die, voor een opgegeven API-key, zijn aangemeld, worden uitgevoerd of zijn afgerond.
-      parameters:
-        - name: apiKey
-          in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
-          required: true
-          type: string
-      responses:
-        '200':
-          description: |
-            Bij een normale afhandeling van de API functie.
-          schema:
-            $ref: '#/definitions/StatusJobResponse'
-        '400':
-          description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
+ 
+
+ 
   /modeldata/{model}:
     get:
       operationId: getModelData
@@ -562,55 +431,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ValidationMessage'         
-  JobState:
-    type: string
-    description: |
-      De status van de job.
-
-      ___QUEUED:___ De opdracht is ontvangen en staat in de wachtrij.
-      ___RUNNING:___ De opdracht wordt op dit moment uitgevoerd.
-      ___CANCELLED:___ De opdracht is afgebroken door de gebruiker.      
-      ___COMPLETED:___ De opdracht is afgerond.
-    enum:
-      - QUEUED
-      - RUNNING
-      - CANCELLED
-      - COMPLETED
-  StatusJobProgress:
-    type: object
-    properties:
-      key:
-        type: string
-        description:
-          Bevat de unieke job key.
-      state:
-        $ref: "#/definitions/JobState"
-      name:
-        type: string
-        description: Optioneel de door gebruiker opgegeven naam voor job.
-      startDateTime:
-        type: string
-        format: date-time
-        description: Startdatum en tijd.
-      endDateTime:
-        type: string
-        format: date-time
-        description: Einddatum en tijd.
-      progressCount:
-        type: integer
-        format: int64
-        description: Aantal scenarios in deze taak klaar.
-      maxProgress:
-        type: integer
-        format: int64
-        description: Totaal aantal scenarios in deze rekentaak.
-  StatusJobResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          $ref: '#/definitions/StatusJobProgress'
+ 
   ModelDataResponse:
     type: object
     properties:

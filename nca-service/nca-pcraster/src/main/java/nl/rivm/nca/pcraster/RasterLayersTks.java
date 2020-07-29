@@ -5,23 +5,23 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.rivm.nca.api.domain.Layer;
+import nl.rivm.nca.tksapi.domain.Layer;
 
-public class RasterLayers {
+public class RasterLayersTks {
 
   private final Map<String, Map<Layer, String>> layers = new HashMap<>();
   private final File path;
 
-  public RasterLayers() {
+  public RasterLayersTks() {
 	  this.path = null;
   }
   
-  public RasterLayers(File path) {
+  public RasterLayersTks(File path) {
     this.path = path;
   }
 
-  public static RasterLayers loadRasterLayers(File path) {
-    final RasterLayers layers = new RasterLayers(path);
+  public static RasterLayersTks loadRasterLayers(File path) {
+    final RasterLayersTks layers = new RasterLayersTks(path);
     hardCodeTmp(layers.layers);
     return layers;
   }
@@ -46,7 +46,6 @@ public class RasterLayers {
     arLayers.put(Layer.WATER, "Meer_plas_zee");
     
     layers.put("air_regulation", arLayers);
-
   }
 
   public File mapOriginalFilePath(String name) {

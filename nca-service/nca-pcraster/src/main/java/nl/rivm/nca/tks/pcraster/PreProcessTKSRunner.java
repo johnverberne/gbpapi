@@ -1,4 +1,4 @@
-package nl.rivm.nca.pcraster;
+package nl.rivm.nca.tks.pcraster;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.rivm.nca.pcraster.RunnerEnum;
 import nl.rivm.nca.runner.Exec;
 import nl.rivm.nca.runner.ExecParameters;
 

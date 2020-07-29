@@ -14,6 +14,11 @@ public enum EnvironmentEnum {
    */
   NCA_MODEL_RUNNER, GEOSERVER_USER, GEOSERVER_PASSWORD,
   /*
+   * Directory with runner files unix shell and windows batch files
+   * Specific for the tks implementation
+   */
+  NCA_MODEL_TKS_RUNNER,
+  /*
    * url endpoint for geoserver to publisch result layers.
    */
   GEOSERVER_URL,

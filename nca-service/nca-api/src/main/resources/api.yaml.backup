@@ -365,7 +365,48 @@ definitions:
         format: int32
       xmax:
         type: integer
-        format: int32       
+        format: int32
+  AssessmentTKSResultsResponse:
+    type: object
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/AssessmentTKSResultResponse'
+      key:
+        type: string
+        description: A unique key for the geoserver results layers.
+  AssessmentTKSResultResponse:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+      name:
+        type: string
+      model:
+        type: string  
+      min:
+        type: number
+        format: double
+      max:
+        type: number
+        format: double
+      sum:
+        type: number
+        format: double
+      tablevalue:
+        type: number
+        format: double
+      avg:
+        type: number 
+        format: double
+      units:
+        type: string
+      class:
+        type: string         
   AssessmentRequest:
     type: object
     required:
@@ -618,7 +659,7 @@ definitions:
           assessmentResults:
             type: array
             items:
-              $ref: '#/definitions/AssessmentResultsResponse'
+              $ref: '#/definitions/AssessmentTKSResultsResponse'
   
   FeatureCollection:
     type: object
@@ -652,7 +693,9 @@ definitions:
       name:
         type: string
       measure:
-        type: string
+          $ref: '#/definitions/MeasureType'
+      measureId:
+          type: number
       areaWidth:
         type: string
       areaFadius:
@@ -661,11 +704,78 @@ definitions:
         type: number
       isProjectArea:
         type: boolean
-                          
+        
+  MeasureType:
+   type: string
+   description: |
+     Soort maatregel 
+   enum:
+      - STREETTREES
+      - URBANWETLANDS
+      - WADI
+      - FOUTAIN
+      - DEEPINFILTRATION
+      - DITCH
+      - GREENFACADE
+      - GREENROOFS
+      - SURFACESTORAGE
+      - DITSEWER
+      - INFILTRATIONFIELDS
+      - URBANFOREST
+      - PERMEABLESURFACE
+      - RAINBARREL
+      - WATERSQUARE
+      - GREENBLUEROOFS
+      - SMARTIRRIGATION
+      - SHADOW
+      - PROJECT
+  
+  MeasureCollection:
+    type: object
+    properties:
+      measures:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
+    
+  Measure:
+    type: object
+    properties:
+      id:
+        type: number
+      code:
+        $ref: '#/definitions/MeasureType'
+      runmodel:
+        type: boolean
+      layers:
+        type: array
+        items:
+          $ref: '#/definitions/MeasureLayer'  
+          
+  MeasureLayer:
+    type: object 
+    properties:
+      layer:
+        $ref: '#/definitions/Layer'
+      value:
+        type: number
+                           
   Geometry:
+#     oneOf:
+#     - $ref: '#definitions/Point'
+#     - $ref: '#definitions/Polygon'
+#     
     type: object
     description: GeoJSon geometry
+    
     discriminator: type
+    
+#     discriminator:
+#       propertyName: type
+#       mapping:
+#         Point: '#/definitions/Point'
+#         Polygon: '#/definitions/Polygon'
+        
     required:
       - type
     externalDocs:
@@ -681,6 +791,13 @@ definitions:
         - MultiLineString
         - MultiPolygon
         description: the geometry type
+#       coordinates:
+#         type: array
+#         items:
+#          type: array
+#          items:
+#            $ref: '#/definitions/Point2D'
+#         x-nullable: true
   
   Point2D:
     type: array
@@ -775,21 +892,3 @@ definitions:
                 items:
                   $ref: '#/definitions/Point2D'
       
-  GeometryCollection:
-    type: object
-    description: GeoJSon geometry collection
-    required:
-     - type
-     - geometries
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometrycollection
-    properties:
-      type:
-        type: string
-        enum:
-        - GeometryCollection
-        description: 
-      geometries:
-          type: array
-          items:
-            $ref: '#/definitions/Geometry'

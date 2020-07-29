@@ -3,7 +3,6 @@ package nl.rivm.nca.api.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,8 +13,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.rivm.nca.api.domain.AssessmentResultResponse;
-import nl.rivm.nca.api.domain.AssessmentResultsResponse;
 import nl.rivm.nca.api.domain.AssessmentTKSRequestResponse;
 import nl.rivm.nca.api.domain.AssessmentTKSResultResponse;
 import nl.rivm.nca.api.domain.AssessmentTKSResultsResponse;
@@ -23,22 +20,45 @@ import nl.rivm.nca.api.domain.FeatureCollection;
 import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.api.service.AssessmentTKSRequestApiService;
 import nl.rivm.nca.api.service.NotFoundException;
+import nl.rivm.nca.api.service.domain.ApiServiceContext;
+import nl.rivm.nca.api.service.util.AeriusExceptionConversionUtil;
+import nl.rivm.nca.api.service.util.SwaggerUtil;
 import nl.rivm.nca.api.service.util.WarningUtil;
+
 import nl.rivm.nca.pcraster.EnvironmentEnum;
-import nl.rivm.nca.pcraster.NkModelTKSController;
+import nl.rivm.nca.pcraster.RunnerEnum;
+import nl.rivm.nca.shared.exception.AeriusException;
+import nl.rivm.nca.shared.exception.AeriusException.Reason;
+import nl.rivm.nca.tks.pcraster.NkModelTKSController;
 
 public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AssessmentTKSRequestApiServiceImpl.class);
 
+  private final ApiServiceContext context;
+
+  public AssessmentTKSRequestApiServiceImpl() {
+    this(new ApiServiceContext());
+  }
+
+  AssessmentTKSRequestApiServiceImpl(final ApiServiceContext context) {
+    this.context = context;
+  }
+
   @Override
   public Response postAssessmentTKSRequest(String apiKey, FeatureCollection geoJson, SecurityContext securityContext) throws NotFoundException {
-    AssessmentTKSRequestResponse response = calculate(apiKey, geoJson);
-    return Response.ok().entity(response).build();
+    try {
+      AssessmentTKSRequestResponse response;
+      response = calculate(apiKey, geoJson);
+      return Response.ok().entity(response).build();
+    } catch (AeriusException e) {
+      return SwaggerUtil.handleException(context, e);
+    }
+    
   }
 
   @SuppressWarnings("unchecked")
-  private AssessmentTKSRequestResponse calculate(String apiKey, FeatureCollection features) {
+  private AssessmentTKSRequestResponse calculate(String apiKey, FeatureCollection features) throws AeriusException {
     AssessmentTKSRequestResponse response = new AssessmentTKSRequestResponse();
     List<ValidationMessage> warnings = new ArrayList<>();
     List<ValidationMessage> errors = new ArrayList<>();
@@ -46,21 +66,12 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
     response.setWarnings(warnings);
     response.setErrors(errors);
     final String uuid = UUID.randomUUID().toString();
-    // keep uuid for task
     response.setKey(uuid);
 
     try {
       response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, uuid));
     } catch (RuntimeException e) {
-//      ValidationMessage message = new ValidationMessage();
-//      message.setCode(1);
-//      message.setMessage("error is call : " + e.getMessage());
-      errors.add(WarningUtil.ValidationInfoMessage(
-          "Task executed uuid: {} " + uuid + " encounterd a error "));
-//      errors.add(message);
-      response.setErrors(errors);
-      response.setSuccessful(false);
-      throw e;
+      throw new AeriusException(Reason.INTERNAL_ERROR);
     }
     if (response.isSuccessful() == null) {
       response.setSuccessful(true);
@@ -69,18 +80,16 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
   }
 
   private AssessmentTKSResultsResponse scenarioCalculation(FeatureCollection features,
-      List<ValidationMessage> warnings, List<ValidationMessage> errors, String uuid) {
+      List<ValidationMessage> warnings, List<ValidationMessage> errors, String uuid) throws AeriusException {
     AssessmentTKSResultsResponse response = new AssessmentTKSResultsResponse();
     response.setKey(uuid);
     try {
-      final NkModelTKSController controller = initController(true);
+      final NkModelTKSController controller = initController();
       response.setEntries(singleCalculation(controller, features, warnings, errors, uuid));
-      //response.setUrl(controller.getDownloadFileUrl());
-    } catch (IOException | ConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new RuntimeException(e);
+    } catch (IOException | ConfigurationException | InterruptedException e) {
+      throw new AeriusException(Reason.INTERNAL_ERROR);
+    } catch (AeriusException e) {
+      throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
     }
     return response;
   }
@@ -88,27 +97,39 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
   private List<AssessmentTKSResultResponse> singleCalculation(NkModelTKSController controller, FeatureCollection features,
       List<ValidationMessage> warnings,
       List<ValidationMessage> errors, final String uuid)
-      throws IOException, ConfigurationException, InterruptedException {
+      throws IOException, ConfigurationException, InterruptedException, AeriusException {
     List<AssessmentTKSResultResponse> response = new ArrayList<>();
     response.addAll(assessmentRun(controller, features, uuid));
     return response;
   }
 
   private List<AssessmentTKSResultResponse> assessmentRun(NkModelTKSController controller, FeatureCollection features, final String uuid)
-      throws IOException, ConfigurationException, InterruptedException {
+      throws IOException, ConfigurationException, InterruptedException, AeriusException {
     List<AssessmentTKSResultResponse> results = new ArrayList<>();
     results.addAll(controller.run(uuid, features));
     return results;
   }
 
-  private NkModelTKSController initController(boolean directFile) throws IOException, InterruptedException {
+  private NkModelTKSController initController() throws IOException, InterruptedException, AeriusException {
+    // path to source files for the maps
     final String ncaModel = EnvironmentEnum.NCA_MODEL_RASTER.getEnv();
-    final String ncaModelRunner = EnvironmentEnum.NCA_MODEL_RUNNER.getEnv();
+    // path to runner files to run pc raster commands.
+    final String ncaModelRunner = EnvironmentEnum.NCA_MODEL_TKS_RUNNER.getEnv();
 
     if (ncaModel == null || ncaModelRunner == null) {
-      throw new IllegalArgumentException(
-          "Environment variable 'NCA_MODEL_RASTER or NCA_MODEL_RUNNER' not set. This should point to the raster data and Scripts.");
+      LOGGER.error("Environment variable 'NCA_MODEL_RASTER or NCA_MODEL_RUNNER' not set. This should point to the raster data and Scripts.");
+      throw new AeriusException(Reason.INTERNAL_ERROR);
     }
-    return new NkModelTKSController(new File(ncaModel), directFile);
+    // test if all runner files exist
+    for (RunnerEnum runner : RunnerEnum.values()) {
+      String script = runner.getRunner();
+      File tmpDir = new File(script);
+      if (!tmpDir.exists()) {
+        LOGGER.error("Problem with runner file does not exist {}", script);
+      }
+
+    }
+
+    return new NkModelTKSController(new File(ncaModel));
   }
 }

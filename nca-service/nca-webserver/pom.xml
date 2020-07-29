@@ -95,8 +95,8 @@
 		<finalName>${project.artifactId}</finalName>
 		
 		<plugins>
-	
-			<plugin>
+	<!-- 
+	      <plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty-version}</version>
@@ -141,6 +141,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
