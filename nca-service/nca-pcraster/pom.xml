@@ -22,11 +22,6 @@
 			<artifactId>nca-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-			<groupId>nl.rivm.nca</groupId>
-			<artifactId>nca-tks-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>nl.rivm.nca</groupId>
 			<artifactId>nca-lib</artifactId>

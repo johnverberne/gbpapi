@@ -5,7 +5,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.rivm.nca.tksapi.domain.Layer;
+import nl.rivm.nca.api.domain.Layer;
 
 public class RasterLayersTks {
 

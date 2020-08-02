@@ -112,11 +112,11 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
 
   private NkModelTKSController initController() throws IOException, InterruptedException, AeriusException {
     // path to source files for the maps
-    final String ncaModel = EnvironmentEnum.NCA_MODEL_RASTER.getEnv();
+    final String ncaModelRaster = EnvironmentEnum.NCA_MODEL_RASTER.getEnv();
     // path to runner files to run pc raster commands.
     final String ncaModelRunner = EnvironmentEnum.NCA_MODEL_TKS_RUNNER.getEnv();
 
-    if (ncaModel == null || ncaModelRunner == null) {
+    if (ncaModelRaster == null || ncaModelRunner == null) {
       LOGGER.error("Environment variable 'NCA_MODEL_RASTER or NCA_MODEL_RUNNER' not set. This should point to the raster data and Scripts.");
       throw new AeriusException(Reason.INTERNAL_ERROR);
     }
@@ -130,6 +130,6 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
 
     }
 
-    return new NkModelTKSController(new File(ncaModel));
+    return new NkModelTKSController(new File(ncaModelRaster));
   }
 }
