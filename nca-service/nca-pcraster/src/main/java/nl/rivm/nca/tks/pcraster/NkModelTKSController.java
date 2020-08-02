@@ -326,23 +326,28 @@ public class NkModelTKSController {
       MeasureType measure = null;
       if (feature.getProperties().getMeasureId() != null) {
         for (Measure m : measuresLayers.getMeasures()) {
-          if (m.getId().equals(feature.getProperties().getMeasureId())) {
+          LOGGER.info("{} == {}", m.getId(), feature.getProperties().getMeasureId());
+          if (m.getId() != null && m.getId().equals(feature.getProperties().getMeasureId())) {
             measure = m.getCode();
+            break;
           }
         }
       } else {
         measure = feature.getProperties().getMeasure() == null ? MeasureType.PROJECT : feature.getProperties().getMeasure();
       }
 
-      ArrayList<Features> measureValue = measures.get(measure);
-      LOGGER.debug("add measure {} value {}", measureValue, feature);
-      LOGGER.debug("add measure {} value {}", measureValue, feature.getGeometry().getType());
-      if (measureValue == null) {
-        ArrayList<Features> list = new ArrayList<Features>();
-        list.add(feature);
-        measures.put(measure, list);
+      if (measure != null) {
+        ArrayList<Features> measureValue = measures.get(measure);
+        LOGGER.debug("add measure {} value {}", measureValue, feature.getGeometry().getType());
+        if (measureValue == null) {
+          ArrayList<Features> list = new ArrayList<Features>();
+          list.add(feature);
+          measures.put(measure, list);
+        } else {
+          measureValue.add(feature);
+        }
       } else {
-        measureValue.add(feature);
+        LOGGER.info("skipping " + feature);
       }
     }
 

@@ -550,6 +550,11 @@ definitions:
       - SMARTIRRIGATION
       - SHADOW
       - PROJECT
+      - M84
+      - M86
+      - M89
+      - M91
+      
   
   MeasureCollection:
     type: object
@@ -581,26 +586,9 @@ definitions:
       value:
         type: number
                            
-  Geometry:
-#     oneOf:
-#     - $ref: '#definitions/Point'
-#     - $ref: '#definitions/Polygon'
-#     
-    type: object
-    description: GeoJSon geometry
-    
-    discriminator: type
-    
-#     discriminator:
-#       propertyName: type
-#       mapping:
-#         Point: '#/definitions/Point'
-#         Polygon: '#/definitions/Polygon'
-        
+  Geometry:    
     required:
       - type
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#geometry-objects
     properties:
       type:
         type: string
@@ -608,108 +596,9 @@ definitions:
         - Point
         - LineString
         - Polygon
-        - MultiPoint
-        - MultiLineString
-        - MultiPolygon
         description: the geometry type
-#       coordinates:
-#         type: array
-#         items:
-#          type: array
-#          items:
-#            $ref: '#/definitions/Point2D'
-#         x-nullable: true
-  
-  Point2D:
-    type: array
-    maxItems: 2
-    minItems: 2
-    items:
-      type: number
-  
-  Point:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id2
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            $ref: '#/definitions/Point2D'
-    
-  LineString:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id3
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              $ref: '#/definitions/Point2D'
-             
-  Polygon:
-    type: object
-    description: GeoJSon geometry
-    required:
-      - coordinates
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id4
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              type: array
-              items:
-                $ref: '#/definitions/Point2D'
-      
-  MultiPoint:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id5
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              $ref: '#/definitions/Point2D'
-            
-  MultiLineString:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id6
-    allOf:
-      - $ref: "#/definitions/Geometry"   
-      - properties:
-          coordinates:
-            type: array
-            items:
-              type: array
-              items:
-                $ref: '#/definitions/Point2D'
-           
-  MultiPolygon:
-    type: object
-    description: GeoJSon geometry
-    externalDocs:
-      url: http://geojson.org/geojson-spec.html#id6
-    allOf:
-      - $ref: "#/definitions/Geometry"
-      - properties:
-          coordinates:
-            type: array
-            items:
-              type: array
-              items:
-                type: array
-                items:
-                  $ref: '#/definitions/Point2D'
-      
+      coordinates:
+        type: array
+        items:
+         type: object
+
