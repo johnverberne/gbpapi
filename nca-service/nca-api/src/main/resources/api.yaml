@@ -257,6 +257,8 @@ definitions:
         type: string
       model:
         type: string  
+      modelDescription:
+        type: string
       min:
         type: number
         format: double

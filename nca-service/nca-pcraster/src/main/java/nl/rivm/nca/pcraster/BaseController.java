@@ -141,7 +141,7 @@ public abstract class BaseController implements ControllerInterface {
     try {
       // convert input tiff to map
       LOGGER.info("Export geotiff2pcraster {} -> {}", geotiffFile, mapFile);
-      Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile);
+      Geotiff2PcRaster.geoTiff2PcRaster(geotiffFile, mapFile, null);
     } catch (final IOException e) {
       e.printStackTrace();
     }

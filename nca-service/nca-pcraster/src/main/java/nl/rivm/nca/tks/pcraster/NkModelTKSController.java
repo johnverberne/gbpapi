@@ -116,7 +116,7 @@ public class NkModelTKSController {
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
     // determine boundig box form project
-    determineBouningBox(workingPath,jobLogger);
+    // determineBouningBox(workingPath,jobLogger);
     
     final Envelope2D extend = new Envelope2D();
     // hard coded get from input geojson how ? round to 10 digits
@@ -517,6 +517,7 @@ public class NkModelTKSController {
             mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AssessmentTKSResultResponse result = mapper.readValue(body, AssessmentTKSResultResponse.class);
+            filterResult(result);
             returnList.add(result);
             LOGGER.info("content of file for correlationId {} content {}", correlationId, result.toString());
             if (jobLogger != null) {
@@ -529,6 +530,12 @@ public class NkModelTKSController {
           }
         });
     return returnList;
+  }
+
+  private void filterResult(AssessmentTKSResultResponse result) {
+    result.name(result.getName().replaceAll("\\[.*\\]", ""));
+    result.units(result.getUnits().replace("[", "").replace("]", "").replace("Euros", "Euro/jaar"));
+    result.setModelDescription(result.getModel().replace("_", " "));
   }
 
   protected void cleanUp(File dir, Boolean remove) throws IOException {
