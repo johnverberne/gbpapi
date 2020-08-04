@@ -472,6 +472,7 @@ public class NkModelTKSController {
             String body = "";
             while ((i = fr.read()) != -1)
               body += (char) i;
+            body = body.replace("nan" , "0");
             mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AssessmentTKSResultResponse result = mapper.readValue(body, AssessmentTKSResultResponse.class);
