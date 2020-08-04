@@ -112,9 +112,10 @@ public class NkModelTKSController {
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
     final Envelope2D extend = new Envelope2D();
-    // hard coded get from input geojson how ?
-    extend.include(85790, 444328); // (134660,455850)
-    extend.include(86091, 444885); // (136620,453800)  
+    // hard coded get from input geojson how ? round to 10 digits
+    
+    extend.include(85790, 444590); // (134660,455850)
+    extend.include(86090, 444890); // (136620,453800)  
     
     File projectlayer = null;
     ArrayList<LayerObject> suppliedLayers = new ArrayList<LayerObject>();
@@ -391,7 +392,7 @@ public class NkModelTKSController {
       // create extra file
       final File mapFile = new File(workingPath, prefix + layerFiles.get(layer) + MAP_DOT_EXT); // original to overwrite
       final File editMapFilePath = new File(mapFile.getAbsolutePath().replace(".map", "_edit.map").replace("org_", ""));
-      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, editMapFilePath); // create map file from tiff
+      Geotiff2PcRaster.geoTiff2PcRaster(tiffFile, editMapFilePath, jobLogger); // create map file from tiff
       try {
         preProcessRunner.runPreProcessorTiffToMap("", mapFile, editMapFilePath, prefix, jobLogger);
       } catch (final IOException | InterruptedException e) {
