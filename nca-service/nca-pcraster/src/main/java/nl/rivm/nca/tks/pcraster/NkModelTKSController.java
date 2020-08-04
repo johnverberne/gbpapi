@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,8 +33,10 @@ import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -42,6 +45,7 @@ import nl.rivm.nca.api.domain.AssessmentTKSResultResponse;
 import nl.rivm.nca.api.domain.FeatureCollection;
 import nl.rivm.nca.api.domain.FeatureCollection.TypeEnum;
 import nl.rivm.nca.api.domain.Features;
+import nl.rivm.nca.api.domain.Geometry;
 import nl.rivm.nca.api.domain.Layer;
 import nl.rivm.nca.api.domain.LayerObject;
 import nl.rivm.nca.api.domain.Measure;
@@ -111,6 +115,9 @@ public class NkModelTKSController {
     final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
+    // determine boundig box form project
+    determineBouningBox(workingPath,jobLogger);
+    
     final Envelope2D extend = new Envelope2D();
     // hard coded get from input geojson how ? round to 10 digits
     
@@ -154,6 +161,44 @@ public class NkModelTKSController {
     closeJobLogger(jobLogger, jobLoggerFile, start);
 
     return assessmentResultlist;
+  }
+
+  private Envelope2D determineBouningBox(File workingPath, java.util.logging.Logger jobLogger)
+      throws JsonParseException, JsonMappingException, IOException {
+    final File projectGeojson = new File(workingPath + "/" + "measure_PROJECT.geojson");
+    LOGGER.info("Read project json {} ", projectGeojson.getAbsoluteFile());
+    final Envelope2D extend = new Envelope2D();
+    @SuppressWarnings("resource")
+    FileReader fr = new FileReader(projectGeojson.getAbsolutePath());
+    int i;
+    String body = "";
+    while ((i = fr.read()) != -1)
+      body += (char) i;
+    mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    FeatureCollection project = mapper.readValue(body, FeatureCollection.class);
+    for (Features f : project.getFeatures()) {
+      if (f.getProperties().isIsProjectArea()) {
+
+        @SuppressWarnings("rawtypes")
+        ArrayList coordinates = (ArrayList) f.getGeometry().getCoordinates().get(0);
+        ArrayList righttop = (ArrayList) coordinates.get(1);
+        ArrayList leftbottom = (ArrayList) coordinates.get(4);
+        // round it and add 1000 meter.
+        jobLogger.info("geometry from project is " + f);
+        jobLogger.info("geometry from project righttop x " + righttop.get(0) + " Y:" + righttop.get(1));
+        jobLogger.info("geometry from project leftbottom x " + leftbottom.get(0) + " Y:" + leftbottom.get(1));
+
+       
+        // hard coded get from input geojson how ? round to 10 digits
+        DecimalFormat df = new DecimalFormat("####0");
+        extend.include(Double.parseDouble(df.format(righttop.get(0))),Double.parseDouble(df.format(righttop.get(1)))); // 85790, 444590
+        extend.include(Double.parseDouble(df.format(leftbottom.get(0))), Double.parseDouble(df.format(leftbottom.get(1)))); // 86090, 444890
+        LOGGER.info("Boundingbox {}", extend);
+       
+      }
+    }
+    return extend;
   }
 
   private void createScenarionFile(File workingPath, FeatureCollection request) {
@@ -304,11 +349,7 @@ public class NkModelTKSController {
       String jsonToSend = gson.toJson(f);
       // correct the conversion 
       jsonToSend = jsonToSend.replace("FEATURECOLLECTION", TypeEnum.FEATURECOLLECTION.toString());
-      // TODO convert line and point to valid geojson
-
       final String fileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;
-      //LOGGER.debug("file ({}) data {}", fileName, jsonToSend);
-      //Write JSON file
       LOGGER.debug("writing file ({})", workingPath + "/" + fileName);
       try (FileWriter file = new FileWriter(workingPath + "/" + fileName)) {
         file.write(jsonToSend);
