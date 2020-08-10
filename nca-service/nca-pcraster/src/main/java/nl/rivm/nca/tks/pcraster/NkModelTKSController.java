@@ -122,8 +122,13 @@ public class NkModelTKSController {
     final Envelope2D extend = new Envelope2D();
     // hard coded get from input geojson how ? round to 10 digits
     
-    extend.include(85790, 444590); // (134660,455850)
-    extend.include(86090, 444890); // (136620,453800)  
+    // [ [ 84770, 443530 ], [ 86780, 445530 ] ] // deltares 
+    
+    //extend.include(85790, 444590); // (134660,455850)
+    //extend.include(86090, 444890); // (136620,453800)  
+    
+    extend.include(84770, 443530); 
+    extend.include(86780, 445530);
     
     File projectlayer = null;
     ArrayList<LayerObject> suppliedLayers = new ArrayList<LayerObject>();
