@@ -30,7 +30,8 @@ class PreProcessTKSRunner {
   public void runPreProcessorTiffToMap(String correlationId, File mapFile, File editMapFilePath, String PREFIX, java.util.logging.Logger jobLogger)
       throws IOException, InterruptedException {
     String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, ""); // remove the org_
-    String newMapFilePath = new File(mapFilePath.replace(".map", "_new.map")).getAbsolutePath();
+    // this file show intermediate difference can be removed in future
+    String newMapFilePath = new File(editMapFilePath.getAbsolutePath().replace(".map", "_new.map")).getAbsolutePath(); 
     // parse as parameter string
     String mapFileParameter = paramString(mapFilePath.replaceAll("\\/", "\\\\"));
     String editMapFileParameter = paramString(editMapFilePath.getAbsolutePath().replaceAll("\\/", "\\\\"));

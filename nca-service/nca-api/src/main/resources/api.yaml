@@ -565,6 +565,18 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Measure'
+  
+  MeasureLayerFile:
+    type: object
+    properties:
+      measureType:
+        $ref: '#/definitions/MeasureType'
+      layer:
+        $ref: '#/definitions/Layer'
+      file:
+        type: string
+      measureLayerValue:
+        type: number
     
   Measure:
     type: object

@@ -69,7 +69,11 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
     response.setKey(uuid);
 
     try {
-      response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, uuid));
+      if (apiKey != null && apiKey.equals("0000-0000-0000-0001")) {
+        response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, uuid));
+      } else {
+        errors.add(WarningUtil.ValidationInfoMessage("apiKey not valid or supplied."));
+      }
     } catch (RuntimeException e) {
       throw new AeriusException(Reason.INTERNAL_ERROR);
     }
@@ -99,14 +103,14 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
       List<ValidationMessage> errors, final String uuid)
       throws IOException, ConfigurationException, InterruptedException, AeriusException {
     List<AssessmentTKSResultResponse> response = new ArrayList<>();
-    response.addAll(assessmentRun(controller, features, uuid));
+    response.addAll(assessmentRun(controller, features, uuid, warnings));
     return response;
   }
 
-  private List<AssessmentTKSResultResponse> assessmentRun(NkModelTKSController controller, FeatureCollection features, final String uuid)
+  private List<AssessmentTKSResultResponse> assessmentRun(NkModelTKSController controller, FeatureCollection features, final String uuid, List<ValidationMessage> warnings)
       throws IOException, ConfigurationException, InterruptedException, AeriusException {
     List<AssessmentTKSResultResponse> results = new ArrayList<>();
-    results.addAll(controller.run(uuid, features));
+    results.addAll(controller.run(uuid, features, warnings));
     return results;
   }
 
