@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.FileHandler;
@@ -58,7 +59,7 @@ import nl.rivm.nca.api.domain.ValidationMessage;
 import nl.rivm.nca.pcraster.CookieCut;
 import nl.rivm.nca.pcraster.EnvironmentEnum;
 import nl.rivm.nca.pcraster.GeoJson2CorrectCRS;
-import nl.rivm.nca.pcraster.GeoJson2Geotiff;
+import nl.rivm.nca.pcraster.BurnGeoJsonOnTiff;
 import nl.rivm.nca.pcraster.Geotiff2PcRaster;
 import nl.rivm.nca.pcraster.ProjectIniFile;
 import nl.rivm.nca.pcraster.RasterLayers;
@@ -111,35 +112,44 @@ public class NkModelTKSController {
     copyRunnerFiles(workingPath, jobLogger);
         
     MeasureCollection measuresLayers = loadTksMeasures(); 
-    HashMap<MeasureType, ArrayList<Features>> measures = groupFeaturesOnMeasureAndExport(features, measuresLayers, workingPath);
-      
+    HashMap<MeasureType, ArrayList<Features>> measures = groupFeaturesOnMeasureAndExport(features, measuresLayers, workingPath, jobLogger);
+    
     final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
 
     // determine boundig box form project
     // determineBouningBox(workingPath,jobLogger);
     
+    List<BigDecimal> bb = features.getBbox();
+    BigDecimal ly = bb.get(0);
+    BigDecimal lx = bb.get(1);
+    BigDecimal ry = bb.get(2);
+    BigDecimal rx = bb.get(3);
+   
+    double[] lrdw = convertToRijksdriehoek( bb.get(1).doubleValue(),bb.get(0).doubleValue());
+    double[] rrdw = convertToRijksdriehoek( bb.get(3).doubleValue(),bb.get(2).doubleValue());
+    
+    LOGGER.info("crc from [{}] [{}] [{}] [{}]",  lrdw[0], lrdw[1], rrdw[0], rrdw[1]);
+    jobLogger.info("crc from " + lrdw[0] + lrdw[1] +rrdw[0]+ rrdw[1]);
+    lrdw[0] = Math.round((lrdw[0] - 500)/10)* 10;
+    lrdw[1] = Math.round((lrdw[1] - 500)/10)* 10;
+    rrdw[0] = Math.round((rrdw[0] + 500)/10)* 10;
+    rrdw[1] = Math.round((rrdw[1] + 500)/10)* 10;
+    LOGGER.info("crc to [{}] [{}] [{}] [{}]",  lrdw[0], lrdw[1], rrdw[0], rrdw[1]);
+    jobLogger.info("crc to " + lrdw[0] + lrdw[1] +rrdw[0]+ rrdw[1]);
+    
     final Envelope2D extend = new Envelope2D();
     // hard coded get from input geojson how ? round to 10 digits
-    
     // [ [ 84770, 443530 ], [ 86780, 445530 ] ] // deltares 
-    
     //extend.include(85790, 444590); // (134660,455850)
     //extend.include(86090, 444890); // (136620,453800)  
     
     extend.include(85250, 444050); 
     extend.include(86450, 445250);
     
-    File projectlayer = null;
-    ArrayList<LayerObject> suppliedLayers = new ArrayList<LayerObject>();
-    //Map<Layer, File> measureLayerFiles = determineProjectAndMeasureLayers(layerFiles, projectlayer, suppliedLayers, measures, measuresLayers, extend, workingPath, scenarioPath, jobLogger);
-    List<MeasureLayerFile> measureLayerFiles = determineProjectAndMeasureLayers(layerFiles, projectlayer, suppliedLayers, measures, measuresLayers, extend, workingPath, scenarioPath, jobLogger);
+    //extend.include(lrdw[0],lrdw[1]);
+    //extend.include(rrdw[2],rrdw[1]);
     
-    
-    // do not run if suppliedLayers is empty 
-    if (suppliedLayers.isEmpty()) {
-      //throw new AeriusException(Reason.CALCULATION_NO_SOURCES);
-    }
     
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
@@ -149,12 +159,41 @@ public class NkModelTKSController {
     List<AssessmentTKSResultResponse> assessmentResultlist = new ArrayList<AssessmentTKSResultResponse>();
 
     // final Envelope2D extend = calculateExtend(projectlayer);
-    cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, suppliedLayers, extend, jobLogger);
+    cookieCutOtherLayersToWorkingPath(scenarioPath, layerFiles, new ArrayList<LayerObject>(), extend, jobLogger);
     cookieCutAllLayersToBaseLinePath(baseLinePath, layerFiles, extend, jobLogger);
 
-    // overlay the input tiff onto the cut scenario map to apply the change
-    prePrepocessSenarioMap(layerFiles, scenarioPath, measureLayerFiles, PREFIX, jobLogger);
-
+    // create tiff from map layer files
+    // todo only for suppliedLayers
+    jobLogger.info("convert map files to tiff file");
+    for (Entry<Layer, String> layer : layerFiles.entrySet()) {
+      try {
+        String inputFile = scenarioPath.getAbsolutePath() + "/" + layer.getValue() + MAP_DOT_EXT;
+        String outputFile = scenarioPath.getAbsolutePath() + "/" + "measure_" + layer.getValue() + TIF_DOT_EXT;
+        jobLogger.info("map " + inputFile + " to tif"+ outputFile);
+        Geotiff2PcRaster.pcRaster2GeoTiff(new File(inputFile), new File(outputFile), jobLogger);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+        
+    // burn the json onto the tiff file
+    File projectlayer = null;
+    ArrayList<LayerObject> suppliedLayers = new ArrayList<LayerObject>();
+    applyProjectAndMeasureOnLayers(layerFiles, projectlayer, suppliedLayers, measures, measuresLayers, extend, workingPath, scenarioPath, jobLogger);
+    
+    // convert the tif file to map file for model.
+    jobLogger.info("convert tiff files to map file");
+    for (Entry<Layer, String> layer : layerFiles.entrySet()) {
+      try {
+        String outputFile = scenarioPath.getAbsolutePath() + "/" + "measure_" + layer.getValue() + MAP_DOT_EXT;
+        String inputFile = scenarioPath.getAbsolutePath() + "/" + "measure_" + layer.getValue() + TIF_DOT_EXT;
+        jobLogger.info("map " + inputFile + " to tif"+ outputFile);
+        Geotiff2PcRaster.geoTiff2PcRaster(new File(inputFile), new File(outputFile), jobLogger);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    
     final File projectFileScenario = ProjectIniFile.generateIniFile(scenarioPath.getAbsolutePath(), scenarioOutputPath.getAbsolutePath());
     final File projectFileBaseLine = ProjectIniFile.generateIniFile(baseLinePath.getAbsolutePath(), baseLineOutputPath.getAbsolutePath());
     LOGGER.info("Run the actual model nkmodel with pcRaster batch file.");
@@ -171,44 +210,6 @@ public class NkModelTKSController {
     warnings.add(new ValidationMessage().code(3).message("Total excecution time " + totSec + " seconds"));
     
     return assessmentResultlist;
-  }
-
-  private Envelope2D determineBouningBox(File workingPath, java.util.logging.Logger jobLogger)
-      throws JsonParseException, JsonMappingException, IOException {
-    final File projectGeojson = new File(workingPath + "/" + "measure_PROJECT.geojson");
-    LOGGER.info("Read project json {} ", projectGeojson.getAbsoluteFile());
-    final Envelope2D extend = new Envelope2D();
-    @SuppressWarnings("resource")
-    FileReader fr = new FileReader(projectGeojson.getAbsolutePath());
-    int i;
-    String body = "";
-    while ((i = fr.read()) != -1)
-      body += (char) i;
-    mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    FeatureCollection project = mapper.readValue(body, FeatureCollection.class);
-    for (Features f : project.getFeatures()) {
-      if (f.getProperties().isIsProjectArea()) {
-
-        @SuppressWarnings("rawtypes")
-        ArrayList coordinates = (ArrayList) f.getGeometry().getCoordinates().get(0);
-        ArrayList righttop = (ArrayList) coordinates.get(1);
-        ArrayList leftbottom = (ArrayList) coordinates.get(4);
-        // round it and add 1000 meter.
-        jobLogger.info("geometry from project is " + f);
-        jobLogger.info("geometry from project righttop x " + righttop.get(0) + " Y:" + righttop.get(1));
-        jobLogger.info("geometry from project leftbottom x " + leftbottom.get(0) + " Y:" + leftbottom.get(1));
-
-       
-        // hard coded get from input geojson how ? round to 10 digits
-        DecimalFormat df = new DecimalFormat("####0");
-        extend.include(Double.parseDouble(df.format(righttop.get(0))),Double.parseDouble(df.format(righttop.get(1)))); // 85790, 444590
-        extend.include(Double.parseDouble(df.format(leftbottom.get(0))), Double.parseDouble(df.format(leftbottom.get(1)))); // 86090, 444890
-        LOGGER.info("Boundingbox {}", extend);
-       
-      }
-    }
-    return extend;
   }
 
   private void createScenarionFile(File workingPath, FeatureCollection request) {
@@ -232,7 +233,6 @@ public class NkModelTKSController {
 
   }
   
-
   private void copyRunnerFiles(File workingPath, java.util.logging.Logger jobLogger) {
     try {
       for (RunnerEnum runner : RunnerEnum.values()) {
@@ -248,6 +248,8 @@ public class NkModelTKSController {
 
   }
 
+  
+  
 /**
  *  convert export json to geotiff
  *  gdal_rasterize -burn <value> -ts 10 10 <measure_input_filename_geojson> <measure_output_filename_tiff> 
@@ -263,16 +265,10 @@ public class NkModelTKSController {
  * @return 
  * @throws IOException
  */
-  private List<MeasureLayerFile> determineProjectAndMeasureLayers(Map<Layer, String> layerFiles, File projectlayer, ArrayList<LayerObject> suppliedLayers,
+  private void applyProjectAndMeasureOnLayers(Map<Layer, String> layerFiles, File projectlayer, ArrayList<LayerObject> suppliedLayers,
       HashMap<MeasureType, ArrayList<Features>> measures, MeasureCollection measuresLayers, Envelope2D extend,
       File workingPath, File scenarioPath, java.util.logging.Logger jobLogger) throws IOException {
-    
-    final File outputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), OUTPUTS)).toFile();
-    List<MeasureLayerFile> measureLayerFileCollection = new ArrayList<MeasureLayerFile>();
-    
-    //Map<Layer, File> measureLayerFiles = new HashMap<Layer, File>();
-    ArrayList<File> layersFiles = new ArrayList<File>();
-    
+
     for (Map.Entry<MeasureType, ArrayList<Features>> m : measures.entrySet()) {
       LOGGER.debug("process measure {} {}", m.getKey());
       
@@ -280,7 +276,9 @@ public class NkModelTKSController {
       final String ouputfileName = MEASURE_FILENAME + m.getKey().toString() + CORRECTED + GEOJSON_DOT_EXT;      
       final File geoJsonFileInput = new File(workingPath, inputfileName);
       final File geoJsonFileOutput = new File(workingPath, ouputfileName);
+      
       // convert geojson to correct crs keep original
+      jobLogger.info("convert to crs " + geoJsonFileInput + " " + geoJsonFileOutput);
       GeoJson2CorrectCRS.geoJsonConvert(geoJsonFileInput, geoJsonFileOutput, jobLogger);
       
       // find out how many layers must be created for this measure
@@ -295,69 +293,50 @@ public class NkModelTKSController {
       LOGGER.debug("measure {} layer values {}", m.getKey(), measureLayers);
 
       if (currentMeasure != null && currentMeasure.isRunmodel()) {
-        // create measureDirectory so we can output layer filenames    
-        String measureName =  m.getKey().toString();
-        final File measureOutputPath = Files.createDirectory(Paths.get(outputPath.getAbsolutePath(), MEASURE_FILENAME + measureName)).toFile();
-
         for (MeasureLayer ml : measureLayers) {
           // only create tiff files for layers with values
           if (ml.getValue() != null) {
             String layerFileName = layerFiles.get(Layer.fromValue(ml.getLayer().toString()));
             final String outputfileName = layerFileName;
-
-            jobLogger.info("run_gdal_rasterize: " + ml.getValue() + " " + inputfileName + " " + outputfileName);
-            LOGGER.debug("run_gdal_rasterize {} {} {}", ml.getValue(), inputfileName, outputfileName);
-
-            //final File geoJsonFile = new File(workingPath, inputfileName);
-            
-            // convert from geojson to geotiff
-            final File tiffFile = new File(measureOutputPath, outputfileName + TIF_DOT_EXT);
-            GeoJson2Geotiff.run(geoJsonFileOutput, tiffFile, ml.getValue(), extend, jobLogger);
-
-            // find project layout for the exstend and add to collect that are supplied 
-            if (MeasureType.fromValue(m.getKey().toString()) == MeasureType.PROJECT) {
-              projectlayer = tiffFile; 
-              // want to use for exstend
-            } else {
-              
-              LayerObject layer = new LayerObject();
-              layer.setClassType(ml.getLayer().toString());
-              //suppliedLayers.add(layer);
-              
-              // also write to scenario path
-              final File orgtiffFile = new File(scenarioPath, PREFIX + measureName + "_" + layerFileName + TIF_DOT_EXT);
-              GeoJson2Geotiff.run(geoJsonFileOutput, orgtiffFile, ml.getValue(), extend, jobLogger);        
-              // want a list of filenames and target layer and to merge with
-              LOGGER.info("Adding measure {} layer {} file {} value {}", measureName, Layer.fromValue(ml.getLayer().toString()), orgtiffFile, ml.getValue());
-              measureLayerFileCollection.add(createMeasureLayerFile(m.getKey(), Layer.fromValue(ml.getLayer().toString()), orgtiffFile.getAbsolutePath(), ml.getValue()));
-              layersFiles.add(orgtiffFile);
-              
-            }
+            File tiffFileToBurn = new File(scenarioPath, "measure_" + outputfileName + TIF_DOT_EXT);
+            // burn geosjon onto the outputFileName
+            jobLogger.info("burn geojson " + tiffFileToBurn + "on the tiff file " + tiffFileToBurn);
+            BurnGeoJsonOnTiff.run(geoJsonFileOutput, tiffFileToBurn, ml.getValue(), extend, jobLogger);
           }
         }
+      } else {
+        jobLogger.info("we skipped measure " + currentMeasure);
       }
     }
-    return measureLayerFileCollection;
-  }
-
-  private MeasureLayerFile createMeasureLayerFile(MeasureType measureType, Layer layer, String orgtiffFile, BigDecimal value) {
-    MeasureLayerFile mlf = new MeasureLayerFile();
-    mlf.setMeasureType(measureType);
-    mlf.setLayer(layer);
-    mlf.setFile(orgtiffFile);
-    mlf.setMeasureLayerValue(value);
-    return mlf;
   }
 
   private HashMap<MeasureType, ArrayList<Features>> groupFeaturesOnMeasureAndExport(FeatureCollection features, MeasureCollection measuresLayers,
-      File workingPath) {
+      File workingPath, java.util.logging.Logger jobLogger) {
     HashMap<MeasureType, ArrayList<Features>> measures = groupFeaturesonMeasure(features, measuresLayers);
-    exportGroupedFeatures(measures, workingPath);
+    exportGroupedFeatures(measures, workingPath, jobLogger);
+    correctCrc(measures,workingPath, jobLogger);
     return measures;
   }
 
+  private void correctCrc(HashMap<MeasureType, ArrayList<Features>> measures, File workingPath, java.util.logging.Logger jobLogger) {
+    for (Map.Entry m : measures.entrySet()) {
+      final String inputfileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;
+      final String ouputfileName = MEASURE_FILENAME + m.getKey().toString() + CORRECTED + GEOJSON_DOT_EXT;
+      final File geoJsonFileInput = new File(workingPath, inputfileName);
+      final File geoJsonFileOutput = new File(workingPath, ouputfileName);
+      // convert geojson to correct crs keep original
+      jobLogger.info("convert to crs " + geoJsonFileInput + " " + geoJsonFileOutput);
+      try {
+        GeoJson2CorrectCRS.geoJsonConvert(geoJsonFileInput, geoJsonFileOutput, jobLogger);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    
+  }
+
   @SuppressWarnings("unchecked")
-  private void exportGroupedFeatures(HashMap<MeasureType, ArrayList<Features>> measures, File workingPath) {
+  private void exportGroupedFeatures(HashMap<MeasureType, ArrayList<Features>> measures, File workingPath, java.util.logging.Logger jobLogger) {
     // export for the geomety of every measure with measure settings
     for (Map.Entry m : measures.entrySet()) {
       LOGGER.debug("measure {} has {} entries", m.getKey(), ((ArrayList<Features>) m.getValue()).size());
@@ -372,6 +351,7 @@ public class NkModelTKSController {
       jsonToSend = jsonToSend.replace("FEATURECOLLECTION", TypeEnum.FEATURECOLLECTION.toString());
       final String fileName = MEASURE_FILENAME + m.getKey().toString() + GEOJSON_DOT_EXT;
       LOGGER.debug("writing file ({})", workingPath + "/" + fileName);
+      jobLogger.info("Meausure "+ m.getKey() + " Creating file " +  workingPath + "/" + fileName);
       try (FileWriter file = new FileWriter(workingPath + "/" + fileName)) {
         file.write(jsonToSend);
         file.flush();
@@ -379,6 +359,7 @@ public class NkModelTKSController {
       } catch (IOException e) {
         e.printStackTrace();
       }
+     
     }
   }
 
@@ -452,7 +433,6 @@ public class NkModelTKSController {
 
       @Override
       public int compare(MeasureLayerFile o1, MeasureLayerFile o2) {
-        // TODO Auto-generated method stub
         return (int) o1.getLayer().toString().compareTo(o2.getLayer().toString()) + 
             (int) o1.getMeasureLayerValue().compareTo(o2.getMeasureLayerValue());
   
@@ -644,6 +624,59 @@ public class NkModelTKSController {
     jobLogger.entering(this.toString(), "run");
     jobLogger.info("Start at :" + start);
     return jobLogger;
+  }
+  
+  public static double[] convertToRijksdriehoek(double wgs84_lattitude, double wgs84_longitude) {
+    // The city “Amsterfoort” is used as reference “Rijksdriehoek” coordinate.
+    int referenceRdX = 155000;
+    int referenceRdY = 463000;
+
+    // The city “Amsterfoort” is used as reference “WGS84” coordinate.
+    double referenceWgs84X = 52.15517;
+    double referenceWgs84Y = 5.387206;
+
+    double[][] Rpq = new double[4][5];
+
+    Rpq[0][1] = 190094.945;
+    Rpq[1][1] = -11832.228;
+    Rpq[2][1] = -114.221;
+    Rpq[0][3] = -32.391;
+    Rpq[1][0] = -0.705;
+    Rpq[3][1] = -2.340;
+    Rpq[0][2] = -0.008;
+    Rpq[1][3] = -0.608;
+    Rpq[2][3] = 0.148;
+
+    double[][] Spq = new double[4][5];
+    Spq[0][1] = 0.433;
+    Spq[0][2] = 3638.893;
+    Spq[0][4] = 0.092;
+    Spq[1][0] = 309056.544;
+    Spq[2][0] = 73.077;
+    Spq[1][2] = -157.984;
+    Spq[3][0] = 59.788;
+    Spq[2][2] = -6.439;
+    Spq[1][1] = -0.032;
+    Spq[1][4] = -0.054;
+
+    double d_lattitude = (0.36 * (wgs84_lattitude - referenceWgs84X));
+    double d_longitude = (0.36d * (wgs84_longitude - referenceWgs84Y));
+
+    double calc_latt = 0;
+    double calc_long = 0;
+
+    for (int p = 0; p < 4; p++) {
+      for (int q = 0; q < 5; q++) {
+        calc_latt += Rpq[p][q] * Math.pow(d_lattitude, p) * Math.pow(d_longitude, q);
+        calc_long += Spq[p][q] * Math.pow(d_lattitude, p) * Math.pow(d_longitude, q);
+      }
+    }
+
+    double rd_x_coordinate = (referenceRdX + calc_latt);
+    double rd_y_coordinate = (referenceRdY + calc_long);
+
+    double[] result = { rd_x_coordinate, rd_y_coordinate};
+    return result;
   }
 
 }

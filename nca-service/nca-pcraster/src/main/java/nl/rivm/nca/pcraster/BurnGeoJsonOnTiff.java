@@ -15,7 +15,7 @@ import nl.rivm.nca.runner.OSUtils;
 /**
  * Convert a geotiff image to a pcraster file.
  */
-public class GeoJson2Geotiff {
+public class BurnGeoJsonOnTiff {
 
   private static final String RUNNER = RunnerEnum.GDAL_RASTERIZE.getRunner();
 
