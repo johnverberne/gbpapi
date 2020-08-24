@@ -27,8 +27,8 @@ public class BurnGeoJsonOnTiff {
   //[-te xmin ymin xmax ymax] 
   public static void run(File geoJson, File tifFile, BigDecimal burnValue, Envelope2D extend, Logger jobLogger) throws IOException {
     final Rectangle b = extend.getBounds();
-    final String[] args = {"-te", s(b.getMinX()), s(b.getMinY()), s(b.getMaxX()), s(b.getMaxY()), 
-        "-burn", burnValue.toString(), geoJson.getAbsolutePath(), tifFile.getAbsolutePath()};
+    final String[] args = {"-burn", burnValue.toString(), geoJson.getAbsolutePath(), tifFile.getAbsolutePath()};
+    //{"-te", s(b.getMinX()), s(b.getMinY()), s(b.getMaxX()), s(b.getMaxY())}
     final ExecParameters execParams = new ExecParameters(RUNNER, args);
     final Exec exec = new Exec(execParams, "", false);
     exec.setJobLogger(jobLogger);

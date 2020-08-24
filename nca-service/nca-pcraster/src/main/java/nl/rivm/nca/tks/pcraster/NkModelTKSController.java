@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,10 +35,8 @@ import org.geotools.geometry.Envelope2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -56,10 +53,10 @@ import nl.rivm.nca.api.domain.MeasureLayer;
 import nl.rivm.nca.api.domain.MeasureLayerFile;
 import nl.rivm.nca.api.domain.MeasureType;
 import nl.rivm.nca.api.domain.ValidationMessage;
+import nl.rivm.nca.pcraster.BurnGeoJsonOnTiff;
 import nl.rivm.nca.pcraster.CookieCut;
 import nl.rivm.nca.pcraster.EnvironmentEnum;
 import nl.rivm.nca.pcraster.GeoJson2CorrectCRS;
-import nl.rivm.nca.pcraster.BurnGeoJsonOnTiff;
 import nl.rivm.nca.pcraster.Geotiff2PcRaster;
 import nl.rivm.nca.pcraster.ProjectIniFile;
 import nl.rivm.nca.pcraster.RasterLayers;
@@ -175,6 +172,19 @@ public class NkModelTKSController {
         throw new RuntimeException(e);
       }
     }
+    
+    jobLogger.info("temoprary create extra vesion from map files to tiff file called org_");
+    for (Entry<Layer, String> layer : layerFiles.entrySet()) {
+      try {
+        String inputFile = scenarioPath.getAbsolutePath() + "/" + layer.getValue() + MAP_DOT_EXT;
+        String outputFile = scenarioPath.getAbsolutePath() + "/" + "org_" + layer.getValue() + TIF_DOT_EXT;
+        jobLogger.info("map " + inputFile + " to tif"+ outputFile);
+        Geotiff2PcRaster.pcRaster2GeoTiff(new File(inputFile), new File(outputFile), jobLogger);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+       
         
     // burn the json onto the tiff file
     File projectlayer = null;
@@ -185,7 +195,7 @@ public class NkModelTKSController {
     jobLogger.info("convert tiff files to map file");
     for (Entry<Layer, String> layer : layerFiles.entrySet()) {
       try {
-        String outputFile = scenarioPath.getAbsolutePath() + "/" + "measure_" + layer.getValue() + MAP_DOT_EXT;
+        String outputFile = scenarioPath.getAbsolutePath() + "/" + "" + layer.getValue() + MAP_DOT_EXT;
         String inputFile = scenarioPath.getAbsolutePath() + "/" + "measure_" + layer.getValue() + TIF_DOT_EXT;
         jobLogger.info("map " + inputFile + " to tif"+ outputFile);
         Geotiff2PcRaster.geoTiff2PcRaster(new File(inputFile), new File(outputFile), jobLogger);
