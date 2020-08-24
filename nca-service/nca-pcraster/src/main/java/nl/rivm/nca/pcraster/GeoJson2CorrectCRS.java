@@ -18,7 +18,7 @@ public class GeoJson2CorrectCRS {
    * ogr2ogr -s_srs EPSG:4326 -t_srs EPSG:28992 -f GEOJSON reprojectedfile.geojson originalfile.geojson
    */
   public static void geoJsonConvert(File geoJsonInput, File geoJsonOutput, java.util.logging.Logger jobLogger) throws IOException {
-    final String[] args = {"-s_srs", "EPSG:4326", "-t_srs", "EPSG:28992", "-f", "GEOJSON", geoJsonOutput.getAbsolutePath(),
+    final String[] args = {"-skipfailures", "-s_srs", "EPSG:4326", "-t_srs", "EPSG:28992", "-f", "GEOJSON", geoJsonOutput.getAbsolutePath(),
         geoJsonInput.getAbsolutePath()};
     final ExecParameters execParams = new ExecParameters(RUNNER, args);
     final Exec exec = new Exec(execParams, "", false);
