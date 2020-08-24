@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -97,7 +98,7 @@ public class NkModelTKSController {
 
   public List<AssessmentTKSResultResponse> run(String correlationId, FeatureCollection features, List<ValidationMessage> warnings)
       throws IOException, ConfigurationException, InterruptedException, AeriusException {
-    final File workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile();
+    final File workingPath = Files.createTempDirectory(correlationId).toFile(); // UUID.randomUUID().toString()
 
     long start = System.currentTimeMillis();
     FileHandler jobLoggerFile = new FileHandler(workingPath + "/" + JOBLOGGER_TXT, true);
@@ -111,19 +112,20 @@ public class NkModelTKSController {
 
     HashMap<MeasureType, ArrayList<Features>> measures = groupFeaturesOnMeasureAndExport(features, measuresLayers, workingPath, jobLogger);
 
-    // load firste exported and corrected crc file to determine boundingbox add 500 meter
-    // Envelope2D extendBox = determineBoundingBox(measures, workingPath, jobLogger);
+    // load first exported and corrected crc file to determine bounding box and add 1000 meter
+    Envelope2D extend = determineBoundingBox(measures, workingPath, jobLogger);
 
     final Map<Layer, String> layerFiles = rasterLayers.getLayerFiles("air_regulation"); // get all files voor eco system
     final File scenarioPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), SCENARIO)).toFile();
     final Map<Layer, String> usedLayers = determineUsedLayers(measuresLayers, layerFiles);
 
-    final Envelope2D extend = new Envelope2D();
+//    final Envelope2D extend = new Envelope2D();
+//
+//    extend.include(85250, 444050);
+//    extend.include(86450, 445250);
 
-    extend.include(85250, 444050);
-    extend.include(86450, 445250);
-
-    //jobLogger.info(extend + " | " + extendBox);
+//    jobLogger.info(extend + " | " + extendBox);
+    jobLogger.info("working with exted " + extend);
 
     final File baseLinePath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE)).toFile();
     final File baseLineOutputPath = Files.createDirectory(Paths.get(workingPath.getAbsolutePath(), BASELINE_OUTPUTS)).toFile();
@@ -152,7 +154,7 @@ public class NkModelTKSController {
     float totSec = closeJobLogger(jobLogger, jobLoggerFile, start);
 
     warnings.add(new ValidationMessage().code(3).message("Total excecution time " + totSec + " seconds"));
-
+    
     return assessmentResultlist;
   }
 
@@ -240,16 +242,16 @@ public class NkModelTKSController {
       FeatureCollection geojson = mapper.readValue(body, FeatureCollection.class);
       List<BigDecimal> bbox = geojson.getBbox();
       jobLogger.info("bbox from geosjon [" + bbox.get(0) + " ," + bbox.get(1) + "] [" + bbox.get(2) + " ," + bbox.get(3) + "] ");
-      extend.include(extendBbox(bbox.get(0).doubleValue()), extendBbox(bbox.get(1).doubleValue()));
-      extend.include(extendBbox(bbox.get(2).doubleValue()), extendBbox(bbox.get(3).doubleValue()));
+      extend.include(extendBbox(bbox.get(0).doubleValue(), -1000), extendBbox(bbox.get(1).doubleValue(), +1000));
+      extend.include(extendBbox(bbox.get(2).doubleValue(), +1000), extendBbox(bbox.get(3).doubleValue(), -1000));
       break;
     }
 
     return extend;
   }
 
-  private double extendBbox(double value) {
-    return (Math.round(value * 10) / 10) + 500;
+  private double extendBbox(double value, int enlarge) {
+    return (Math.round(value / 10) * 10) + enlarge;
   }
 
   private void createScenarionFile(File workingPath, FeatureCollection request) {
