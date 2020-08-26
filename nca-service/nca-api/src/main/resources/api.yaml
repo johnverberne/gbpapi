@@ -591,7 +591,19 @@ definitions:
         $ref: '#/definitions/Layer'
       value:
         type: number
-                           
+        
+  MeasureLayerFile:
+    type: object
+    properties:
+      measureType:
+        $ref: '#/definitions/MeasureType'
+      layer:
+        $ref: '#/definitions/Layer'
+      file:
+        type: string
+      measureLayerValue:
+        type: number
+                             
   Geometry:    
     required:
       - type
