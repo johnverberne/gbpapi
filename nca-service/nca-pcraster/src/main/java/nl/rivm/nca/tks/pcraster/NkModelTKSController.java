@@ -240,8 +240,8 @@ public class NkModelTKSController {
       FeatureCollection geojson = mapper.readValue(body, FeatureCollection.class);
       List<BigDecimal> bbox = geojson.getBbox();
       jobLogger.info("bbox from geosjon [" + bbox.get(0) + " ," + bbox.get(1) + "] [" + bbox.get(2) + " ," + bbox.get(3) + "] ");
-      extend.include(extendBbox(bbox.get(0).doubleValue(), -1000), extendBbox(bbox.get(1).doubleValue(), +1000));
-      extend.include(extendBbox(bbox.get(2).doubleValue(), +1000), extendBbox(bbox.get(3).doubleValue(), -1000));
+      extend.include(extendBbox(bbox.get(0).doubleValue(), -500), extendBbox(bbox.get(1).doubleValue(), +500));
+      extend.include(extendBbox(bbox.get(2).doubleValue(), +500), extendBbox(bbox.get(3).doubleValue(), -500));
       break;
     }
 
