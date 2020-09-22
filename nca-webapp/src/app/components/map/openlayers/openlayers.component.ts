@@ -185,8 +185,9 @@ export class OpenlayersComponent implements AfterViewInit {
     this.view = new OlView({
       //5.1075035, 52.0814808 utrecht
       //6.098213, 52.521916 zwolle
-      //4.378121, 51.986413 deltares
-      center: fromLonLat([4.378121, 51.986413], this.targetProjection.getCode()),
+      //4.378121, 51.986413 deltares delft
+      //5.675800, 52.030000 ede
+      center: fromLonLat([5.675800, 52.030000], this.targetProjection.getCode()),
       zoom: 18,
       minZoom: 7,
       maxZoom: 20,
