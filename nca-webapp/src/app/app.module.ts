@@ -37,6 +37,7 @@ import { ResultLayersComponent } from './components/menubar/result-layers-compon
 import { registerLocaleData } from '@angular/common';
 import { CalculationEventService } from './services/calculation-event-service';
 import { CalculationDialogComponent } from './shared/confirm-dialog/calculation-dialog-component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,6 +88,10 @@ registerLocaleData(localeNl, 'nl');
     CalculationDialogComponent
   ],
   providers: [
+    {
+      provide: LocationStrategy, 
+      useClass: HashLocationStrategy
+    },
     MessageEventService,
     ScenarioService,
     CurrentProjectService,

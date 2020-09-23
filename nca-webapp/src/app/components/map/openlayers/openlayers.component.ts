@@ -130,7 +130,7 @@ export class OpenlayersComponent implements AfterViewInit {
     });
 
     this.bagVector = new VectorSource({
-      url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs?service=WFS&LAYERS=BU.Building&` +
+      url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs/v1_1?service=WFS&LAYERS=BU.Building&` +
         'version=1.1.0&request=GetFeature&typename=bag:pand&STYLES=&TRANSPARANT=TRUE&' +
         'outputFormat=application/json&srsname=EPSG:28992&' +
         'bbox=' + extent.join(',') + ',EPSG:28992',
