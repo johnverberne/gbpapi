@@ -32,7 +32,7 @@ public enum RunnerEnum {
    * this script runs gdal_translate 
    * script runs a docker file to run gdal_translate
    */
-  OGR2OGR("nca_ogr2ogr"),
+  OGR2OGR("ncaogr2ogr"),
   /*
    * this script runs gdal_rasterize 
    * will convert geojson to tiff
@@ -55,6 +55,13 @@ public enum RunnerEnum {
     final String UNIX = ".sh";
     final String runnerFile = getScript() + (OSUtils.isWindows() ? WIN : UNIX);
     return EnvironmentEnum.NCA_MODEL_RUNNER.getEnv()+ "/" + runnerFile;
+  }
+  
+  public String getRunner(String path) {
+    final String WIN = ".bat";
+    final String UNIX = ".sh";
+    final String runnerFile = getScript() + (OSUtils.isWindows() ? WIN : UNIX);
+    return path + "/" + runnerFile;
   }
 
 }

@@ -89,8 +89,10 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
     response.setKey(uuid);
     try {
       final NkModelTKSController controller = initController();
+      LOGGER.info(features.toString());
       response.setEntries(singleCalculation(controller, features, warnings, errors, uuid));
     } catch (IOException | ConfigurationException | InterruptedException e) {
+      LOGGER.error(e.getMessage());
       throw new AeriusException(Reason.INTERNAL_ERROR);
     } catch (AeriusException e) {
       throw AeriusExceptionConversionUtil.convert(e, context.getLocale());
@@ -121,7 +123,7 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
     final String ncaModelRunner = EnvironmentEnum.NCA_MODEL_TKS_RUNNER.getEnv();
 
     if (ncaModelRaster == null || ncaModelRunner == null) {
-      LOGGER.error("Environment variable 'NCA_MODEL_RASTER or NCA_MODEL_RUNNER' not set. This should point to the raster data and Scripts.");
+      LOGGER.error("Environment variable 'NCA_MODEL_RASTER or NCA_MODEL_TKS_RUNNER' not set. This should point to the raster data and Scripts.");
       throw new AeriusException(Reason.INTERNAL_ERROR);
     }
     // test if all runner files exist

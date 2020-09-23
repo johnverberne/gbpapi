@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+whoami
 
 # Destination path for the context.xml
 CONTEXT_DESTINATION="${JETTY_WEBAPPS}/${APPNAME}.xml"

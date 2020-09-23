@@ -40,8 +40,6 @@
 		<postgis-jdbc.version>2.2.0</postgis-jdbc.version>
     	<postgresql.version>9.4.1207.jre7</postgresql.version>
 	</properties>
-
-
 	
     <scm>
       <developerConnection>scm:git:ssh://git@github.com/rivm-syso/GroeneBatenPlanner</developerConnection>

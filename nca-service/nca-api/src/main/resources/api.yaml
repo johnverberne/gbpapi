@@ -115,6 +115,7 @@ paths:
           description: Eco system service naam
           required: true
           type: string
+          example: air_regulation
       responses:
         '200':
           description: |
@@ -471,6 +472,14 @@ definitions:
       - WINDFORCE
       - WATER
       - WOZ
+      - WETFOREST
+      - PRODFOREST
+      - GHG
+      - GLG
+      - GWT
+      - POPULATION2018
+      - SBU
+      - WOZ2018
 
   AssessmentTKSRequestResponse:
     allOf:
@@ -603,8 +612,10 @@ definitions:
         type: string
       measureLayerValue:
         type: number
-                             
-  Geometry:    
+                           
+  Geometry:
+    type: object
+    description: GeoJSon geometry
     required:
       - type
     properties:
@@ -614,9 +625,8 @@ definitions:
         - Point
         - LineString
         - Polygon
-        description: the geometry type
+        description: the geometry type only Point, LineString and Polygon supported
       coordinates:
         type: array
         items:
          type: object
-

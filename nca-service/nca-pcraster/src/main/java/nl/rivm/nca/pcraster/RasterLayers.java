@@ -45,6 +45,17 @@ public class RasterLayers {
     arLayers.put(Layer.WOZ, "WOZ_buurt");
     arLayers.put(Layer.WATER, "Meer_plas_zee");
     
+    // addition chart layers
+    
+    arLayers.put(Layer.WETFOREST, "BT_NatBos_OppFract");
+    arLayers.put(Layer.PRODFOREST, "BT_ProdBos_OppFract");
+    arLayers.put(Layer.GHG, "GHG");
+    arLayers.put(Layer.GLG, "GLG");
+    arLayers.put(Layer.GWT, "GWT");
+    arLayers.put(Layer.POPULATION2018, "InwAantal2018");
+    arLayers.put(Layer.SBU, "SBU");
+    arLayers.put(Layer.WOZ2018, "WOZ_2018");
+    
     layers.put("air_regulation", arLayers);
 
   }
