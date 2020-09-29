@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion
+#e
 
 docker run --rm \
     --name nginx-proxy \
@@ -9,6 +9,7 @@ docker run --rm \
     --volume /etc/nginx/certs \
     --volume /etc/nginx/vhost.d \
     --volume /usr/share/nginx/html \
+#    --volume /path/to/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
     jwilder/nginx-proxy
 

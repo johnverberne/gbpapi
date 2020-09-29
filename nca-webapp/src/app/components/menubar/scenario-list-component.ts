@@ -162,6 +162,7 @@ export class ScenarioListComponent implements OnInit {
 
     const start = [Math.min(...allX) - 10, Math.min(...allY) - 10];
     const end = [Math.max(...allX) + 10, Math.max(...allY) + 10];
+
     measureRequest.extent.push(start);
     measureRequest.extent.push(end);
   }

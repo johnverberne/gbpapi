@@ -600,7 +600,6 @@ public class NkModelTKSController {
   private void filterResult(AssessmentTKSResultResponse result) {
     result.name(result.getName().replaceAll("\\[.*\\]", ""));
     result.units(result.getUnits().replace("[", "").replace("]", "").replace("Euros", "Euro/jaar"));
-    result.setModelDescription(result.getModel().replace("_", " "));
   }
 
   protected void cleanUp(File dir, Boolean remove) throws IOException {
