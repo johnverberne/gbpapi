@@ -132,29 +132,6 @@ paths:
             Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /modelEnvironment/:
-    get:
-      operationId: getModelEnvironment
-      tags:
-        - environment settings for the configuration
-      description: |
-        Deze functie geeft een lijst van de geconfigureerde omgeving..
-      responses:
-        '200':
-          description: |
-            Bij een normale afhandeling van de API functie.
-          schema:
-            $ref: '#/definitions/ModelEnvironmentResponse'
-        '400':
-          description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
-          schema:
-            $ref: '#/definitions/ErrorResponse'            
 securityDefinitions:
    apiKey:
      type: apiKey
