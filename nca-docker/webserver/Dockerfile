@@ -19,6 +19,11 @@ COPY jetty-deps/*.jar "${JETTY_LIB_EXT}"/
 # Copy context.xml template containing the database configuration
 COPY context.xml "${CONTEXT_TEMPLATE}"
 
+# Create download dir in jetty
+run mkdir "${JETTY_WEBAPPS}"/ROOT
+run mkdir "${JETTY_WEBAPPS}"/ROOT/download
+COPY empty.txt "${JETTY_WEBAPPS}"/ROOT/download
+
 # Run commands as root - otherwise we cannot move the already present file
 USER root
 

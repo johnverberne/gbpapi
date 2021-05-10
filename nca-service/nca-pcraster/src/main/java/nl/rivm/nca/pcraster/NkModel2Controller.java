@@ -138,13 +138,15 @@ public class NkModel2Controller extends BaseController {
         baseLineOutputPath, diffPath, jobLogger);
     jobLogger.info("Durration of PCRaster models :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
-    // convert to geotiff and publish to geo server
-    startMeasure = System.currentTimeMillis();
-    convertOutput(diffPath, jobLogger);
-    List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath, jobLogger);
-    publishFiles(correlationId, diffPath, jobLogger);
-    jobLogger.info("Duration of publishing to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
 
+    // read results json
+    List<AssessmentResultResponse> assessmentResultlist = importJsonResult(correlationId, diffPath, jobLogger);//    publishFiles(correlationId, diffPath, jobLogger);
+    
+    // convert to geotiff and publish to geo server
+//    startMeasure = System.currentTimeMillis();
+//    convertOutput(diffPath, jobLogger);
+//    jobLogger.info("Duration of publishing to GEO Server :" + (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
+    
     // close joblogger
     jobLogger.info("List<AssessmentResultResponse>");
     jobLogger.info(Json.pretty(assessmentResultlist));
@@ -154,11 +156,11 @@ public class NkModel2Controller extends BaseController {
     jobLoggerFile.close();
 
     // create zip file in server environment for download 
-    startMeasure = System.currentTimeMillis();
-    String fileName = zipResult(correlationId, workingPath);
-    setDownloadFileUrl(EnvironmentEnum.NCA_DOWNLOAD_URL.getEnv() + "/" + fileName);
-    LOGGER.info("Duration of zipping temp output diretory : {} ", (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
-    LOGGER.info("download resultset {}", getDownloadFileUrl());
+//    startMeasure = System.currentTimeMillis();
+//    String fileName = zipResult(correlationId, workingPath);
+//    setDownloadFileUrl(EnvironmentEnum.NCA_DOWNLOAD_URL.getEnv() + "/" + fileName);
+//    LOGGER.info("Duration of zipping temp output diretory : {} ", (System.currentTimeMillis() - startMeasure) / 1000F + " seconds");
+//    LOGGER.info("download resultset {}", getDownloadFileUrl());
 
     // cleanup
     cleanUp(workingPath, false);

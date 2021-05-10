@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.rivm.nca.api.domain.AssessmentResultResponse;
@@ -183,6 +184,7 @@ public abstract class BaseController implements ControllerInterface {
             while ((i = fr.read()) != -1)
               body += (char) i;
             mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AssessmentResultResponse result = mapper.readValue(body, AssessmentResultResponse.class);
             result.setWmsname(f.toFile().getName().replaceAll(".json", ""));
             returnList.add(result);

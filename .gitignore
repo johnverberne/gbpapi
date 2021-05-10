@@ -6,3 +6,5 @@ nca-docker/database/restore/
 nca-docker18012021.zip
 nca-docker/dev.zip
 nca-docker/backup/
+
+nca-docker/dev/

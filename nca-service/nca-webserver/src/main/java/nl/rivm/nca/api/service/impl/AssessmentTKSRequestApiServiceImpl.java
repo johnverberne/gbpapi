@@ -70,7 +70,11 @@ public class AssessmentTKSRequestApiServiceImpl extends AssessmentTKSRequestApiS
 
     try {
       if (apiKey != null && apiKey.equals("0000-0000-0000-0001")) {
-        response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, uuid));
+        if (features.getFeatures().isEmpty()) {
+          errors.add(WarningUtil.ValidationInfoMessage("no features supplied calculation not started."));
+        } else {
+          response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, uuid));
+        }
       } else {
         errors.add(WarningUtil.ValidationInfoMessage("apiKey not valid or supplied."));
       }

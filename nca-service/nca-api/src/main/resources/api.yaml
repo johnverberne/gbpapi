@@ -5,7 +5,7 @@ info:
   version: "1"
   title: Natural Capital Assessment API
   description: |
-    ## TDB
+    Green and Blue in the city models 
   contact:
     name: RIVM
   license:
@@ -27,7 +27,7 @@ paths:
       parameters:
         - name: apiKey
           in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
+          description: The API-key that can be used with other calls.
           required: true
           type: string
         - name: scenarios
@@ -59,6 +59,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
         - apiKey: []
+
   /assessmentTKSRequest:
     post:
       operationId: postAssessmentTKSRequest
@@ -69,7 +70,7 @@ paths:
       parameters:
         - name: apiKey
           in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
+          description: The API-key that can be used with other calls.
           required: true
           type: string
         - name: features
@@ -98,9 +99,31 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
       security:
-        - apiKey: []        
- 
-
+        - apiKey: []      
+          
+  /measureCollectiondata:
+    get:
+      operationId: getMeasureCollectionData
+      tags:
+        - measures
+      description: |
+        Will return a list of measure that containts the calculation parameters for the measure for individual layers
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/MeasureCollectionDataResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'     
  
   /modeldata/{model}:
     get:
@@ -108,30 +131,30 @@ paths:
       tags:
         - model
       description: |
-        Deze functie geeft een lijst met rasterlayers die voor het gevraagde model nodig zijn.
+        Will return a list of rasterlayers that are required for the model. Use air_regulation.
       parameters:
         - name: model
           in: path
-          description: Eco system service naam
+          description: Eco system model name to fetch rasterlayers for.
           required: true
           type: string
-          example: air_regulation
       responses:
         '200':
           description: |
-            Bij een normale afhandeling van de API functie.
+            In case of normal behavior.
           schema:
             $ref: '#/definitions/ModelDataResponse'
         '400':
           description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
+            In case of user error - thing of missing fields.
           schema:
             $ref: '#/definitions/ErrorResponse'
         '500':
           description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
+            In case of system error. Please contact the helpdesk if this error persists.
           schema:
             $ref: '#/definitions/ErrorResponse'
+
 securityDefinitions:
    apiKey:
      type: apiKey
@@ -164,7 +187,9 @@ definitions:
       wmsname:
         type: string
       model:
-        type: string  
+        type: string
+      modelDescription:
+        type: string      
       tableop:
         type: string
       min:
@@ -411,7 +436,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ValidationMessage'         
- 
   ModelDataResponse:
     type: object
     properties:
@@ -425,13 +449,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Layer'
-  ModelEnvironmentResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          type: string          
   Layer:
     type: string
     description: |
@@ -457,7 +474,6 @@ definitions:
       - POPULATION2018
       - SBU
       - WOZ2018
-
   AssessmentTKSRequestResponse:
     allOf:
       - $ref: '#/definitions/ValidateResponse'
@@ -469,7 +485,6 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/AssessmentTKSResultsResponse'
-  
   FeatureCollection:
     type: object
     properties:
@@ -485,7 +500,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Features'
-            
   Features:
     type: object 
     properties:
@@ -499,7 +513,6 @@ definitions:
           $ref: '#/definitions/Properties'
       geometry:
           $ref: '#/definitions/Geometry'
-    
   Properties:
     type: object
     properties:
@@ -517,11 +530,23 @@ definitions:
         type: number
       isProjectArea:
         type: boolean
-        
+  MeasureCollectionDataResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the measure collection
+      version:
+        type: string
+        description: Version number of the measure collection
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
   MeasureType:
    type: string
    description: |
-     Soort maatregel 
+     Type of measurement
    enum:
       - STREETTREES
       - URBANWETLANDS
@@ -546,8 +571,6 @@ definitions:
       - M86
       - M89
       - M91
-      
-  
   MeasureCollection:
     type: object
     properties:
@@ -555,7 +578,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Measure'
-  
   Measure:
     type: object
     properties:
@@ -563,13 +585,14 @@ definitions:
         type: number
       code:
         $ref: '#/definitions/MeasureType'
+      description: 
+        type: string
       runmodel:
         type: boolean
       layers:
         type: array
         items:
           $ref: '#/definitions/MeasureLayer'  
-          
   MeasureLayer:
     type: object 
     properties:
@@ -577,7 +600,6 @@ definitions:
         $ref: '#/definitions/Layer'
       value:
         type: number
-        
   MeasureLayerFile:
     type: object
     properties:
@@ -589,7 +611,6 @@ definitions:
         type: string
       measureLayerValue:
         type: number
-                           
   Geometry:
     type: object
     description: GeoJSon geometry
