@@ -165,47 +165,39 @@
 	<profiles>
 		<profile>
 			<id>default</id>
-
 			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
-			
+			</activation>	
 			<modules>
 				<module>nca-lib</module>
-			    <module>nca-pcraster</module>
-			    <module>nca-api</module>
+				<module>nca-pcraster</module>
+				<module>nca-api</module>
 				<module>nca-webserver</module>
 				<module>nca-geoserver-parent/nca-geoserver-base</module>
 				<module>nca-geoserver-parent/nca-geoserver-gbp</module>
 			</modules>
 		</profile>
-		
-	    <profile>
-          <id>api</id>
-          <modules>
-            <module>nca-lib</module>
-			<module>nca-pcraster</module>
-			<module>nca-api</module>
-			<module>nca-webserver</module>
-          </modules>
-        </profile>
-		
-        <profile>
-          <id>geoserver</id>
-          <modules>
-            <module>nca-geoserver-parent/nca-geoserver-base</module>
-            <module>nca-geoserver-parent/nca-geoserver-gbp</module>
-          </modules>
-        </profile>
-        
-       <profile>
-          <id>database</id>
-          <modules>
-            <module>nca-database-parent/nca-database-gbp</module>
-          </modules>
-        </profile>
-        
-      
+  	        <profile>
+                         <id>api</id>
+                         <modules>
+				<module>nca-lib</module>
+				<module>nca-pcraster</module>
+				<module>nca-api</module>
+				<module>nca-webserver</module>
+                         </modules>
+                </profile>
+                <profile>
+			<id>geoserver</id>
+			<modules>
+				<module>nca-geoserver-parent/nca-geoserver-base</module>
+				<module>nca-geoserver-parent/nca-geoserver-gbp</module>
+			</modules>
+		</profile>
+		<profile>
+			  <id>database</id>
+			  <modules>
+			    	<module>nca-database-parent/nca-database-gbp</module>
+			  </modules>
+		</profile>  
 	</profiles>
-
 </project>

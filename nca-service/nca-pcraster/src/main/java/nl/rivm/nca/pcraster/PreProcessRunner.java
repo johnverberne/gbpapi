@@ -17,31 +17,29 @@ class PreProcessRunner {
   
   /**
    * create a new map (edit_map) file from current map file mutated with the
-   * values from xyz file.
+   * values from tiff posible converted to map file file.
    * 
    * @param correlationId
-   * @param xyzFile 
+   * @param tiffFile 
    * @param mapFile
    * @param jobLogger 
    * @throws IOException
    * @throws InterruptedException
    */
-  public void runPreProcessor(String correlationId, File xyzFile, File mapFile, String PREFIX, java.util.logging.Logger jobLogger)
+  public void runPreProcessorTiffToMap(String correlationId, File mapFile, File editMapFilePath, String PREFIX, java.util.logging.Logger jobLogger)
       throws IOException, InterruptedException {
-    String xyzFilePath = xyzFile.getAbsolutePath();
-    String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, "");
-    // new file will be created in batch file
-    String editMapFilePath = new File(mapFilePath.replace(".map", "_edit.map")).getAbsolutePath();
-    String newMapFilePath = new File(mapFilePath.replace(".map", "_new.map")).getAbsolutePath();
+    String mapFilePath = mapFile.getAbsolutePath().replace(PREFIX, ""); // remove the org_
+    // this file show intermediate difference can be removed in future
+    String newMapFilePath = new File(editMapFilePath.getAbsolutePath().replace(".map", "_new.map")).getAbsolutePath(); 
     // parse as parameter string
     String mapFileParameter = paramString(mapFilePath.replaceAll("\\/", "\\\\"));
-    String editMapFileParameter = paramString(editMapFilePath.replaceAll("\\/", "\\\\"));
+    String editMapFileParameter = paramString(editMapFilePath.getAbsolutePath().replaceAll("\\/", "\\\\"));
     String newMapFileParameter = paramString(newMapFilePath.replaceAll("\\/", "\\\\"));
-    final String[] args = {xyzFilePath, editMapFilePath, mapFilePath, editMapFileParameter, mapFileParameter, newMapFileParameter};
+    final String[] args = {editMapFileParameter, mapFileParameter, newMapFileParameter};
     final ExecParameters execParams = new ExecParameters(RUNNER, args);
     final Exec exec = new Exec(execParams, "", false); // run as batch file
     exec.setJobLogger(jobLogger);
-    exec.run(correlationId, new File(xyzFile.getParent()));
+    exec.run(correlationId, new File(mapFile.getParent()));
   }
 
   private String paramString(String parma) {

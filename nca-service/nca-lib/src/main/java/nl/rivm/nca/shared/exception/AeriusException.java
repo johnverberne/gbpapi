@@ -53,11 +53,28 @@ public class AeriusException extends Exception implements Serializable {
     /**
      * Trying to start a calculation but there are no sources to calculate.
      *
-     * @param 0 name of the project
      */
     CALCULATION_NO_SOURCES(1001),
+    /**
+     * Trying to start a calculation but specified a measure that does not exist.
+     *
+     * @param 0 name of the measure
+     */
+    CALCULATION_NO_MEASURE(1002),
+    /**
+     * Trying write new measureCollection but the name already exists.
+     *
+     * @param 0 name of the measure
+     */
+    CALCULATION_MEASURE_NAME_ALREADY_EXISTS(1003),
+    /**
+     * Trying delete measureCollection but does not exists.
+     *
+     * @param 0 name of the measure
+     */
+    CALCULATION_MEASURE_NAME_DOES_NOT_EXISTS(1004),
+    
     // Authorization & Authentication and User management errors (across applications).
-
     /**
      * Authorization error. Does not have the required permissions.
      */
@@ -112,7 +129,12 @@ public class AeriusException extends Exception implements Serializable {
     /**
      * The user account is disabled.
      */
-    USER_ACCOUNT_DISABLED(40010);
+    USER_ACCOUNT_DISABLED(40010),
+    
+    /**
+     * The email is not supplied or not valid format
+     */
+    CONNECT_NO_VALID_EMAIL_SUPPLIED(50001);
 
     private final int errorCode;
 

@@ -14,11 +14,6 @@ public enum EnvironmentEnum {
    */
   NCA_MODEL_RUNNER, GEOSERVER_USER, GEOSERVER_PASSWORD,
   /*
-   * Directory with runner files unix shell and windows batch files
-   * Specific for the tks implementation
-   */
-  NCA_MODEL_TKS_RUNNER,
-  /*
    * url endpoint for geoserver to publisch result layers.
    */
   GEOSERVER_URL,
@@ -33,7 +28,11 @@ public enum EnvironmentEnum {
   /*
    * json file with measure type and effected layer changes
    */
-  NCA_TKS_MEASURES;
+  NCA_MEASURES,
+  /*
+   * json file with list of used maps 
+   */
+  NCA_MAP_LAYERS;
 
   public String getEnv() {
     return System.getenv(this.toString());
