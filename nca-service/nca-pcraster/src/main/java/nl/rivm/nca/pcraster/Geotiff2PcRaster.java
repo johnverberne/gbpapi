@@ -18,11 +18,12 @@ public class Geotiff2PcRaster {
 	// to gdal_translate as a metadata item.
 	// gdal_translate -of PCRaster -ot Int32 \
 	// -mo "PCRASTER_VALUESCALE=VS_NOMINAL" LCEU_ini.tif LCEU_ini.map
-	public static void geoTiff2PcRaster(File geotiffFile, File mapFile) throws IOException {
+	public static void geoTiff2PcRaster(File geotiffFile, File mapFile, java.util.logging.Logger jobLogger) throws IOException {
 		final String[] args = { "-of", "PCRaster", "-ot", "Float32" /* "Int32" */, "-mo",
 				"PCRASTER_VALUESCALE=VS_NOMINAL", "-b", "1", geotiffFile.getAbsolutePath(), mapFile.getAbsolutePath() };
 		final ExecParameters execParams = new ExecParameters(RUNNER, args);
 		final Exec exec = new Exec(execParams, "", false);
+		exec.setJobLogger(jobLogger);
 		try {
 			exec.run(new File(geotiffFile.getParent()));
 		} catch (final InterruptedException e) {

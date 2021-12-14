@@ -25,6 +25,14 @@ import java.sql.SQLException;
 public enum QueryAttribute implements Attribute {
 
   /**
+   * ID for measure
+   */
+  MEASURES_ID,
+  /**
+   * API-key
+   */
+  API_KEY,
+  /**
    * The id of a receptor (or hexagon).
    */
   RECEPTOR_ID,

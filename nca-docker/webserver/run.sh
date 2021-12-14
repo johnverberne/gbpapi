@@ -1,12 +1,18 @@
 #!/bin/bash
-docker run --rm \
+
+docker run \
   --name api \
   --network host \
-  -e DBPASSWORD="hallo2dirk337" \
-  -e DBHOSTNAME="localhost:5432" \
-  -e DBNAME="unittest_NCA-gbp" \
-  -e GEOSERVER_PASSWORD="hallo2dirk337" \
-  -e GEOSERVER_URL="http://131.224.198.104:8080/geoserver-gbp" \
-  -e GEOSERVER_USER="root" \
-  -e NCA_MODEL="/opt/nkmodel/raster/nederland" \
+  -e NCA_MODEL_RASTER="/opt/nkmodel/raster/nederland" \
+  -e NCA_MODEL_RUNNER="/nkmodel" \
+  -e NCA_MODEL_TKS_RUNNER="/nkmodel" \
+  -e NCA_TKS_MEASURES="tks_measures.json" \
+  -e NCA_DOWNLOAD_PATH="/tmp/download" \
+  -e NCA_DOWNLOAD_URL="http://api.gbpapi.nl/download" \
+  -v /tmp:/tmp \
+  -v /tmp/download:/tmp/download \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/download:/var/lib/jetty/webapps/ROOT/download \
   nca-gbp-webserver:latest
+
+

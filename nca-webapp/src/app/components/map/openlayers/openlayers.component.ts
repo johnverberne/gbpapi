@@ -130,7 +130,7 @@ export class OpenlayersComponent implements AfterViewInit {
     });
 
     this.bagVector = new VectorSource({
-      url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs?service=WFS&LAYERS=BU.Building&` +
+      url: (extent) => `https://geodata.nationaalgeoregister.nl/bag/wfs/v1_1?service=WFS&LAYERS=BU.Building&` +
         'version=1.1.0&request=GetFeature&typename=bag:pand&STYLES=&TRANSPARANT=TRUE&' +
         'outputFormat=application/json&srsname=EPSG:28992&' +
         'bbox=' + extent.join(',') + ',EPSG:28992',
@@ -183,9 +183,12 @@ export class OpenlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit() {
     this.view = new OlView({
-        //5.1075035, 52.0814808 utrecht
+      //5.1075035, 52.0814808 utrecht
       //6.098213, 52.521916 zwolle
-      center: fromLonLat([6.098213, 52.521916], this.targetProjection.getCode()),
+      //4.378121, 51.986413 deltares delft
+      //5.675800, 52.030000 ede
+      //4.559, 51.882 rotterdam
+      center: fromLonLat([4.559, 51.882], this.targetProjection.getCode()),
       zoom: 18,
       minZoom: 7,
       maxZoom: 20,

@@ -31,15 +31,12 @@ import nl.rivm.nca.util.UuidUtil;
 public final class UserUtil {
 
   public static ScenarioUser generateAPIKey(final Connection con, final String email) throws SQLException, AeriusException {
-    
-    ScenarioUser user = null; //ScenarioUserRepository.getUserByEmailAddress(con, email);
-
+    ScenarioUser user = UserRepository.getUserByEmailAddress(con, email);    
     if (user == null) {
       user = createUser(con, email);
     } else {
       user = resetAPIKey(con, user);
     }
-
     return user;
   }
   
@@ -76,15 +73,6 @@ public final class UserUtil {
     if (!user.isEnabled()) {
       throw new AeriusException(Reason.USER_ACCOUNT_DISABLED);
     }
-
-//    if (validateMaximumConcurrentJobs) {
-//      final List<JobProgress> jobs = JobRepository.getProgressForUser(con, user);
-//      CollectionUtils.filter(jobs, FILTER_ACTIVE_JOB_STATUSES);
-//
-//      if (jobs.size() >= user.getMaxConcurrentJobs()) {
-//        throw new AeriusException(Reason.USER_MAX_CONCURRENT_JOB_LIMIT_REACHED, String.valueOf(user.getMaxConcurrentJobs()));
-//      }
-//    }
 
     return user;
   }

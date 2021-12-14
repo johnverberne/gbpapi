@@ -3,7 +3,7 @@
 <Configure id="wac" class="org.eclipse.jetty.webapp.WebAppContext">
   <Set name="contextPath">/${APPNAME}</Set>
   <Set name="war"><Property name="jetty.base" default="." />/webapps/${APPNAME}.war</Set>
-
+  <!--
   <New id="${DATASOURCENAME}" class="org.eclipse.jetty.plus.jndi.Resource">
     <Arg><Ref refid="wac"/></Arg>
     <Arg>jdbc/${DATASOURCENAME}</Arg>
@@ -16,4 +16,5 @@
       </New>
     </Arg>
   </New>
+  -->
 </Configure>

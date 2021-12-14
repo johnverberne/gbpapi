@@ -19,9 +19,11 @@ ENV PATH=/opt/${pcraster}/bin:$PATH
 ENV PYTHONPATH=/opt/${pcraster}/python:$PYTHONPATH
 
 ### Install python modules for NatuurlijkKapitaalModellen ###
-
 COPY NatuurlijkKapitaalModellen/environment/configuration/requirements.txt /tmp
 RUN pip install -r /tmp/requirements.txt && rm /tmp/requirements.txt
+
+### Copy temporary small raster files ###
+COPY opt/. /opt
 
 ### Install NatuurlijkKapitaalModellen ###
 COPY NatuurlijkKapitaalModellen/ /opt/NatuurlijkKapitaalModellen/

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ServerPMF implements PMF {
-  String DATASOURCE_NAME = "jdbc/AeriusDB"; //GbpDB
+  String DATASOURCE_NAME = "jdbc/ncaDB";
   static Logger LOGGER = LoggerFactory.getLogger(ServerPMF.class);
   
   private static ServerPMF instance;

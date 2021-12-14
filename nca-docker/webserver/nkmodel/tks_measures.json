@@ -1,0 +1,268 @@
+{"measures":[
+   {
+      "id":3,
+      "code":"STREETTREES",
+      "runmodel":true,
+      "description":"Straatbomen en bomenlanen",
+      "layers":[{"layer":"TREES","value":0.25}]
+   },
+   {
+      "id":4,
+      "code":"URBANWETLANDS",
+      "runmodel":true,
+      "description":"Urban wetlands",
+      "layers":[{"layer":"GRASS", "value":0.5}]
+   },
+   {
+      "id":16,
+      "code":"GREENROOFS",
+      "runmodel":true,
+      "description":"Groene daken",
+      "layers":[{"layer":"SHRUBS","value":0.1},{"layer":"GRASS", "value":0.9}]
+   },
+      {
+      "id":6,
+      "code":"WADI",
+      "runmodel":true,
+      "description":"Wadi's met drainage",
+      "layers":[{"layer":"GRASS", "value":1.0}]
+   },
+   {
+      "id":7,
+      "code":"FOUNTAIN",
+      "runmodel":false,
+      "description":"Fonteinen, watervallen watermuren",
+      "layers":[]
+   },
+   {
+      "id":10,
+      "code":"DEEPINFILTRATION",
+      "runmodel":false,
+      "description":"Diepe grondwater infiltratie",
+      "layers":[]
+   },
+   {
+      "id":11,
+      "code":"DITCH",
+      "runmodel":false,
+      "description":"Greppels",
+      "layers":[]
+   },
+   {
+      "id":14,
+      "code":"GREENFACADE",
+      "runmodel":true,
+      "description":"Groene gevels",
+      "layers":[{"layer":"TREES","value":0.05}]
+   },
+   {
+      "id":19,
+      "code":"SURFACESTORAGE",
+      "runmodel":false,
+      "description":"Berging door de realisatie van extra wateroppervlak",
+      "layers":[]
+   },
+   {
+      "id":20,
+      "code":"DITSEWER",
+      "runmodel":false,
+      "description":"Drainage-infiltratie-Transport DIT-riool",
+      "layers":[]
+   },
+   {
+      "id":22,
+      "code":"INFILTRATIONFIELDS",
+      "runmodel":true,
+      "description":"Infiltratievelden en infiltratiestroken met bovengrondse opslag",
+      "layers":[{"layer":"SHRUBS","value":0.2},{"layer":"GRASS", "value":0.8}]
+   },
+   {
+      "id":25,
+      "code":"URBANFOREST",
+      "runmodel":true,
+      "description":"Stadsbossen",
+      "layers":[{"layer":"TREES","value":0.5},{"layer":"SHRUBS","value":0.2},{"layer":"GRASS", "value":0.3}]
+   },
+   {
+      "id":26,
+      "code":"PERMEABLESURFACE",
+      "runmodel":true,
+      "description":"Waterdoorlatende verharding",
+      "layers":[{"layer":"GRASS", "value":0.2}]
+   },
+   {
+      "id":29,
+      "code":"RAINBARREL",
+      "runmodel":false,
+      "description":"Regenton",
+      "layers":[]
+   },
+   {
+      "id":32,
+      "code":null,
+      "runmodel":false,
+      "description":"Berging door de realisatie van extra berghoogte",
+      "layers":[]
+   },
+   {
+      "id":33,
+      "code":null,
+      "runmodel":false,
+      "description":"Infiltratiekratten",
+      "layers":[]
+   },
+   {
+      "id":40,
+      "code":"BLUEROOFS",
+      "runmodel":false,
+      "description":"Waterdaken/blauwe daken",
+      "layers":[]
+   },
+   {
+      "id":41,
+      "code":"WATERSQUARE",
+      "description":"Waterpleinen",
+      "runmodel":false,
+      "layers":[]
+   },
+   {
+      "id":42,
+      "code":"GREENBLUEROOFS",
+      "runmodel":true,
+      "description":"Groene daken met afvoervertraging",
+      "layers":[{"layer":"SHRUBS","value":0.1},{"layer":"GRASS", "value":0.9}]
+   },
+   {
+      "id":45,
+      "code":null,
+      "runmodel":false,
+      "description":"Holle en schuine wegen",
+      "layers":[]
+   },
+   {
+      "id":46,
+      "code":null,
+      "runmodel":false,
+      "description":"Ondergrondse bergingkelder",
+      "layers":[]
+   },
+   {
+      "id":57,
+      "code":"SMARTIRRIGATION",
+      "description":"Slim beregeningsbeleid/smart irrigation",
+      "runmodel":false,
+      "layers":[]
+   },
+   {
+      "id":62,
+      "code":null,
+      "runmodel":false,
+      "description":"Koele materialen hoge albedo",
+      "layers":[]
+   },
+   {
+      "id":71,
+      "code":null,
+      "runmodel":false,
+      "description":"Bergingsvijver",
+      "layers":[]
+   },
+   {
+      "id":80,
+      "code":"SHADOW",
+      "runmodel":false,
+      "description":"Creeren van schaduw",
+      "layers":[]
+   },
+   {
+      "id":81,
+      "code":"M81",
+      "runmodel":true,
+      "description":"Dijken",
+      "layers":[{"layer":"GRASS", "value":1.0}]
+   },
+   {
+      "id":82,
+      "code":"M82",
+      "runmodel":false,
+      "description":"Grindkoffers",
+      "layers":[]
+   },
+   {
+      "id":83,
+      "code":"M83",
+      "runmodel":false,
+      "description":"Kade lage dijkjes",
+      "layers":[]
+   },
+   {
+      "id":84,
+      "code":"M84",
+      "runmodel":true,
+      "description":"Droogtebestendige planten en bomen",
+      "layers":[{"layer":"TREES","value":0.6},{"layer":"SHRUBS","value":0.4}]
+   },
+   {
+      "id":86,
+      "code":"M86",
+      "runmodel":true,
+      "description":"Gras aanleggen",
+      "layers":[{"layer":"GRASS", "value":1.0}]
+   },
+   {
+      "id":87,
+      "code":null,
+      "runmodel":false,
+      "description":"Kademuur",
+      "layers":[]
+   },
+   {
+      "id":88,
+      "code":null,
+      "runmodel":false,
+      "description":"Gebouw als waterkering",
+      "layers":[]
+   },
+   {
+      "id":89,
+      "code":"M89",
+      "runmodel":true,
+      "description":"Tijdelijke kering",
+      "layers":[{"layer":"GRASS", "value":1.0}]
+   },
+   {
+      "id":90,
+      "code":null,
+      "runmodel":false,
+      "description":"Waterabsorberende/bergende verharding",
+      "layers":[]
+   },
+   {
+      "id":91,
+      "code":"M91",
+      "runmodel":true,
+      "description":"Ontharden : Verharding eruit, groen erin",
+      "layers":[{"layer":"SHRUBS","value":0.2},{"layer":"GRASS", "value":0.8}]
+   },
+   {
+      "id":92,
+      "code":null,
+      "runmodel":false,
+      "description":"Verlagen van terras",
+      "layers":[]
+   },
+   {
+      "id":93,
+      "code":null,
+      "runmodel":false,
+      "description":"Verlagen van deel van de tuin",
+      "layers":[]
+   },
+   {
+      "id":94,
+      "code":null,
+      "runmodel":false,
+      "description":"Stadsparken",
+      "layers":[]
+   }
+]}   

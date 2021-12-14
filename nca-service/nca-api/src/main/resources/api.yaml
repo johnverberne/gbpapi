@@ -2,10 +2,10 @@ swagger: '2.0'
 info:
   # Some fields also need to be set in the web.xml. Swagger doesn't set these properly in the generated web.xml.
   # The fields in question: title, version and basepath.
-  version: "1"
+  version: "2"
   title: Natural Capital Assessment API
   description: |
-    ## TDB
+    Green and Blue in the city models 
   contact:
     name: RIVM
   license:
@@ -16,24 +16,35 @@ consumes:
 produces:
   - application/json
 paths:
+
   /assessmentRequest:
     post:
       operationId: postAssessmentRequest
       tags:
         - assessmentRequest
       description: |
-        TDB
+        Excecute one or more scenarios and affiliated measures (models) with geojson input with supplied measures
       parameters:
         - name: apiKey
           in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
+          description: The API-key that can be used with other calls.
           required: true
           type: string
-        - name: body
+        - name: jobKey
+          in: query
+          description: The jobKey is a reference to a previouse job so it can skip extracting data files
+          required: false
+          type: string
+        - name: measureKey
+          in: query
+          description: The measureKey is a reference to a uploaded measureCollection if omitted we use a default measureCollection
+          required: false
+          type: string
+        - name: features
           in: body
           required: true
           schema:
-            $ref: '#/definitions/AssessmentRequest'
+            $ref: "#/definitions/FeatureCollection"
       responses:
         '200':
           description: |
@@ -55,83 +66,8 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
       security:
-        - apiKey: []
-  /assessmentScenarioRequest:
-    post:
-      operationId: postAssessmentScenarioRequest
-      tags:
-        - assessmentRequest
-      description: |
-        Excecute one or more scenarios and affiliated measures (models) 
-      parameters:
-        - name: apiKey
-          in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
-          required: true
-          type: string
-        - name: scenarios
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/AssessmentScenarioRequest'
-      responses:
-        '200':
-          description: |
-            In case of normal behavior.
-          schema:
-            $ref: '#/definitions/AssessmentScenarioRequestResponse'
-        '400':
-          description: |
-            In case of user error - thing of missing fields.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '401':
-          description: API key is missing or invalid
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            In case of system error. Please contact the helpdesk if this error persists.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-        - apiKey: []
-  /assessmentResult/{resultId}:
-    get:
-      operationId: getAssessmentResultById
-      tags:
-        - assessmentResult
-      description: |
-        Deze functie geeft een resultaten voor opgegeven apiKey en resultId.
-      parameters:
-        - name: apiKey
-          in: query
-          description: De API-key die is gebruikt bij andere opdrachten.
-          required: true
-          type: string
-        - name: resultId
-          in: path
-          description: ID of Assessment Result
-          required: true
-          type: string
-      responses:
-        '200':
-          description: |
-            Bij een normale afhandeling van de API functie.
-          schema:
-            $ref: '#/definitions/AssessmentResultsResponse'
-        '400':
-          description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
+        - apiKey: []      
+      
   /generateAPIKey:
     post:
       operationId: postGenerateAPIKey
@@ -164,247 +100,155 @@ paths:
             In case of system error. Please contact the helpdesk if this error persists.
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /status/jobs:
-    get:
-      operationId: getStatusJobs
+                  
+  /measureCollection:
+    post:
+      operationId: postMeasureCollection
       tags:
-        - user
+        - measures
       description: |
-        Deze functie geeft een statusoverzicht van de uitgevoerde taken die, voor een opgegeven API-key, zijn aangemeld, worden uitgevoerd of zijn afgerond.
+        Upload a new set of measures with a name.
       parameters:
         - name: apiKey
           in: query
           description: De API-key die is gebruikt bij andere opdrachten.
           required: true
           type: string
+        - name: measure
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MeasureDataRequest'
       responses:
         '200':
           description: |
-            Bij een normale afhandeling van de API functie.
+            In case of normal behavior.
           schema:
-            $ref: '#/definitions/StatusJobResponse'
+            $ref: '#/definitions/ValidateResponse'
         '400':
           description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
           schema:
             $ref: '#/definitions/ErrorResponse'
         '500':
           description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
+            In case of system error. Please contact the helpdesk if this error persists.
           schema:
             $ref: '#/definitions/ErrorResponse'
+
+  /getMeasureCollection:
+    get:
+      operationId: getMeasureCollection
+      tags:
+        - measures
+      description: |
+        Will return a list of measure that containts the calculation parameters for the measure for individual layers
+      parameters:
+        - name: apiKey
+          in: query
+          description: The API-key that can be used with other calls.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/MeasureCollectionsResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /deleteMeasureCollection:     
+    delete:
+      operationId: deleteMeasureCollection
+      tags:
+        - measures
+      description: |
+        Upload a new set of measures with a given name.
+      parameters:
+        - name: apiKey
+          in: query
+          description: The used API-key
+          required: true
+          type: string
+        - name: measureKey
+          in: query
+          description: the measureKey to be removed
+          required: true
+          type: string          
+      responses:
+        '200':
+          description: |
+            In case of normal behavior.
+          schema:
+            $ref: '#/definitions/ValidateResponse'
+        '400':
+          description: |
+            In case of user error - thing of missing fields.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: API key is missing or invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: |
+            In case of system error. Please contact the helpdesk if this error persists.
+          schema:
+            $ref: '#/definitions/ErrorResponse'  
+ 
   /modeldata/{model}:
     get:
       operationId: getModelData
       tags:
         - model
       description: |
-        Deze functie geeft een lijst met rasterlayers die voor het gevraagde model nodig zijn.
+        Will return a list of rasterlayers that are required for the model. Use air_regulation.
       parameters:
         - name: model
           in: path
-          description: Eco system service naam
+          description: Eco system model name to fetch rasterlayers for.
           required: true
           type: string
       responses:
         '200':
           description: |
-            Bij een normale afhandeling van de API functie.
+            In case of normal behavior.
           schema:
             $ref: '#/definitions/ModelDataResponse'
         '400':
           description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
+            In case of user error - thing of missing fields.
           schema:
             $ref: '#/definitions/ErrorResponse'
         '500':
           description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
+            In case of system error. Please contact the helpdesk if this error persists.
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /modelEnvironment/:
-    get:
-      operationId: getModelEnvironment
-      tags:
-        - environment settings for the configuration
-      description: |
-        Deze functie geeft een lijst van de geconfigureerde omgeving..
-      responses:
-        '200':
-          description: |
-            Bij een normale afhandeling van de API functie.
-          schema:
-            $ref: '#/definitions/ModelEnvironmentResponse'
-        '400':
-          description: |
-            Bij gebruikersfout(en) - denk aan missende optioneel verplichte velden enz.
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: |
-            Bij een systeemfout. Neem a.u.b. contact op met de helpdesk als dit aanhoudt.
-          schema:
-            $ref: '#/definitions/ErrorResponse'            
+
 securityDefinitions:
    apiKey:
      type: apiKey
      name: api_key
      in: query
-definitions:
-  AssessmentResultsResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          $ref: '#/definitions/AssessmentResultResponse'
-      key:
-        type: string
-        description: A unique key for the geoserver results layers.
-      url:
-        type: string
-        description: A url to zipped file containing all generated file for the run including a log file and json of the scenario
-  AssessmentResultResponse:
-    type: object
-    required:
-      - code
-    properties:
-      code:
-        type: integer
-        format: int32
-      name:
-        type: string
-      wmsname:
-        type: string
-      model:
-        type: string  
-      tableop:
-        type: string
-      min:
-        type: number
-        format: double
-      max:
-        type: number
-        format: double
-      sum:
-        type: number
-        format: double
-      tablevalue:
-        type: number
-        format: double
-      avg:
-        type: number 
-        format: double
-      units:
-        type: string
-      class:
-        type: string    
-      legendrgbmin:
-        type: string
-      legendrgbmax:
-        type: string
-      legendmin:   
-        type: number
-        format: double
-      legendmax:
-         type: number
-         format: double
-      geobox:
-         $ref: '#/definitions/GeoBox'
-  GeoBox:
-    type: object
-    properties:
-      xmin:
-        type: integer
-        format: int32
-      ymin:
-        type: integer
-        format: int32
-      ymax:
-        type: integer
-        format: int32
-      xmax:
-        type: integer
-        format: int32       
-  AssessmentRequest:
-    type: object
-    required:
-      - name
-      - model
-      - eco_system_service
-      - layers
-      - extent
-    properties:
-      name:
-        type: string
-        description: A description given to this assessment request.
-      model:
-        type: string
-        description: |
-          A description given to this assessment request.
-          supported values are: 
-          ___NKMODEL:___ Excecute nkmodel.
-          ___NKMODEL2:___ Excecute preview version of nkmodel.
-        enum:
-          - NKMODEL
-          - NKMODEL2
-      eco_system_service:
-        type: string
-        description: The eco system service for which an assessment request is made.
-        default: air_regulation
-      layers:
-        type: array
-        minItems: 1
-        items:
-          $ref: '#/definitions/LayerObject'
-      extent:
-        type: array
-        minItems: 2
-        items:
-          type: array
-          minItems: 2
-          items:
-            type: integer
-  AssessmentScenarioRequest:
-    type: object
-    required:
-      - measures
-    properties:
-      measures:
-        type: array
-        minItems: 1
-        description: An array of measures that determine the scenario
-        items: 
-          $ref: '#/definitions/AssessmentRequest'
-  AssessmentRequestResponse:
-    allOf:
-      - $ref: '#/definitions/ValidateResponse'
-      - properties:
-          key:
-            type: string
-            description: A unique id to identify this request.
-  ImmediatlyAssessmentRequestResponse:
-    allOf:
-      - $ref: '#/definitions/ValidateResponse'
-      - properties:
-          key:
-            type: string
-            description: A unique id to identify this request.
-          assessmentResults:
-            type: array
-            items:
-              $ref: '#/definitions/AssessmentResultResponse'
-  AssessmentScenarioRequestResponse:
-    allOf:
-      - $ref: '#/definitions/ValidateResponse'
-      - properties:
-          key:
-            type: string
-            description: A unique id to identify this request.
-          assessmentResults:
-            type: array
-            items:
-              $ref: '#/definitions/AssessmentResultsResponse'         
+definitions:    
   DataType:
     type: string
     description: |
@@ -481,55 +325,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ValidationMessage'         
-  JobState:
-    type: string
-    description: |
-      De status van de job.
-
-      ___QUEUED:___ De opdracht is ontvangen en staat in de wachtrij.
-      ___RUNNING:___ De opdracht wordt op dit moment uitgevoerd.
-      ___CANCELLED:___ De opdracht is afgebroken door de gebruiker.      
-      ___COMPLETED:___ De opdracht is afgerond.
-    enum:
-      - QUEUED
-      - RUNNING
-      - CANCELLED
-      - COMPLETED
-  StatusJobProgress:
-    type: object
-    properties:
-      key:
-        type: string
-        description:
-          Bevat de unieke job key.
-      state:
-        $ref: "#/definitions/JobState"
-      name:
-        type: string
-        description: Optioneel de door gebruiker opgegeven naam voor job.
-      startDateTime:
-        type: string
-        format: date-time
-        description: Startdatum en tijd.
-      endDateTime:
-        type: string
-        format: date-time
-        description: Einddatum en tijd.
-      progressCount:
-        type: integer
-        format: int64
-        description: Aantal scenarios in deze taak klaar.
-      maxProgress:
-        type: integer
-        format: int64
-        description: Totaal aantal scenarios in deze rekentaak.
-  StatusJobResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          $ref: '#/definitions/StatusJobProgress'
   ModelDataResponse:
     type: object
     properties:
@@ -543,13 +338,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Layer'
-  ModelEnvironmentResponse:
-    type: object
-    properties:
-      entries:
-        type: array
-        items:
-          type: string          
   Layer:
     type: string
     description: |
@@ -565,5 +353,276 @@ definitions:
       - CROP
       - TREE_HEIGHT
       - WINDFORCE
-      - WATER
       - WOZ
+      - WATER
+      - WETFOREST
+      - PRODFOREST
+      - GHG
+      - GLG
+      - GWT
+      - SBU
+      - LGN8
+      - WOZINWONER
+  AssessmentRequestResponse:
+    allOf:
+      - $ref: '#/definitions/ValidateResponse'
+      - properties:
+          key:
+            type: string
+            description: A unique id to identify this request.
+          jobKey:
+            type: string
+            description: A unique key to rerun this model with speed performance  
+          assessmentResults:
+            type: array
+            items:
+              $ref: '#/definitions/AssessmentResultsResponse'   
+  AssessmentResultsResponse:
+    type: object
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/AssessmentResultResponse'
+      key:
+        type: string
+        description: A unique key for the geoserver results layers.      
+  AssessmentResultResponse:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+      name:
+        type: string
+      model:
+        type: string  
+      modelDescription:
+        type: string
+      min:
+        type: number
+        format: double
+      max:
+        type: number
+        format: double
+      sum:
+        type: number
+        format: double
+      tablevalue:
+        type: number
+        format: double
+      avg:
+        type: number 
+        format: double
+      units:
+        type: string
+      class:
+        type: string        
+  MapLayers:
+    type: object
+    properties:
+      layerFiles:
+        type: array
+        items:
+          $ref: '#/definitions/LayerFile'
+  LayerFile:
+    type: object
+    properties:
+      code:
+        type: string
+      filename:
+        type: string
+      description:
+        type: string     
+  FeatureCollection:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - FeatureCollection
+      bbox:
+        type: array
+        items:
+          type: number  
+      features:
+        type: array
+        required: false
+        items:
+          $ref: '#/definitions/Features'
+  Features:
+    type: object 
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum:
+        - Feature
+      properties:
+          $ref: '#/definitions/Properties'
+      geometry:
+          $ref: '#/definitions/Geometry'
+  Properties:
+    type: object
+    properties:
+      name:
+        type: string
+      measure:
+          $ref: '#/definitions/MeasureType'
+      measureId:
+          type: number
+      areaWidth:
+        type: string
+      areaRadius:
+        type: string
+      area:
+        type: number
+      isProjectArea:
+        type: boolean
+  MeasureCollectionsResponse:
+    type: object
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/MeasureResponse'     
+  MeasureResponse:
+    type: object
+    properties:
+      key:
+        type: string
+        description: Uniqu key
+      name:
+        type: string
+        description: Name of the measure collection
+      version:
+        type: string
+        description: Version number of the measure collection
+      enabled:
+        type: boolean
+        description: If this measure can be used.
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
+  MeasureDataRequest:
+    type: object
+    properties:
+      measureKey:
+        type: string
+        description: Unique singele name for the supplied measures
+      name:
+        type: string
+        description: Name of the measure collection
+      version:
+        type: string
+        description: Version number of the measure collection
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
+  MeasureType:
+   type: string
+   description: |
+     Type of measurement
+   enum:
+      - PROJECT
+      - STREETTREES
+      - URBANWETLANDS
+      - GREENROOFS
+      - WADI
+      - FOUNTAIN
+      - DEEPINFILTRATION
+      - DITCH
+      - GREENFACADE
+      - SURFACESTORAGE
+      - DITSEWER
+      - INFILTRATIONFIELDS
+      - URBANFOREST
+      - PERMEABLESURFACE
+      - RAINBARREL
+      - M32
+      - M33
+      - BLUEROOFS
+      - WATERSQUARE
+      - GREENBLUEROOFS
+      - M45
+      - SUBTERRAINSTORAGE
+      - SMARTIRRIGATION
+      - COOLSURFACES
+      - RESERVOIR
+      - SHADOW
+      - EMBANKMENTS
+      - GRAVELCASES
+      - SMALL_EMBANKMENTS
+      - DROUGHTVEG
+      - M86
+      - M87
+      - M88
+      - TEMP_EMBANKMENT
+      - M90
+      - SOFTENINGSURFACE
+      - M92
+      - M93
+      - M94
+
+  MeasureCollection:
+    type: object
+    properties:
+      measures:
+        type: array
+        items:
+          $ref: '#/definitions/Measure'
+  Measure:
+    type: object
+    properties:
+      id:
+        type: number
+      code:
+        $ref: '#/definitions/MeasureType'
+      description: 
+        type: string
+      runmodel:
+        type: boolean
+      layers:
+        type: array
+        items:
+          $ref: '#/definitions/MeasureLayer'  
+  MeasureLayer:
+    type: object 
+    properties:
+      layer:
+        $ref: '#/definitions/Layer'
+      value:
+        type: number
+  MeasureLayerFile:
+    type: object
+    properties:
+      measureType:
+        $ref: '#/definitions/MeasureType'
+      layer:
+        $ref: '#/definitions/Layer'
+      file:
+        type: string
+      measureLayerValue:
+        type: number
+  Geometry:
+    type: object
+    description: GeoJSon geometry
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        enum:
+        - Point
+        - LineString
+        - Polygon
+        description: the geometry type only Point, LineString and Polygon supported
+      coordinates:
+        type: array
+        items:
+         type: object

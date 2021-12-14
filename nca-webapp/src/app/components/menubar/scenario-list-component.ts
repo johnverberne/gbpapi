@@ -160,8 +160,9 @@ export class ScenarioListComponent implements OnInit {
     const allX = cells.map(cell => cell.coords[0]);
     const allY = cells.map(cell => cell.coords[1]);
 
-    const start = [Math.min(...allX) - 1000, Math.min(...allY) - 1000];
-    const end = [Math.max(...allX) + 1000, Math.max(...allY) + 1000];
+    const start = [Math.min(...allX) - 10, Math.min(...allY) - 10];
+    const end = [Math.max(...allX) + 10, Math.max(...allY) + 10];
+
     measureRequest.extent.push(start);
     measureRequest.extent.push(end);
   }
