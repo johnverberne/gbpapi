@@ -529,29 +529,45 @@ definitions:
    description: |
      Type of measurement
    enum:
+      - PROJECT
       - STREETTREES
       - URBANWETLANDS
+      - GREENROOFS
       - WADI
-      - FOUTAIN
+      - FOUNTAIN
       - DEEPINFILTRATION
       - DITCH
       - GREENFACADE
-      - GREENROOFS
       - SURFACESTORAGE
       - DITSEWER
       - INFILTRATIONFIELDS
       - URBANFOREST
       - PERMEABLESURFACE
       - RAINBARREL
+      - M32
+      - M33
+      - BLUEROOFS
       - WATERSQUARE
       - GREENBLUEROOFS
+      - M45
+      - SUBTERRAINSTORAGE
       - SMARTIRRIGATION
+      - COOLSURFACES
+      - RESERVOIR
       - SHADOW
-      - PROJECT
-      - M84
+      - EMBANKMENTS
+      - GRAVELCASES
+      - SMALL_EMBANKMENTS
+      - DROUGHTVEG
       - M86
-      - M89
-      - M91     
+      - M87
+      - M88
+      - TEMP_EMBANKMENT
+      - M90
+      - SOFTENINGSURFACE
+      - M92
+      - M93
+      - M94
 
   MeasureCollection:
     type: object
