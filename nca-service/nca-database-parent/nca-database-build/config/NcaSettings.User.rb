@@ -1,4 +1,4 @@
 $sftp_data_readonly_password = 'MaFFJROWUY'
 
-$pg_password = 'hallo2dirk337'
+$pg_password = '...'
 $dbdata_path = '/data/gitRepos/GroeneBatenPlanner-data'

@@ -1,7 +1,15 @@
 package nl.rivm.nca.pcraster;
 
 public enum EnvironmentEnum {
-
+  
+  /*
+   * githash from api version
+   */
+  APIVERSION,
+  /*
+   * githash from nkm version
+   */
+  NKMVERSION,
   /*
    * Directory with raster files.
    * /opt/nkmodel/raster/nederland [unix]
