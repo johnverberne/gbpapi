@@ -205,6 +205,8 @@ public class NkModelController {
     }
 
     warnings.add(new ValidationMessage().code(3).message("Total excecution time " + totalSeconds + " seconds"));
+    warnings.add(new ValidationMessage().code(4).message("api-version=" + EnvironmentEnum.APIVERSION.getEnv()));
+    warnings.add(new ValidationMessage().code(5).message("nkm-version=" + EnvironmentEnum.NKMVERSION.getEnv()));
     return assessmentResultlist;
   }
 
