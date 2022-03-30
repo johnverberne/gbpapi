@@ -343,7 +343,7 @@ definitions:
     description: |
       Benodigde lagen voor het gekozen eco system service
     enum:
-      - LAND_COVER
+      - BGT_LAND_COVER
       - PM_10
       - POPULATION
       - TREES
@@ -353,7 +353,6 @@ definitions:
       - CROP
       - TREE_HEIGHT
       - WINDFORCE
-      - WOZ
       - WATER
       - WETFOREST
       - PRODFOREST
