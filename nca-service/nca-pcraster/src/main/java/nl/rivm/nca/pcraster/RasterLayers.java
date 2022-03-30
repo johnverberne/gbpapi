@@ -31,27 +31,25 @@ public class RasterLayers {
    */
   private static void hardCodeTmp(Map<String, Map<Layer, String>> layers) {
     final Map<Layer, String> arLayers = new HashMap<>();
-    arLayers.put(Layer.LAND_COVER, "LCEU_ini");
-    arLayers.put(Layer.PM_10, "conc_pm10_2018");
-    arLayers.put(Layer.TREES, "Bomenkaart_2019");
-    arLayers.put(Layer.SHRUBS, "Struikenkaart_2019");
-    arLayers.put(Layer.GRASS, "Graskaart_2019");
-    arLayers.put(Layer.MASK, "Mask");
-    arLayers.put(Layer.CROP, "Gewas");
+    arLayers.put(Layer.BGT_LAND_COVER, "bgt");
+    arLayers.put(Layer.TREES, "bomenkaart");
     arLayers.put(Layer.TREE_HEIGHT, "boomhoogte");
+    arLayers.put(Layer.WETFOREST, "bt_natbos_oppfract");
+    arLayers.put(Layer.PRODFOREST, "bt_prodbos_oppfract");
+    arLayers.put(Layer.PM_10, "conc_pm10");
+    arLayers.put(Layer.CROP, "gewas");
+    arLayers.put(Layer.GHG, "ghg");
+    arLayers.put(Layer.GLG, "glg");
+    arLayers.put(Layer.GRASS, "graskaart");
+    arLayers.put(Layer.GWT, "gwt");
+    arLayers.put(Layer.POPULATION, "inwonerkaart");
+    arLayers.put(Layer.LGN8, "lgn8_10m");
+    arLayers.put(Layer.MASK, "mask");
+    arLayers.put(Layer.WATER, "meer_plas_zee");
+    arLayers.put(Layer.SBU, "sbu");
+    arLayers.put(Layer.SHRUBS, "struikenkaart");
     arLayers.put(Layer.WINDFORCE, "windkaart");
-    arLayers.put(Layer.WATER, "Meer_plas_zee");
-    arLayers.put(Layer.WETFOREST, "BT_NatBos_OppFract");
-    arLayers.put(Layer.PRODFOREST, "BT_ProdBos_OppFract");
-    arLayers.put(Layer.GHG, "GHG");
-    arLayers.put(Layer.GLG, "GLG");
-    arLayers.put(Layer.GWT, "GWT");
-    arLayers.put(Layer.POPULATION, "InwAantal2018");
-    arLayers.put(Layer.SBU, "SBU");
-    arLayers.put(Layer.WOZ, "WOZ_2018");
-    arLayers.put(Layer.LGN8, "LGN8_10m");
-    arLayers.put(Layer.WOZINWONER, "WOZ_inwoner_2019");
-    
+    arLayers.put(Layer.WOZINWONER, "woz_inwoner");    
     layers.put("air_regulation", arLayers);
   }
 

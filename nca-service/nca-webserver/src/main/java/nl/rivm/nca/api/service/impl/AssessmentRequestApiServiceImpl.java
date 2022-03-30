@@ -88,46 +88,31 @@ public class AssessmentRequestApiServiceImpl extends AssessmentRequestApiService
     response.setJobKey(jobKey);
     MeasureCollection measuresCollection = null;
 
-    if (apiKey.equals("0000-0000-0000-0001")) {
-      try {
-        measuresCollection = Measures.load();
-        response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, jobKey, measuresCollection, jobRerun));
-        response.setSuccessful(true);
-      } catch (AeriusException a) {
-        LOGGER.error("Calculation Exception :", a);
-        throw new AeriusException(a.getReason(), a.getArgs());
-      } catch (Exception e) {
-        LOGGER.error("Calculation failed:", e);
-        throw new AeriusException(Reason.INTERNAL_ERROR);
-      }
+    try {
+      final ScenarioUser user;
 
-    } else {
-      try {
-        final ScenarioUser user;
-
-        final PMF pmf = context.getPMF();
-        try (final Connection con = pmf.getConnection()) {
-          user = UserUtil.getUser(con, apiKey);
-          if (measureKey == null || measureKey.isEmpty()) {
-            measuresCollection = Measures.load();
-          } else {
-            String modelMeasure = MeasuresRepository.getMeasuresByUser(con, user.getId(), measureKey);
-            if (modelMeasure == null || modelMeasure.isEmpty()) {
-              throw new AeriusException(Reason.CALCULATION_NO_MEASURE, measureKey);
-            }
-            measuresCollection = getMeasureCollection(modelMeasure);
+      final PMF pmf = context.getPMF();
+      try (final Connection con = pmf.getConnection()) {
+        user = UserUtil.getUser(con, apiKey);
+        if (measureKey == null || measureKey.isEmpty()) {
+          measuresCollection = Measures.load();
+        } else {
+          String modelMeasure = MeasuresRepository.getMeasuresByUser(con, user.getId(), measureKey);
+          if (modelMeasure == null || modelMeasure.isEmpty()) {
+            throw new AeriusException(Reason.CALCULATION_NO_MEASURE, measureKey);
           }
+          measuresCollection = getMeasureCollection(modelMeasure);
         }
-
-        response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, jobKey, measuresCollection, jobRerun));
-        response.setSuccessful(true);
-      } catch (AeriusException a) {
-        LOGGER.error("Calculation Exception :", a);
-        throw new AeriusException(a.getReason(), a.getArgs());
-      } catch (Exception e) {
-        LOGGER.error("Calculation failed:", e);
-        throw new AeriusException(Reason.INTERNAL_ERROR);
       }
+
+      response.getAssessmentResults().add(scenarioCalculation(features, warnings, errors, jobKey, measuresCollection, jobRerun));
+      response.setSuccessful(true);
+    } catch (AeriusException a) {
+      LOGGER.error("Calculation Exception :", a);
+      throw new AeriusException(a.getReason(), a.getArgs());
+    } catch (Exception e) {
+      LOGGER.error("Calculation failed:", e);
+      throw new AeriusException(Reason.INTERNAL_ERROR);
     }
     return response;
   }
