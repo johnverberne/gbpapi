@@ -1,7 +1,0 @@
-export enum MenuType {
-  REFERENCE = 'REFERENCE',
-  SCENARIO = 'SCENARIO',
-  RESULT = 'RESULT',
-  LAYERS = 'LAYERS',
-  SETTINGS = 'SETTINGS'
-}
