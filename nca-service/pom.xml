@@ -11,19 +11,19 @@
 	<description>Natural Capital Assessment parent pom</description>
     <url>https://www.groenebatenplanner.nl</url>
 
-	<repositories>
-		<repository>
-			<id>opengeo</id>
-			<name>OpenGeo Maven Repository</name>
-			<url>http://download.osgeo.org/webdav/geotools/</url>
-		</repository>
-	</repositories>
+    <repositories>
+      <repository>
+        <id>OSGEO</id>
+        <name>OSGEO GeoServer Maven Repository</name>
+        <url>https://repo.osgeo.org/repository/release/</url>
+      </repository>
+    </repositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <com-fasterxml-jackson.version>2.9.5</com-fasterxml-jackson.version>
 		<commons-configuration2.version>2.2</commons-configuration2.version>
-		<geotools.version>19.0</geotools.version>
+        <geotools.version>27.2</geotools.version>
 		<javax-servlet-jsp-api.version>2.3.1</javax-servlet-jsp-api.version>
 		<junit.version>4.11</junit.version>
 		<log4j.version>2.17.0</log4j.version>
@@ -39,9 +39,9 @@
 		<tomcat-servlet-api.version>8.5.28</tomcat-servlet-api.version>
 		<postgis-jdbc.version>2.2.0</postgis-jdbc.version>
 	</properties>
-	
+
     <scm>
-      <developerConnection>scm:git:ssh://git@github.com/rivm-syso/GroeneBatenPlanner</developerConnection>
+      <developerConnection>scm:git:ssh://git@github.com/GroeneBatenPlanner</developerConnection>
     </scm>
 	
 	<dependencyManagement>
@@ -172,31 +172,22 @@
 				<module>nca-pcraster</module>
 				<module>nca-api</module>
 				<module>nca-webserver</module>
-				<module>nca-geoserver-parent/nca-geoserver-base</module>
-				<module>nca-geoserver-parent/nca-geoserver-gbp</module>
 			</modules>
 		</profile>
-  	        <profile>
-                         <id>api</id>
-                         <modules>
+  	    <profile>
+            <id>api</id>
+            <modules>
 				<module>nca-lib</module>
 				<module>nca-pcraster</module>
 				<module>nca-api</module>
 				<module>nca-webserver</module>
-                         </modules>
-                </profile>
-                <profile>
-			<id>geoserver</id>
-			<modules>
-				<module>nca-geoserver-parent/nca-geoserver-base</module>
-				<module>nca-geoserver-parent/nca-geoserver-gbp</module>
-			</modules>
-		</profile>
+            </modules>
+        </profile>
 		<profile>
-			  <id>database</id>
-			  <modules>
-			    	<module>nca-database-parent/nca-database-gbp</module>
-			  </modules>
+			<id>database</id>
+			<modules>
+			   <module>nca-database-parent/nca-database-gbp</module>
+			</modules>
 		</profile>  
 	</profiles>
 </project>
