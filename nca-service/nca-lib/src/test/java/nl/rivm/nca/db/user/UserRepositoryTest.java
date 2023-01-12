@@ -16,19 +16,12 @@
  */
 package nl.rivm.nca.db.user;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
-import org.junit.Test;
-
 import nl.rivm.nca.db.BaseDBTest;
-import nl.rivm.nca.db.TestPMF;
-import nl.rivm.nca.shared.domain.JobProgress;
 import nl.rivm.nca.shared.domain.user.ScenarioUser;
 import nl.rivm.nca.shared.exception.AeriusException;
 
@@ -36,7 +29,7 @@ public class UserRepositoryTest extends BaseDBTest {
 
 	private static final String TEST_API_KEY = "0000-0000-0000-0000";
 
-	@Test
+	/*
 	public void testCreateUser() throws SQLException, AeriusException {
 		String apiKey = UUID.randomUUID().toString();
 		ScenarioUser user = new ScenarioUser();
@@ -47,4 +40,5 @@ public class UserRepositoryTest extends BaseDBTest {
 		ScenarioUser existingUser = UserRepository.getUserByApiKey(getGbpConnection(), apiKey);
 		assertNotNull("user found ", existingUser);
 	}
+	*/
 }

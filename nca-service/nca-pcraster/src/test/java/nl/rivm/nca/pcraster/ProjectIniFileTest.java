@@ -15,10 +15,10 @@ import org.junit.Test;
  */
 public class ProjectIniFileTest {
 
-  @Test
-  public void testGenerateFile() throws ConfigurationException, IOException {
-    final String workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile().getAbsolutePath();
-    final File projectFile = ProjectIniFile.generateIniFile(workingPath, workingPath);
-    assertTrue("Project ini file should exist", projectFile.exists());
-  }
+	@Test
+	public void testGenerateFile() throws ConfigurationException, IOException {
+		final String workingPath = Files.createTempDirectory(UUID.randomUUID().toString()).toFile().getAbsolutePath();
+		final File projectFile = ProjectIniFile.generateIniFile(workingPath, workingPath);
+		assertTrue("Project ini file should exist", projectFile.exists());
+	}
 }

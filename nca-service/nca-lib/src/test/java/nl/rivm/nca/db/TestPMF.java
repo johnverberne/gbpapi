@@ -80,8 +80,9 @@ public class TestPMF {
 	 */
 	public Connection getConnection() throws SQLException {
 		if (firstTime) {
-			firstTime = false; // reset init field before call in case init
-								// method decides to call getConnection.
+			firstTime = false; 
+			// reset init field before call in case init
+			// method decides to call getConnection.
 			// DBMessages.init(this);
 		}
 

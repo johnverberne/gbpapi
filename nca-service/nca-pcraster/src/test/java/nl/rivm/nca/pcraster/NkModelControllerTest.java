@@ -20,22 +20,22 @@ import nl.rivm.nca.api.domain.MeasureCollection;
  */
 public class NkModelControllerTest {
 
-  @Test
-  public void testLoadMeasureJson() throws ConfigurationException, IOException {
+	@Test
+	public void testLoadMeasureJson() throws ConfigurationException, IOException {
 
-    final ObjectMapper mapper = new ObjectMapper();
-    
-    final File measureModelsFile = new File("d:/opt/nkmodel/tks_measures.json");
-    @SuppressWarnings("resource")
-    FileReader fr = new FileReader(measureModelsFile.getAbsolutePath());
-    int i;
-    String body = "";
-    while ((i = fr.read()) != -1)
-      body += (char) i;
-    mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    MeasureCollection measureLayers1 = mapper.readValue(body, MeasureCollection.class);
-    
-    assertTrue( measureLayers1.getMeasures().size() > 0);
-  }
+		final ObjectMapper mapper = new ObjectMapper();
+
+		final File measureModelsFile = new File("d:/opt/nkmodel/tks_measures.json");
+		@SuppressWarnings("resource")
+		FileReader fr = new FileReader(measureModelsFile.getAbsolutePath());
+		int i;
+		String body = "";
+		while ((i = fr.read()) != -1)
+			body += (char) i;
+		mapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MeasureCollection measureLayers1 = mapper.readValue(body, MeasureCollection.class);
+
+		assertTrue(measureLayers1.getMeasures().size() > 0);
+	}
 }

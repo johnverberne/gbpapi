@@ -4,28 +4,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MainTester {
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(MainTester.class);
 
-  public static void main(final String[] args) throws InterruptedException {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainTester.class);
 
-    try {
+	public static void main(final String[] args) throws InterruptedException {
 
-      
-      LOGGER.error("Current isDebugEnabled: {}", LOGGER.isDebugEnabled());
+		try {
 
-      LOGGER.debug("start");
-      LOGGER.info("info");
-      LOGGER.warn("warn");
-      LOGGER.error("error");
+			LOGGER.error("Current isDebugEnabled: {}", LOGGER.isDebugEnabled());
 
-    
-    } catch (final Exception e) {
-      LOGGER.error("Program stopped with error: '{}', see log file for details.", e.getMessage());
-      LOGGER.debug("Main failed with error:", e.getMessage(), e);
-      System.exit(1);
-    }
-    System.exit(0);
-  }
-  
+			LOGGER.debug("start");
+			LOGGER.info("info");
+			LOGGER.warn("warn");
+			LOGGER.error("error");
+
+		} catch (final Exception e) {
+			LOGGER.error("Program stopped with error: '{}', see log file for details.", e.getMessage());
+			LOGGER.debug("Main failed with error:", e.getMessage(), e);
+			System.exit(1);
+		}
+		System.exit(0);
+	}
+
 }
