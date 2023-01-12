@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 	<name>NCA</name>
 	<description>Natural Capital Assessment parent pom</description>
-    <url>https://www.groenebatenplanner.nl</url>
+    <url>http://www.gbpapi.nl/</url>
 
     <repositories>
       <repository>
@@ -20,6 +20,8 @@
     </repositories>
 
 	<properties>
+        <sonar.organization>johnverberne</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <com-fasterxml-jackson.version>2.9.5</com-fasterxml-jackson.version>
 		<commons-configuration2.version>2.2</commons-configuration2.version>
