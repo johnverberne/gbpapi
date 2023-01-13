@@ -40,7 +40,7 @@ jobs:
         echo "row two ${{ github.GITHUB_RUN_NUMBER }}"
         echo "env: ${{ toJSON(env) }}"
         echo "secrets: ${{ toJSON(secrets) }}"
-        echo "github: ${{ toJSON(github }}"
+        echo "github: ${{ toJSON(github) }}"
         ls -a
 
     - name: Maven
