@@ -14,6 +14,9 @@ on:
   pull_request:
     branches: [ "main/nca-service" ]
 
+env:
+  SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+
 jobs:
   build:
 
@@ -27,11 +30,15 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: change
-      run: cd ./nca-service
+    - name: show info
+      run: |
+        echo "running with sonar key ${{ SONAR_TOKEN }}"
+        echo "row two ${{ env.GITHUB_RUN_NUMBER }}"
+        ls -a
+        
     - name: list dir
-      run: ls -a -d
+      run: ls -a
     - name: list file
       run: ls -a -d ./nca-service/pom.xml
     - name: Maven
-      run: mvn verify ./nca-service/pom.xml
+      run: mvn verify sonar:sonar ./nca-service/pom.xml
