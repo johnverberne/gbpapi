@@ -15,7 +15,7 @@ on:
     branches: [ "main/nca-service" ]
 
 env:
-  MAVEN_SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+  MAVEN_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   MAVEN_TEST_TOKEN: just_a_token
 
 jobs:
