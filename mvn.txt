@@ -1,3 +1,3 @@
 
-SET SONAR_TOKEN=
+SET SONAR_TOKEN=*
 mvn verify sonar:sonar
