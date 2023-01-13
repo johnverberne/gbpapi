@@ -15,7 +15,7 @@ on:
     branches: [ "main/nca-service" ]
 
 env:
-  MAVEN_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
   MAVEN_TEST_TOKEN: just_a_token
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
     - run: mkdir staging123
     - name: show info
       run: |
-        echo "running with sonar key ${{ env.MAVEN_SONAR_TOKEN }}"
+        echo "running with sonar key ${{ env.SONAR_TOKEN }}"
         echo "running with sonar key ${{ env.MAVEN_TEST_TOKEN }}"
         echo "$MAVEN_TEST_TOKEN"
         echo "row two ${{ github.GITHUB_RUN_NUMBER }}"
