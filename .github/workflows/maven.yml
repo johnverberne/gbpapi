@@ -45,4 +45,4 @@ jobs:
         ls -a
         cd nca-service
         ls -a
-        mvn verify sonar:sonar
+        mvn verify sonar:sonar install
