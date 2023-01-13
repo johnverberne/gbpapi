@@ -35,8 +35,8 @@ jobs:
     - name: show info
       run: |
         echo "running with sonar key ${{ env.MAVEN_SONAR_TOKEN }}"
-        echo "running with sonar key ${{ env.MAVEN_TEST}}"
-        echo $MAVEN_TEST
+        echo "running with sonar key ${{ env.MAVEN_TEST_TOKEN }}"
+        echo "$MAVEN_TEST_TOKEN"
         echo "row two ${{ env.GITHUB_RUN_NUMBER }}"
         ls -a
 
