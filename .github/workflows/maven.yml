@@ -38,6 +38,8 @@ jobs:
         echo "running with sonar key ${{ env.MAVEN_TEST_TOKEN }}"
         echo "$MAVEN_TEST_TOKEN"
         echo "row two ${{ github.GITHUB_RUN_NUMBER }}"
+        echo "${{ toJSON(env) }}"
+        echo "${{ toJSON(secrets) }}"
         ls -a
 
     - name: Maven
@@ -46,3 +48,9 @@ jobs:
         cd nca-service
         ls -a
         mvn verify sonar:sonar install
+        ls -a
+        ls -a nca-webserver
+        ls -a nca-webserver/target
+        cp nca-webserver/target ../staging123
+        ls ../staging123
+        
