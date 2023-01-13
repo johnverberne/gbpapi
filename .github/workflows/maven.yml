@@ -31,7 +31,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - run: mkdir staging123
+    - run: mkdir staging_war
     - name: show info
       run: |
         echo "running with sonar key ${{ env.SONAR_TOKEN }}"
@@ -40,6 +40,7 @@ jobs:
         echo "row two ${{ github.GITHUB_RUN_NUMBER }}"
         echo "env: ${{ toJSON(env) }}"
         echo "secrets: ${{ toJSON(secrets) }}"
+        echo "github: ${{ toJSON(github }}"
         ls -a
 
     - name: Maven
@@ -48,9 +49,6 @@ jobs:
         cd nca-service
         ls -a
         mvn verify sonar:sonar install
-        ls -a
-        ls -a nca-webserver
-        ls -a nca-webserver/target
-        cp nca-webserver/target ../staging123
-        ls ../staging123
+        cp nca-webserver/target/*.war ../staging_war
+        ls -a ../staging_war
         
