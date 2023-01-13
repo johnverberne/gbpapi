@@ -16,7 +16,7 @@ on:
 
 env:
   MAVEN_SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-  MAVEN_TEST: "just a token"
+  MAVEN_TEST_TOKEN: just_a_token
 
 jobs:
   build:
@@ -36,7 +36,6 @@ jobs:
       run: |
         echo "running with sonar key $MAVEN_SONAR_TOKEN"
         echo "running with sonar key $MAVEN_TEST"
-        echo "running with sonar key ${{ MAVEN_TEST }}"
         echo "row two ${{ env.GITHUB_RUN_NUMBER }}"
         ls -a
 
